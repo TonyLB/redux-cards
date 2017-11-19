@@ -1,0 +1,128 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+  }
+  
+  ol, ul {
+    padding-left: 30px;
+  }
+
+  .toggle {
+      background: rgb(198, 226, 231);
+      border: 1px solid #89ddff;
+      border-radius: 10px 20px;
+      font-size: 18px;
+      width: 240px;
+      padding: 4px;
+      padding-left: 10px;
+      margin-top: 4px;
+  }
+
+  [class*="card-"]{
+    border-radius: 10px 20px;
+    font-size: 18px;
+    width: 60px;
+    height: 120px;
+    padding: 4px;
+    padding-left: 10px;
+    margin-top: 4px;
+  }
+
+  [class*="card-"] p,svg {
+    margin: 0;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .card-plain {
+    background: rgb(198, 226, 231);
+    border: 1px solid #89ddff;
+  }
+
+  .card-empty {
+    background: rgb(228, 228, 228);
+    border: 1px solid #c2c2c2;
+  }
+
+  .toggletable {
+      padding-left: 30px;
+      -webkit-user-select: none;  
+      -moz-user-select: none;    
+      -ms-user-select: none;      
+      user-select: none;
+      cursor: default;
+  }
+
+  .toggletable td {
+    text-align: right;
+  }
+
+  .status {
+    margin-bottom: 10px;
+  }
+  
+  .minesquare {
+    background: rgb(255, 0, 0);
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+  }
+  
+  .square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+  }
+
+  .hiddensquare {
+    background: #aaa;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+  }
+  
+  .square:focus {
+    outline: none;
+  }
+  
+  .kbd-navigation .square:focus {
+    background: #ddd;
+  }
+  
+  .game {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .game-info {
+    margin-left: 20px;
+  }
+  
