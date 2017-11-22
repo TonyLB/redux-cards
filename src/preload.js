@@ -1,4 +1,5 @@
 import { generateKey } from './reducers/keys'
+import { StateTypes } from './state/index'
 import CardTemplate from './state/CardTemplates'
 
 const listToDenormalizedObject = (list, prefix) => {
@@ -28,12 +29,12 @@ const combineDenormalizedObjects = (
 }
 
 const preloadDecks = (state) => {
-    const deckId = generateKey('STACK')
-    const discardId = generateKey('STACK')
+    const deckId = generateKey(StateTypes.Stack)
+    const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalizedObject(
         ['X', 'Y', 'X', 'Y', 'X', 'X', 'X', 'Y', 'X', 'X'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
-        'CARD'
+        StateTypes.Card
     )
     let decks = {
         byId: {
@@ -73,15 +74,15 @@ const preloadRandoms = (state) => {
 }
 
 const preloadHand = (state) => {
-    let timerId = generateKey('TIMER')
+    let timerId = generateKey(StateTypes.Timer)
     let stacks = listToDenormalizedObject(
         [1, 2, 3, 4, 5].map((stack) => ({ cards: [] })),
-        'STACK'
+        StateTypes.Stack
     )
     return {
         ...state,
         hand: {
-            id: generateKey('HAND'),
+            id: generateKey(StateTypes.Hand),
             stacks: stacks.allIds,
             timerId: timerId
         },
