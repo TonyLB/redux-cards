@@ -1,37 +1,47 @@
 import { connect } from 'react-redux'
-import { moveCard, combineDecks, startTimer } from '../actions'
+import { moveCard, combineDecks, startTimer, condenseHand } from '../actions'
 import Board from '../components/Board'
-
-const assembleHand = state => {
-    return {
-        ...state.hand,
-        cards: state.hand.cards.map(card => state.cards.byId[card]),
-        timer: state.timers.byId[state.hand.timerId]
-    }
-}
 
 const mapStateToProps = state => {
     return {
-        hand: assembleHand(state),
         deck: state.decks.byId[state.mainDeckId],
-        discard: state.decks.byId[state.discardDeckId]
+        discard: state.decks.byId[state.discardDeckId],
+        timerId: state.hand.timerId
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        cardDrawClick: (card, deck, hand, timerId) => () => {
-            dispatch(moveCard(card, deck, hand))
+        cardDrawClick: (card, deck, timerId) => (stack) => () => {
+            dispatch(moveCard(card, deck, stack))
+            dispatch(condenseHand())
             dispatch(startTimer(timerId))
         },
-        discardClick: (card, hand, discard) => () => dispatch(moveCard(card, hand, discard)),
+        discardClick: (discard) => (stack) => (card) => () => {
+            dispatch(moveCard(card, stack, discard)) 
+            dispatch(condenseHand())
+        },
         shuffleClick: (discard, deck) => () => dispatch(combineDecks(discard, deck))
     }
 }
 
+const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => ({
+    deck: propsFromState.deck,
+    discard: propsFromState.discard,
+    cardDrawClick: propsFromDispatch.cardDrawClick(
+        propsFromState.deck.cards[0], 
+        propsFromState.deck.id,
+        propsFromState.timerId
+    ),
+    discardClick: propsFromDispatch.discardClick(propsFromState.discard.id),
+    shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discard.id, propsFromState.deck.id),
+    ...ownProps
+})
+
 const BoardContainer = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(Board)
 
 export default BoardContainer

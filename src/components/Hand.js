@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Card from './Card'
-//import Clock from './SVG/Clock'
+import Stack from './Stack'
 import Countdown from '../containers/Countdown'
 import Arrow from './SVG/Arrow'
 
@@ -10,30 +9,22 @@ class Hand extends React.Component {
     render () {
         let props = this.props
 
-        const cards = props.cards
-        let empties = []
-        for (let x=cards.length+1; x<props.maxStacks;x++) { empties.push(x+1) }
+        const stacks = props.stacks
         return (
             <table className='toggletable'><tbody><tr>
-                {cards.map(card => (
-                    <td key={card.id}>
-                    <Card className='card-plain' {...card} onClick={props.discardClick(card.id)} />
+            {
+                stacks.map(stack => (
+                    <td key={stack.id}>
+                        <Stack {...stack} discardClick={props.discardClick(stack.id)}>
+                            {(stack.firstOpenStack ? (
+                                <Countdown timerId={props.timerId}>
+                                    <Arrow onClick={ props.drawClick(stack.id) } />
+                                </Countdown>
+                            ): null)}
+                        </Stack>
                     </td>
-                ))}
-                { (cards.length < props.maxStacks) ? (
-                    <td key={"EMPTY-"+cards.length}>
-                        <Card className='card-empty' id={"EMPTY-"+cards.length} >
-                            <Countdown timerId={props.timerId}>
-                                <Arrow onClick={ props.drawClick } />
-                            </Countdown>
-                        </Card>
-                    </td>
-                ) : null}
-                {empties.map((index) => (
-                    <td key={"EMPTY-"+index}>
-                        <Card className='card-empty' id={"EMPTY-"+index} value='' onClick={null} />
-                    </td>
-                ))}
+                ))
+            }
             </tr></tbody></table>
         )
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Deck from './Deck'
-import Hand from './Hand'
+import HandContainer from '../containers/HandContainer'
 
 const Board = ({ deck, discard, hand, cardDrawClick, discardClick, shuffleClick }) => {
     return (
@@ -11,14 +11,13 @@ const Board = ({ deck, discard, hand, cardDrawClick, discardClick, shuffleClick 
             <td><Deck {...discard} /></td>
         </tr><tr>
             <td></td>
-            <td><button onClick={ shuffleClick(discard.id, deck.id) }>
+            <td><button onClick={ shuffleClick }>
                 Shuffle
             </button></td>
         </tr></tbody></table>
-        <Hand 
-            {...hand} 
-            drawClick={ cardDrawClick( deck.cards[0], deck.id, hand.id, hand.timerId ) } 
-            discardClick={ (card) =>  discardClick(card, hand.id, discard.id) } 
+        <HandContainer 
+            drawClick={ cardDrawClick } 
+            discardClick={ discardClick } 
         />
     </div>
 )}
@@ -44,14 +43,14 @@ Board.PropTypes = {
                 val: PropTypes.string.isRequired
             }).isRequired
         ).isRequired,
-        discardClick: PropTypes.func,
-        drawClick: PropTypes.func,
         timer: PropTypes.shape({
             id: PropTypes.string.isRequired,
             startTime: PropTypes.Date,
             duration: PropTypes.number
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    discardClick: PropTypes.func,
+    drawClick: PropTypes.func
 }
 
 export default Board

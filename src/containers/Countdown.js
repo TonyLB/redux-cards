@@ -7,7 +7,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-const mapDispatchToProps = ( dispatch, ownProps) => {
+const mapDispatchToProps = ( dispatch ) => {
     return {
     }
 }

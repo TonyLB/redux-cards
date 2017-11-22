@@ -26,11 +26,12 @@ body {
     padding: 4px;
     padding-left: 10px;
     margin-top: 4px;
+    position: relative;
   }
 
   [class*="card-"] p,svg {
     margin: 0;
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -45,6 +46,25 @@ body {
   .card-empty {
     background: rgb(228, 228, 228);
     border: 1px solid #c2c2c2;
+  }
+
+  .stack-footer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  [class*="positioning-"] {
+    position: relative;
+    top: 0px;
+    left: 0px;
+  }
+
+  .positioning-discard {
+    width: 76px;
+    height: 30px;
   }
 
   .toggletable {

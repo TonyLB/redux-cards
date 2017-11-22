@@ -16,7 +16,6 @@ const advanceRandom = (state = { values: [0.5], index:0}, action, randomsNeeded)
 }
 
 const randomList = (state, randomsNeeded) => {
-    console.log(state)
     if (state.index + randomsNeeded < 2000) {
         return state.values.slice(state.index, state.index + randomsNeeded )
     }

@@ -22,6 +22,12 @@ export const combineDecks = (source, destination) => {
     }
 }
 
+export const condenseHand = () => {
+    return {
+        type: 'CONDENSE_HAND'
+    }
+}
+
 export const startTimer = (timerId) => {
     return {
         type: 'START_TIMER',
