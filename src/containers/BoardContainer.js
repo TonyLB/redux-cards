@@ -6,6 +6,7 @@ const mapStateToProps = state => {
     return {
         deck: state.stacks.byId[state.hand.drawId],
         discard: state.stacks.byId[state.hand.discardId],
+        trackId: state.trackId,
         timerId: state.hand.timerId
     }
 }
@@ -28,12 +29,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => ({
     deck: propsFromState.deck,
     discard: propsFromState.discard,
-    cardDrawClick: propsFromDispatch.cardDrawClick(
-        propsFromState.deck.cards[0], 
-        propsFromState.deck.id,
-        propsFromState.timerId
-    ),
-    discardClick: propsFromDispatch.discardClick(propsFromState.discard.id),
+    trackId: propsFromState.trackId,
     shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discard.id, propsFromState.deck.id),
     ...ownProps
 })

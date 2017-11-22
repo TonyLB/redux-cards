@@ -1,6 +1,6 @@
 import { StateTypes, moveItemReducer } from '../state'
 
-const hand = (state = {id: 'TEST', cards: [], timerId: 0, timerStarted: new Date()}, action) => {
+const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Date(), drawDeck: 'NULL-STACK', discardDeck: 'NULL-STACK'}, action) => {
     switch(action.type) {
         case 'START_TIMER':
             return (state.timerId !== action.id) ?

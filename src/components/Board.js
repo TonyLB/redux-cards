@@ -2,11 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Deck from './Deck'
 import HandContainer from '../containers/HandContainer'
+import TrackContainer from '../containers/TrackContainer'
 
-const Board = ({ deck, discard, hand, cardDrawClick, discardClick, shuffleClick }) => {
+const Board = ({ deck, discard, hand, trackId, shuffleClick }) => {
     return (
     <div>
-        <table><tbody><tr>
+        <table><tbody><tr><td>
+            <TrackContainer trackId={trackId} />
+        </td></tr></tbody></table><table><tbody><tr>
             <td><Deck {...deck} /></td>
             <td><Deck {...discard} /></td>
         </tr><tr>
@@ -16,9 +19,6 @@ const Board = ({ deck, discard, hand, cardDrawClick, discardClick, shuffleClick 
             </button></td>
         </tr></tbody></table>
         <HandContainer />
-{/*            drawClick={ cardDrawClick } 
-            discardClick={ discardClick } 
-        />*/}
     </div>
 )}
 

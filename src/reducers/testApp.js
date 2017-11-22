@@ -4,16 +4,16 @@ import hand from './hand'
 import { random, advanceRandom, randomList } from './random'
 import { stacks, condenseHand, shuffleStacks } from './stacks'
 import timers from './timers'
+import tracks from './tracks'
+
+const passThru = (defaultVal) => (state=defaultVal, action) => (state)
 
 const testApp = (state, action) => {
     switch(action.type) {
         case 'CONDENSE_HAND':
             return {
-                cards: cards(state.cards, action),
-                hand: hand(state.hand, action),
-                random: random(state.random, action),
+                ...state,
                 stacks: condenseHand(state.stacks, action, state.hand),
-                timers: timers(state.timers, action)
             }
         // Call out anything requiring randomness or shuffling,
         // so that a slice of the random-sequence backbone can
@@ -23,8 +23,7 @@ const testApp = (state, action) => {
                 state.stacks.byId[action.source].cards.length + 
                 state.stacks.byId[action.destination].cards.length
             return {
-                cards: cards(state.cards, action),
-                hand: hand(state.hand, action),
+                ...state,
                 random: advanceRandom(state.random, action, randomsNeeded),
                 stacks: shuffleStacks(
                     state.stacks, 
@@ -32,14 +31,15 @@ const testApp = (state, action) => {
                     state.stacks.byId[action.source].cards, 
                     randomList(state.random, randomsNeeded)
                 ),
-                timers: timers(state.timers, action)
             }
         default: return combineReducers({
             cards,
             hand,
             random,
             stacks,
-            timers
+            timers,
+            tracks,
+            trackId: passThru('TEST')
         })(state, action)        
     }
 }

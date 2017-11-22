@@ -4,11 +4,10 @@ import Card from './Card'
 
 const Deck = ( props ) => {
     return (
-    <table className='toggletable'><tbody>
-        <tr>
-            <td>
-                <Card className={props.cards.length ? 'card-plain' : 'card-empty'} value={props.cards.length.toString()} />
-            </td>
+    <table><tbody><tr>
+        <td>
+            <Card className={props.cards.length ? 'card-plain' : 'card-empty'} value={props.cards.length.toString()} />
+        </td>
     </tr></tbody></table>
 )}
 

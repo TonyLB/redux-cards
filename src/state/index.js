@@ -2,7 +2,8 @@ export const StateTypes = {
     Card: 'CARD',
     Hand: 'HAND',
     Timer: 'TIMER',
-    Stack: 'STACK'
+    Stack: 'STACK',
+    Track: 'TRACK'
 }
 
 export const stateTypeKey = (stateType) => (

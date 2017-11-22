@@ -62,11 +62,17 @@ body {
     left: 0px;
   }
 
+  .positioning-sidearrow {
+    width: 30px;
+    height: 120px;
+  }
   .positioning-discard {
     width: 76px;
     height: 30px;
   }
 
+
+  
   .toggletable {
       padding-left: 30px;
       -webkit-user-select: none;  
