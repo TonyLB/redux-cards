@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
-import { moveCard, combineDecks, startTimer, condenseHand } from '../actions'
+import { moveCard, combineStacks, startTimer, condenseHand } from '../actions'
 import Board from '../components/Board'
 
 const mapStateToProps = state => {
     return {
-        deck: state.decks.byId[state.mainDeckId],
-        discard: state.decks.byId[state.discardDeckId],
+        deck: state.stacks.byId[state.mainDeckId],
+        discard: state.stacks.byId[state.discardDeckId],
         timerId: state.hand.timerId
     }
 }
@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(moveCard(card, stack, discard)) 
             dispatch(condenseHand())
         },
-        shuffleClick: (discard, deck) => () => dispatch(combineDecks(discard, deck))
+        shuffleClick: (discard, deck) => () => dispatch(combineStacks(discard, deck))
     }
 }
 

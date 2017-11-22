@@ -1,4 +1,4 @@
-import stack from './stack'
+import { stack, shuffleStack } from './stack'
 
 const condenseHand = (state = { byId: {}, allIds: []}, action, hand) => {
     let stacks = hand.stacks.map((stackId) => state.byId[stackId])
@@ -19,6 +19,17 @@ const condenseHand = (state = { byId: {}, allIds: []}, action, hand) => {
     return result
 }
 
+const shuffleStacks = (state = { byId: {}, allIds: []}, action, cards, randoms) => {
+    let tempById = {}
+    state.allIds.forEach((stackId) => {
+        tempById[stackId] = shuffleStack(state.byId[stackId], action, cards, randoms)
+    })
+    return {
+        ...state,
+        byId: tempById
+    }
+}
+
 const stacks = (state = { byId: {}, allIds: []}, action) => {
     let tempById = {}
     state.allIds.forEach((stackId) => {
@@ -31,4 +42,4 @@ const stacks = (state = { byId: {}, allIds: []}, action) => {
 }
 
 export default stacks
-export { stacks, condenseHand }
+export { stacks, condenseHand, shuffleStacks }

@@ -28,31 +28,32 @@ const combineDenormalizedObjects = (
 }
 
 const preloadDecks = (state) => {
-    const deckId = generateKey('DECK')
-    const discardId = generateKey('DECK')
+    const deckId = generateKey('STACK')
+    const discardId = generateKey('STACK')
     const cards = listToDenormalizedObject(
         ['X', 'Y', 'X', 'Y', 'X', 'X', 'X', 'Y', 'X', 'X'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
         'CARD'
     )
+    let decks = {
+        byId: {
+            [deckId]: {
+                id: deckId,
+                cards: cards.allIds,
+            },
+            [discardId]: {
+                id: discardId,
+                cards: []
+            }
+        },
+        allIds: [deckId, discardId]
+    } 
     return {
         ...state,
         cards: combineDenormalizedObjects(state.cards, cards),
         mainDeckId: deckId,
         discardDeckId: discardId,
-        decks: {
-            byId: {
-                [deckId]: {
-                    id: deckId,
-                    cards: cards.allIds,
-                },
-                [discardId]: {
-                    id: discardId,
-                    cards: []
-                }
-            },
-            allIds: [deckId, discardId]
-        }
+        stacks: combineDenormalizedObjects(state.stacks, decks)
     }    
 }
 

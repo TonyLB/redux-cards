@@ -14,9 +14,9 @@ export const moveCard = (cardId, source, destination) => {
     }
 }
 
-export const combineDecks = (source, destination) => {
+export const combineStacks = (source, destination) => {
     return {
-        type: 'COMBINE_DECKS',
+        type: 'COMBINE_STACKS',
         source,
         destination
     }
