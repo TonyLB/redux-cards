@@ -52,8 +52,11 @@ const preloadDecks = (state) => {
     return {
         ...state,
         cards: combineDenormalizedObjects(state.cards, cards),
-        mainDeckId: deckId,
-        discardDeckId: discardId,
+        hand: { 
+            ...state.hand,
+            drawId: deckId,
+            discardId: discardId,    
+        },
         stacks: combineDenormalizedObjects(state.stacks, decks)
     }    
 }
@@ -104,8 +107,8 @@ const preloadState = () => {
     let state = {}
     let loadFuncs = [
         preloadRandoms,
-        preloadDecks,
-        preloadHand
+        preloadHand,
+        preloadDecks
     ]
     loadFuncs.forEach((loadFunc) => { state = loadFunc(state) })
     return state

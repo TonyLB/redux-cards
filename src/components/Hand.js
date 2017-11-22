@@ -18,7 +18,7 @@ class Hand extends React.Component {
                         <Stack {...stack} discardClick={props.discardClick(stack.id)}>
                             {(stack.firstOpenStack ? (
                                 <Countdown timerId={props.timerId}>
-                                    <Arrow onClick={ props.drawClick(stack.id) } />
+                                    <Arrow onClick={ props.drawClick } />
                                 </Countdown>
                             ): null)}
                         </Stack>

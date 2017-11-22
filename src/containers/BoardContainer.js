@@ -4,8 +4,8 @@ import Board from '../components/Board'
 
 const mapStateToProps = state => {
     return {
-        deck: state.stacks.byId[state.mainDeckId],
-        discard: state.stacks.byId[state.discardDeckId],
+        deck: state.stacks.byId[state.hand.drawId],
+        discard: state.stacks.byId[state.hand.discardId],
         timerId: state.hand.timerId
     }
 }

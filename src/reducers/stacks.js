@@ -14,7 +14,7 @@ const condenseHand = (state = { byId: {}, allIds: []}, action, hand) => {
                 }
             }
         }
-        result[destStack.id] = destStack
+        result.byId[destStack.id] = destStack
     }
     return result
 }

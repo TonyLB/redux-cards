@@ -15,10 +15,10 @@ const Board = ({ deck, discard, hand, cardDrawClick, discardClick, shuffleClick 
                 Shuffle
             </button></td>
         </tr></tbody></table>
-        <HandContainer 
-            drawClick={ cardDrawClick } 
+        <HandContainer />
+{/*            drawClick={ cardDrawClick } 
             discardClick={ discardClick } 
-        />
+        />*/}
     </div>
 )}
 
