@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { moveCard } from '../actions'
+import { moveCard, addCard } from '../actions'
 import Track from '../components/Track'
 
 const mapStateToProps = state => {
@@ -17,12 +17,19 @@ const mapStateToProps = state => {
         deck: {
             id: track.deck,
             ...(state.stacks.byId[track.deck])
-        }
+        },
+        handDiscard: state.hand.discardId
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        onClick: (track, trackDiscard, handDiscard) => (card, payload=[]) => () => {
+            dispatch(moveCard(card, track, trackDiscard))
+            payload.forEach(newCard => {
+                    dispatch(addCard(newCard, handDiscard))
+            })
+        },
         cardDrawClick: (card, deck, track, discard) => () => {
             if (discard) { 
                 dispatch(moveCard(discard, track, deck))
@@ -48,6 +55,10 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
             propsFromState.id,
             discard
         ) : () => {},
+        onClick: propsFromDispatch.onClick(
+            propsFromState.id, 
+            propsFromState.deck.id, 
+            propsFromState.handDiscard),
 
         // Replace denormalized deck ID with normal form now that we're done
         // with the extracted data.

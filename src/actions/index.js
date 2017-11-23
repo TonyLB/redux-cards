@@ -1,3 +1,6 @@
+import { generateKey } from '../reducers/keys'
+import { StateTypes } from '../state/index'
+
 export const removeCardFromHand = id => {
     return {
         type: 'REMOVE_CARD',
@@ -11,6 +14,15 @@ export const moveCard = (cardId, source, destination) => {
         cardId,
         source,
         destination
+    }
+}
+
+export const addCard = (cardTemplate, destination) => {
+    return {
+        type: 'ADD_CARD',
+        cardTemplate,
+        destination,
+        cardId: generateKey(StateTypes.Card)
     }
 }
 

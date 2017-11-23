@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Card from './Card'
+import CardTemplates from '../state/CardTemplates'
 import SideArrow from './SVG/SideArrow'
 import DeckContainer from '../containers/DeckContainer'
 
@@ -24,7 +25,15 @@ class Track extends React.Component {
             {
                 props.cards.map(card => (
                     <td key={card.id}>
-                        <Card className='card-plain' {...card} />
+                        <Card 
+                            className='card-plain' 
+                            {...card} 
+                            onClick={(card.cardTemplate && CardTemplates[card.cardTemplate].payload) ? 
+                                props.onClick(
+                                    card.id,
+                                    CardTemplates[card.cardTemplate].payload
+                                ) : () => {} }
+                        />
                     </td>
                 ))
             }
