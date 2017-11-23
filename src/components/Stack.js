@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Card from './Card'
+import Header from './SVG/Header'
 
 const Stack = ( props ) => (
     props.cards.length ? (
@@ -12,13 +13,9 @@ const Stack = ( props ) => (
             ))}
         <tr key={"DISCARD-"+props.id}><td>
             <div className='positioning-discard'>
-                <svg x='8px' y='0px' width='60px' height='20px' viewBox='0 0 60 20' onClick={props.discardClick(props.cards[0].id)}>
-                    <line x1="0" y1="8" x2="20" y2="8" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="0" y1="12" x2="20" y2="12" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="60" y1="8" x2="40" y2="8" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="60" y1="12" x2="40" y2="12" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <circle cx="30" cy="10" r="6" opacity="0.5" fill="#898989" stroke="#000000" />
-                </svg>
+                <Header width='76' height='20' onClick={props.discardClick(props.cards[0].id)}>
+                    <circle cx="38" cy="10" r="6" />
+                </Header>
             </div>
         </td></tr>
         </tbody></table>                
@@ -31,12 +28,7 @@ const Stack = ( props ) => (
         </td></tr>
         <tr key={"DISCARD-"+props.id}><td>
             <div className='positioning-discard'>
-                <svg x='8px' y='0px' width='60px' height='20px' viewBox='0 0 60 20'>
-                    <line x1="0" y1="8" x2="20" y2="8" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="0" y1="12" x2="20" y2="12" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="60" y1="8" x2="40" y2="8" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                    <line x1="60" y1="12" x2="40" y2="12" opacity="0.5" stroke="#000000" strokeWidth="2" />
-                </svg>
+                <Header className='svg-greys' width='76' height='20' />
             </div>
         </td></tr></tbody></table>
     )

@@ -71,8 +71,20 @@ body {
     height: 30px;
   }
 
+  [class*="svg-"] {
+    stroke-miterlimit: 10;
+  }
 
-  
+  .svg-blues {
+    fill: rgb(198, 226, 231);
+    stroke: #89ddff;
+  }
+
+  .svg-greys {
+    fill: rgb(228, 228, 228);
+    stroke: #c2c2c2;
+  }
+
   .toggletable {
       padding-left: 30px;
       -webkit-user-select: none;  
