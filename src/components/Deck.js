@@ -1,14 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Card from './Card'
+import Header from './SVG/Header'
 
-const Deck = ( props ) => {
+const Deck = ( {cards, headerTop=false, children, top, left} ) => {
+    let header = (
+        <Header className={ cards.length ? 'svg-blues': 'svg-greys'} width='76'>
+            <text x="38" y="15">{cards.length}</text>
+        </Header>
+    )
     return (
-    <table><tbody><tr>
-        <td>
-            <Card className={props.cards.length ? 'card-plain' : 'card-empty'} value={props.cards.length.toString()} />
-        </td>
-    </tr></tbody></table>
+        <div style={top?{position:"absolute", top:top, left:left}:{position:"relative", height:160}}>
+            <div style={{position:"absolute", top:"0px", left:"0px"}}>
+                { headerTop ? header : null}
+            </div>
+            <div style={{position:"absolute", top:headerTop?"20px":"0px", left:"0px"}}>
+                <Card className={cards.length ? 'card-plain' : 'card-empty'} children={children} />
+            </div>
+            <div style={{position:"absolute", top:"135px", left:"0px"}}>
+                { !headerTop ? header : null}
+            </div>
+        </div>
 )}
 
 Deck.PropTypes = {

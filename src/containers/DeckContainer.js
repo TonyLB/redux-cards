@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 
 const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => ({
-    ...propsFromState
+    ...propsFromState,
+    ...ownProps
 })
 
 const DeckContainer = connect(

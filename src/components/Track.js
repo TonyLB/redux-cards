@@ -14,7 +14,7 @@ class Track extends React.Component {
             empties = Array(props.trackSize - props.cards.length).fill(1).map((val, index) => ({ id: `TRACK-EMPTY-${index}` }))
         }
         return (
-            <table className='toggletable'><tbody><tr>
+            <table className='positioning-table'><tbody><tr>
             {
                 empties.map(card => (
                     <td key={card.id}>

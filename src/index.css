@@ -7,17 +7,6 @@ body {
     padding-left: 30px;
   }
 
-  .toggle {
-      background: rgb(198, 226, 231);
-      border: 1px solid #89ddff;
-      border-radius: 10px 20px;
-      font-size: 18px;
-      width: 240px;
-      padding: 4px;
-      padding-left: 10px;
-      margin-top: 4px;
-  }
-
   [class*="card-"]{
     border-radius: 10px 20px;
     font-size: 18px;
@@ -29,7 +18,7 @@ body {
     position: relative;
   }
 
-  [class*="card-"] p,svg {
+  [class*="card-"] p, [class*="card-"] svg {
     margin: 0;
     position: absolute;
     top: 50%;
@@ -66,13 +55,34 @@ body {
     width: 30px;
     height: 120px;
   }
+
   .positioning-discard {
     width: 76px;
     height: 30px;
   }
 
+  .positioning-layout {
+/*    background: rgb(250, 235, 186)*/
+  }
+
+  .positioning-table {
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+    cursor: default;
+  }
+
+  .positioning-table td {
+    text-align: right;
+    vertical-align: top;
+  }
   [class*="svg-"] {
     stroke-miterlimit: 10;
+  }
+
+  [class*="svg-"] text {
+    text-anchor: middle;
   }
 
   .svg-blues {
@@ -80,87 +90,16 @@ body {
     stroke: #89ddff;
   }
 
+  .svg-blues text {
+    fill: #89ddff;    
+  }
+
   .svg-greys {
     fill: rgb(228, 228, 228);
     stroke: #c2c2c2;
   }
 
-  .toggletable {
-      padding-left: 30px;
-      -webkit-user-select: none;  
-      -moz-user-select: none;    
-      -ms-user-select: none;      
-      user-select: none;
-      cursor: default;
+  .svg-greys text {
+    fill: #c2c2c2;    
   }
 
-  .toggletable td {
-    text-align: right;
-  }
-
-  .status {
-    margin-bottom: 10px;
-  }
-  
-  .minesquare {
-    background: rgb(255, 0, 0);
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
-  }
-  
-  .square {
-    background: #fff;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
-  }
-
-  .hiddensquare {
-    background: #aaa;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
-  }
-  
-  .square:focus {
-    outline: none;
-  }
-  
-  .kbd-navigation .square:focus {
-    background: #ddd;
-  }
-  
-  .game {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .game-info {
-    margin-left: 20px;
-  }
-  

@@ -3,34 +3,31 @@ import PropTypes from 'prop-types'
 import Card from './Card'
 import Header from './SVG/Header'
 
-const Stack = ( props ) => (
-    props.cards.length ? (
-        <table><tbody>
-            {props.cards.map((card) => (
-                <tr key={card.id}><td>
+const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) => (
+    cards.length ? (
+        <div style={{top: top, left: left, position:"absolute"}} key={id}>
+            { cards.map((card) => (
+                <div key={card.id}>
                     <Card className='card-plain' {...(card)} />
-                </td></tr>
+                </div>
             ))}
-        <tr key={"DISCARD-"+props.id}><td>
-            <div className='positioning-discard'>
-                <Header width='76' height='20' onClick={props.discardClick(props.cards[0].id)}>
+            <div className='positioning-discard' style={{top:150, left:0, position:"absolute"}}>
+                <Header width='76' height='20' onClick={discardClick(cards[0].id)}>
                     <circle cx="38" cy="10" r="6" />
                 </Header>
             </div>
-        </td></tr>
-        </tbody></table>                
+        </div>
     ) :
     (
-        <table><tbody><tr><td>
-            <Card className='card-empty' value = '' id={props.id} >
-                {props.children}
+        <div style={{top: top, left: left, position:"absolute"}} key={id}>
+            <Card className='card-empty' value = '' id={id} >
+                {children}
             </Card>
-        </td></tr>
-        <tr key={"DISCARD-"+props.id}><td>
-            <div className='positioning-discard'>
+
+            <div className='positioning-discard' style={{top:150, left:0, position:"absolute"}}>
                 <Header className='svg-greys' width='76' height='20' />
             </div>
-        </td></tr></tbody></table>
+        </div>
     )
 )
 
@@ -43,6 +40,8 @@ Stack.PropTypes = {
         }).isRequired
     ).isRequired,
     discardClick: PropTypes.func,
+    top: PropTypes.number,
+    left: PropTypes.number
 }
 
 export default Stack

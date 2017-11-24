@@ -1,24 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Deck from './Deck'
 import HandContainer from '../containers/HandContainer'
 import TrackContainer from '../containers/TrackContainer'
 
-const Board = ({ deck, discard, hand, trackId, shuffleClick }) => {
+const Board = ({ hand, trackId }) => {
     return (
     <div>
-        <table><tbody><tr><td>
+        <table className="positioning-table"><tbody><tr><td>
             <TrackContainer trackId={trackId} />
-        </td></tr></tbody></table><table><tbody><tr>
-            <td><Deck {...deck} /></td>
-            <td><Deck {...discard} /></td>
-        </tr><tr>
-            <td></td>
-            <td><button onClick={ shuffleClick }>
-                Shuffle
-            </button></td>
-        </tr></tbody></table>
-        <HandContainer />
+        </td></tr><tr><td>
+            <HandContainer />
+        </td></tr></tbody></table>
     </div>
 )}
 
