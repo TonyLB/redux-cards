@@ -4,8 +4,17 @@ import PropTypes from 'prop-types'
             id="Layer_1" 
 xmlns="http://www.w3.org/2000/svg" */
 
-const SideArrow = ({ width=30, height=120, onClick, orientation='LEFT'}) => (
-    <div className="positioning-sidearrow" width={width} height={height}>
+const SideArrow = ({ width=30, height=120, top, left=0, onClick, orientation='LEFT'}) => (
+    <div 
+        className="positioning-sidearrow" 
+        style={{
+            width:width, 
+            height:height, 
+            left:left, 
+            top:top||0,
+            position: (top === undefined) ? 'relative' : 'absolute'
+            }}
+    >
         <svg 
             className="svg-blues"
             onClick={onClick}
@@ -15,7 +24,7 @@ const SideArrow = ({ width=30, height=120, onClick, orientation='LEFT'}) => (
             enableBackground={`new 0 0 ${width} ${height}`}
         >
             <polygon 
-                points={orientation === 'LEFT' ?
+                points={ orientation === 'LEFT' ?
                     `1,${height/2} ${width-1},1 ${width-1},${height-1}` :
                     `${width-1},${height/2} 1,1 1,${height-1}`
                 }
@@ -27,7 +36,10 @@ const SideArrow = ({ width=30, height=120, onClick, orientation='LEFT'}) => (
 SideArrow.PropTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
-    onClick: PropTypes.func
+    top: PropTypes.number,
+    left: PropTypes.number,
+    onClick: PropTypes.func,
+    orientation: PropTypes.string
 }
 
 export default SideArrow

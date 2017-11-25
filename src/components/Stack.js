@@ -7,9 +7,12 @@ const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) 
     cards.length ? (
         <div>
             { cards.map((card,index) => (
-                <div style={{top: top+20*index, left: left+(index?10:0), position:"absolute"}} key={id}>
-                    <Card {...(card)} />
-                </div>
+                <Card 
+                    top={top+20*index} {...(card)}
+                    left={left+(index?10:0)}
+                    key={card.id}
+                    {...card}
+                />
             ))}
             <div style={{top:top+250, left:left, position:"absolute"}}>
                 <Header width='76' height='20' onClick={discardClick(cards[cards.length-1].id)}>
@@ -20,11 +23,15 @@ const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) 
     ) :
     (
         <div>
-            <div style={{top: top, left: left, position:"absolute"}} key={id}>
-                <Card className='card-empty' value = '' id={id} >
-                    {children}
-                </Card>
-            </div>
+            <Card 
+                className='card-empty' 
+                top={top}
+                left={left}
+                value = '' 
+                id={id} 
+            >
+                {children}
+            </Card>
 
             <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}}>
                 <Header className='svg-greys' width='76' height='20' />

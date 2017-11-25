@@ -10,13 +10,16 @@ const Deck = ( {cards, headerTop=false, children, top=0, left=0} ) => {
         </Header>
     )
     return (
-        <div style={top? { }:{ position:"relative", height:160 }}>
+        <div style={ top !== undefined? { } : { position:"relative", height:160 }}>
             <div style={{position:"absolute", top:top+"px", left:left+"px"}}>
                 { headerTop ? header : null}
             </div>
-            <div style={{position:"absolute", top:(top+(headerTop?20:0))+"px", left:left+"px"}}>
-                <Card className={cards.length ? 'card-plain' : 'card-empty'} children={children} />
-            </div>
+            <Card 
+                top={(top+(headerTop?20:0))}
+                left={left}
+                className={cards.length ? 'card-plain' : 'card-empty'} 
+                children={children} 
+            />
             <div style={{position:"absolute", top:(top+135)+"px", left:left+"px"}}>
                 { !headerTop ? header : null}
             </div>

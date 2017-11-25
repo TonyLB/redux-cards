@@ -13,35 +13,33 @@ class Track extends React.Component {
         if (props.cards.length < props.trackSize) {
             empties = Array(props.trackSize - props.cards.length).fill(1).map((val, index) => ({ id: `TRACK-EMPTY-${index}` }))
         }
+        const width = props.width || 600
+        const height = props.height || 200
         return (
-            <table className='positioning-table'><tbody><tr>
+            <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
             {
-                empties.map(card => (
-                    <td key={card.id}>
-                        <Card className='card-empty' {...card} />
-                    </td>
+                empties.map((card, index) => (
+                    <Card className='card-empty' top={0} left={index*90} {...card} key={card.id} />
                 ))
             }
             {
-                props.cards.map(card => (
-                    <td key={card.id}>
-                        <Card 
-                            {...card} 
-                            onClick={(card.cardTemplate && CardTemplates[card.cardTemplate].payload) ? 
-                                props.onClick(
-                                    card.id,
-                                    CardTemplates[card.cardTemplate].payload
-                                ) : () => {} }
-                        />
-                    </td>
+                props.cards.map((card, index) => (
+                    <Card 
+                        {...card}
+                        top={0}
+                        left={90*(index+empties.length)}
+                        onClick={(card.cardTemplate && CardTemplates[card.cardTemplate].payload) ? 
+                            props.onClick(
+                                card.id,
+                                CardTemplates[card.cardTemplate].payload
+                            ) : () => {} }
+                         key={card.id}
+                    />
                 ))
             }
-            <td>
-                <SideArrow onClick={ props.cardDrawClick } />
-            </td><td>
-                <DeckContainer deck={ props.deck } />
-            </td>
-            </tr></tbody></table>
+                <SideArrow top={8} left={width-140} onClick={ props.cardDrawClick } />
+                <DeckContainer deck={ props.deck } top={0} left={width-100} />
+            </div>
         )
     }
 }
