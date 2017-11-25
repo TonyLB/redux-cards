@@ -12,7 +12,7 @@ const Card = ({ className, top=0, left=0, zIndex=0, value, cardTemplate, onClick
             </div>
         ) : 
         (
-            <div style={{top:top, left:left, position:"absolute"}}
+            <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
                 className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
                 onClick={onClick}
             >

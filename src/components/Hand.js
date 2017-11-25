@@ -18,7 +18,7 @@ class Hand extends React.Component {
 
             <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
                 <DeckContainer top={0} left={width-100} deck={props.drawId} />
-                <DeckContainer top={190} left={width-100} headerTop deck={props.discardId} />
+                <DeckContainer top={190} left={width-100} discard headerTop deck={props.discardId} />
                 <button style={{position:"absolute", top:'165px', left:(width-90)+"px"}} onClick={ props.shuffleClick }>
                     Shuffle
                 </button>
