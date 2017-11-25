@@ -37,8 +37,8 @@ class Track extends React.Component {
                     />
                 ))
             }
-                <SideArrow top={8} left={width-140} onClick={ props.cardDrawClick } />
-                <DeckContainer deck={ props.deck } top={0} left={width-100} />
+                <SideArrow top={8} left={width-140} className='svg-pinks' onClick={ props.cardDrawClick } />
+                <DeckContainer deck={ props.deck } top={0} left={width-100} className='svg-pinks' />
             </div>
         )
     }

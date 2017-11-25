@@ -108,3 +108,13 @@ body {
     fill: #c2c2c2;    
   }
 
+  .svg-pinks {
+    fill: rgb(255, 204, 242);
+    stroke: #ff89ff;
+  }
+
+  .svg-pinks text {
+    fill: #ff89ff;
+  }
+
+

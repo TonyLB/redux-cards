@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
             id="Layer_1" 
 xmlns="http://www.w3.org/2000/svg" */
 
-const SideArrow = ({ width=30, height=120, top, left=0, onClick, orientation='LEFT'}) => (
+const SideArrow = ({ width=30, height=120, top, left=0, className='svg-blues', onClick, orientation='LEFT'}) => (
     <div 
         className="positioning-sidearrow" 
         style={{
@@ -16,7 +16,7 @@ const SideArrow = ({ width=30, height=120, top, left=0, onClick, orientation='LE
             }}
     >
         <svg 
-            className="svg-blues"
+            className={className}
             onClick={onClick}
             width={width}
             height={height} 
@@ -38,6 +38,7 @@ SideArrow.PropTypes = {
     height: PropTypes.number,
     top: PropTypes.number,
     left: PropTypes.number,
+    className: PropTypes.string,
     onClick: PropTypes.func,
     orientation: PropTypes.string
 }
