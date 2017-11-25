@@ -8,11 +8,11 @@ const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) 
         <div>
             { cards.map((card,index) => (
                 <div style={{top: top+20*index, left: left+(index?10:0), position:"absolute"}} key={id}>
-                    <Card className='card-plain' {...(card)} />
+                    <Card {...(card)} />
                 </div>
             ))}
             <div style={{top:top+250, left:left, position:"absolute"}}>
-                <Header width='76' height='20' onClick={discardClick(cards[0].id)}>
+                <Header width='76' height='20' onClick={discardClick(cards[cards.length-1].id)}>
                     <circle cx="38" cy="10" r="6" />
                 </Header>
             </div>

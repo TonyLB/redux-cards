@@ -26,7 +26,6 @@ class Track extends React.Component {
                 props.cards.map(card => (
                     <td key={card.id}>
                         <Card 
-                            className='card-plain' 
                             {...card} 
                             onClick={(card.cardTemplate && CardTemplates[card.cardTemplate].payload) ? 
                                 props.onClick(

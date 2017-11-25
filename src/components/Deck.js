@@ -10,7 +10,7 @@ const Deck = ( {cards, headerTop=false, children, top=0, left=0} ) => {
         </Header>
     )
     return (
-        <div style={top? { height:160 }:{ position:"relative", height:160 }}>
+        <div style={top? { }:{ position:"relative", height:160 }}>
             <div style={{position:"absolute", top:top+"px", left:left+"px"}}>
                 { headerTop ? header : null}
             </div>

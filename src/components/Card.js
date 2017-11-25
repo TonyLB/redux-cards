@@ -4,12 +4,18 @@ import CardTemplates from '../state/CardTemplates'
 
 const Card = ({ className, value, cardTemplate, onClick, children }) => (
     children ? (
-            <div className={className} onClick={onClick}>
+            <div 
+                className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
+                onClick={onClick}
+            >
                 {children}
             </div>
         ) : 
         (
-            <div className={className} onClick={onClick}>
+            <div 
+                className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
+                onClick={onClick}
+            >
                 <p>{value ? value : cardTemplate ? CardTemplates[cardTemplate].value : ''}</p>
             </div>
         ) 
