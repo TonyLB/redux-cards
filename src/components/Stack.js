@@ -5,13 +5,13 @@ import Header from './SVG/Header'
 
 const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) => (
     cards.length ? (
-        <div style={{top: top, left: left, position:"absolute"}} key={id}>
-            { cards.map((card) => (
-                <div key={card.id}>
+        <div>
+            { cards.map((card,index) => (
+                <div style={{top: top+20*index, left: left+(index?10:0), position:"absolute"}} key={id}>
                     <Card className='card-plain' {...(card)} />
                 </div>
             ))}
-            <div className='positioning-discard' style={{top:150, left:0, position:"absolute"}}>
+            <div style={{top:top+250, left:left, position:"absolute"}}>
                 <Header width='76' height='20' onClick={discardClick(cards[0].id)}>
                     <circle cx="38" cy="10" r="6" />
                 </Header>
@@ -19,12 +19,14 @@ const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) 
         </div>
     ) :
     (
-        <div style={{top: top, left: left, position:"absolute"}} key={id}>
-            <Card className='card-empty' value = '' id={id} >
-                {children}
-            </Card>
+        <div>
+            <div style={{top: top, left: left, position:"absolute"}} key={id}>
+                <Card className='card-empty' value = '' id={id} >
+                    {children}
+                </Card>
+            </div>
 
-            <div className='positioning-discard' style={{top:150, left:0, position:"absolute"}}>
+            <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}}>
                 <Header className='svg-greys' width='76' height='20' />
             </div>
         </div>

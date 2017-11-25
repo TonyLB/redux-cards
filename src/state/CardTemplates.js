@@ -1,9 +1,10 @@
-const TemplateTypes = {
+export const TemplateTypes = {
     Payload: 'PAYLOAD',
-    Resource: 'RESOURCE'
+    Resource: 'RESOURCE',
+    Aggregator: 'AGGREGATOR'
 }
 
-const CardTemplates = {
+export const CardTemplates = {
     Types: TemplateTypes,
     ACard: {
         id: 'ACard',
@@ -32,7 +33,11 @@ const CardTemplates = {
     ZCard: {
         id: 'ZCard',
         value: 'Z',
-        type: TemplateTypes.Resource
+        type: TemplateTypes.Aggregator,
+        aggregates: [{
+            cardTemplate: 'XCard',
+            maxStack: 5
+        }]
     }
 }
 

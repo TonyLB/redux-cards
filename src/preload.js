@@ -1,72 +1,35 @@
 import { generateKey } from './reducers/keys'
-import { StateTypes } from './state/index'
+import { StateTypes, listToDenormalized, combineDenormalizedObjects } from './state'
 import CardTemplate from './state/CardTemplates'
-
-const emptyDenormalizedObject = { byId: {}, allIds: [] }
-
-const listToDenormalizedObject = (list, prefix) => {
-    const values = list.map(value => ({
-            ...value,
-            id: generateKey(prefix)
-        }))
-    return {
-        byId: values.reduce((obj, value) => ({
-                ...obj,
-                [value.id]: value
-            }), {}),
-        allIds: values.map(value => (value.id))
-    }
-}
-
-const combineDenormalizedObjects = (
-        object1 = emptyDenormalizedObject, 
-        object2 = emptyDenormalizedObject
-    ) => {
-    let tempObject = { ...object1 }
-    object2.allIds.forEach((tempId) => {
-        tempObject.byId[tempId] = object2.byId[tempId]
-    })
-    tempObject.allIds = [ ...tempObject.allIds, ...object2.allIds ]
-    return tempObject
-}
 
 const preloadNulls = (state) => {
     let nullProp = 'NULL-STACK'
     return {
         ...state,
-        stacks: combineDenormalizedObjects(state.stacks, {
-            byId: {
-                [nullProp]: {
-                    id: nullProp,
-                    cards: []
-                }
-            },
-            allIds: [nullProp]
-        })
+        stacks: combineDenormalizedObjects(state.stacks, 
+            listToDenormalized([{
+                id: nullProp,
+                cards: []
+            }], StateTypes.Stack))
     }
 }
 
 const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
-    const cards = listToDenormalizedObject(
+    const cards = listToDenormalized(
         ['X', 'Y', 'X', 'Y', 'X', 'X', 'X', 'Y', 'X', 'X'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
         StateTypes.Card
     )
-    let decks = {
-        byId: {
-            [deckId]: {
-                id: deckId,
-                cards: cards.allIds,
-            },
-            [discardId]: {
-                id: discardId,
-                cards: []
-            }
-        },
-        allIds: [deckId, discardId]
-    } 
+    let decks = listToDenormalized([{
+            id: deckId,
+            cards: cards.allIds,
+        }, {
+            id: discardId,
+            cards: []
+        }], StateTypes.Stack)
+
     return {
         ...state,
         cards: combineDenormalizedObjects(state.cards, cards),
@@ -96,7 +59,7 @@ const preloadRandoms = (state) => {
 
 const preloadHand = (state) => {
     let timerId = generateKey(StateTypes.Timer)
-    let stacks = listToDenormalizedObject(
+    let stacks = listToDenormalized(
         [1, 2, 3, 4, 5].map((stack) => ({ cards: [] })),
         StateTypes.Stack
     )
@@ -123,7 +86,7 @@ const preloadHand = (state) => {
 
 const preloadTracks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
-    const cards = listToDenormalizedObject(
+    const cards = listToDenormalized(
         ['A', 'B', 'C', 'C', 'B', 'A'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
         StateTypes.Card

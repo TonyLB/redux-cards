@@ -17,13 +17,13 @@ class Hand extends React.Component {
             <div>
 
             <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
-                <DeckContainer top='0px' left={(width-100)+"px"} deck={props.drawId} />
-                <DeckContainer top='190px' left={(width-100)+"px"} headerTop deck={props.discardId} />
+                <DeckContainer top={0} left={width-100} deck={props.drawId} />
+                <DeckContainer top={190} left={width-100} headerTop deck={props.discardId} />
                 <button style={{position:"absolute", top:'165px', left:(width-90)+"px"}} onClick={ props.shuffleClick }>
                     Shuffle
                 </button>
                 {stacks.map((stack, index) => (
-                    <Stack {...stack} key={stack.id} top="0px" left={(90*index)+"px"} discardClick={props.discardClick(stack.id)}>
+                    <Stack {...stack} key={stack.id} top={0} left={95*index} discardClick={props.discardClick(stack.id)}>
                         {(stack.firstOpenStack ? (
                             <Countdown timerId={props.timerId}>
                                 <Arrow onClick={ props.drawClick } />
