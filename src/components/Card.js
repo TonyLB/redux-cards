@@ -14,22 +14,23 @@ export const Card = ({
         showBack=false, 
         cardId 
     }) => (
-    (children || showBack) ? (
-        <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
-            className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
-            onClick={onClick}
-        >
+    <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
+        className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
+        onClick={onClick}
+    >
+        <div className='positioning-center'>
             {children}
         </div>
-    ) : 
-    (
-        <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
-            className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
-            onClick={onClick}
-        >
-            <p>{value ? value : cardTemplate ? CardTemplates[cardTemplate].value : ''}</p>
+        <div className='positioning-header'>
+            { !showBack && cardTemplate ? CardTemplates[cardTemplate].header : ''}
         </div>
-    ) 
+        <div className='positioning-footer'>
+            { !showBack && cardTemplate ? CardTemplates[cardTemplate].footer : ''}
+        </div>
+        <div className='positioning-center'>
+            { !showBack && cardTemplate ? CardTemplates[cardTemplate].value : ''}
+        </div> 
+    </div>
 )
 
 Card.PropTypes = {

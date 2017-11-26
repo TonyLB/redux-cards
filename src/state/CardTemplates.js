@@ -1,3 +1,6 @@
+import React from 'react'
+import Glyph from '../components/SVG/Glyph'
+
 export const TemplateTypes = {
     Payload: 'PAYLOAD',
     Resource: 'RESOURCE',
@@ -25,18 +28,23 @@ export const CardTemplates = {
     },
     XCard: {
         id: 'XCard',
-        value: 'X',
+        header: 'Asteroid',
+        footer: (<div>1<Glyph size={10} shape='ASTEROID' /></div>),
+        value: (<Glyph size={50} shape='ASTEROID' />),
         style: 'plain',
         type: TemplateTypes.Resource
     },
     YCard: {
         id: 'YCard',
-        value: 'Y',
+        header: 'Comet',
+        footer: (<div>1<Glyph size={10} shape='COMET' /></div>),
+        value: (<Glyph size={50} shape='COMET' />),
         style: 'plain',
         type: TemplateTypes.Resource
     },
     ZCard: {
         id: 'ZCard',
+        footer: 'Test',
         value: 'Z',
         type: TemplateTypes.Aggregator,
         style: 'control',
