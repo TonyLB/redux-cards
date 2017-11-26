@@ -57,6 +57,8 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
     let drawStack = drawStacks.length ? drawStacks[0] : null
     let drawCards = drawStack ? drawStack.cards : null
     let drawCard = drawCards.length ? drawCards[0].id : null
+    let discardStacks = propsFromState.stacks.filter((stack) => ( stack.id === propsFromState.discardId))
+    let discardStack = discardStacks.length ? discardStacks[0] : null
 
     return {
         ...propsFromState,
@@ -72,8 +74,11 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         discardClick: propsFromDispatch.discardClick(propsFromState.discardId),
         shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discardId, propsFromState.drawId),
 
-        // Filter discard and draw deck denormalization out of state, now that 
-        // we've used the data as payload for dispatch functions
+        drawDeck: drawStack,
+        discardDeck: discardStack,
+
+        // Filter discard and draw deck denormalization out of stacks, now that 
+        // we've assigned them to named properties
 
         stacks: propsFromState.stacks.filter((stack) => (
             stack.id !== propsFromState.drawId &&
