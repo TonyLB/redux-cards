@@ -35,10 +35,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        cardDrawClick: (card, deck, stack, timerId) => () => {
+        cardDrawClick: (card, deck, discard, shuffle, stack, timerId) => () => {
             dispatch(moveCard(card, deck, stack))
             dispatch(condenseHand())
-            dispatch(startTimer(timerId))    
+            dispatch(startTimer(timerId))
+            if (shuffle) {
+                dispatch(combineStacks(discard, deck))
+            }
         },
         discardClick: (discard) => (stack) => (card) => () => {
             dispatch(moveCard(card, stack, discard)) 
@@ -68,6 +71,8 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         drawClick: (propsFromState.firstOpenStack && drawCard) ? propsFromDispatch.cardDrawClick(
             drawCard, 
             propsFromState.drawId,
+            propsFromState.discardId,
+            drawCards.length<=1,
             propsFromState.firstOpenStack,
             propsFromState.timerId
         ) : () => {},

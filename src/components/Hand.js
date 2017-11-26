@@ -38,9 +38,6 @@ class Hand extends React.Component {
             .map(val => ({key: val.cardId, data: val, style: {top:spring(val.top), left:spring(val.left)} }))
         return (
             <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
-                <button style={{position:"absolute", top:'165px', left:(width-90)+"px"}} onClick={ props.shuffleClick }>
-                    Shuffle
-                </button>
                 {drawDeck.jsx}
                 {discardDeck.jsx}
                 {stackRender.jsx}
