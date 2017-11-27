@@ -11,21 +11,14 @@ import { CardTemplates, TemplateTypes } from "../state/CardTemplates"
 
 const passThru = (defaultVal) => (state=defaultVal, action) => (state)
 
-const condenseEmptyStacks = (stacks = []) => {
+const sortStacks = (stacks = [], cards = { byId: {}, allIds: []} ) => {
     let result = [ ...stacks ]
-    for (let a = 0; a < result.length; a++) {
-        let destStack = result[a]
-        if (destStack.cards.length === 0) {
-            for (let b = a+1; b < result.length; b++) {
-                let sourceStack = result[b]
-                if (sourceStack.cards.length) {
-                    destStack.cards = sourceStack.cards
-                    sourceStack.cards = []
-                    break;
-                }
-            }
-        }
-    }
+    let cardSets = result.map(stack => (stack.cards))
+    cardSets.sort((a, b) => (
+        (b.length ? TemplateTypes.Priority[CardTemplates[cards.byId[b[0]].cardTemplate].type]: 0) -
+        (a.length ? TemplateTypes.Priority[CardTemplates[cards.byId[a[0]].cardTemplate].type]: 0)
+    ))
+    result.forEach(stack => { stack.cards = cardSets.shift() })
     return result
 }
 
@@ -45,28 +38,37 @@ const listOfAggregatedCards = (stacks, cards, cardTemplate, maxStack) => (
         .slice(0,maxStack)
 )
 
-const condenseAggregateCards = (stacks = { byId: {}, allIds: []}, cards = { byId: {}, allIds: [] }) => {
-    let state = denormalizedToList(stacks)
-    for (let i = 0; i < state.length; i++) {
-        let currentStack = state[i]
+const condenseAggregateCards = (stacks = [], cards = { byId: {}, allIds: [] }) => {
+    for (let i = 0; i < stacks.length; i++) {
+        let currentStack = stacks[i]
         let firstCard = currentStack.cards.length ? cards.byId[currentStack.cards[0]] : null
         let aggregatorTypes = firstCard ? CardTemplates[firstCard.cardTemplate].aggregates : []
         if ( aggregatorTypes && aggregatorTypes.length ) {
-            let stacksToCheck = state.slice(i)
+            let stacksToCheck = stacks.slice(i)
             let cardsToMove = aggregatorTypes.reduce((state, aggType) => (state.concat(
                 listOfAggregatedCards(stacksToCheck, cards, aggType.cardTemplate, aggType.maxStack)
                 )), [])
             if (cardsToMove.length) {
-                state = aggregateStacks(state, cardsToMove, currentStack.id)                
+                stacks = aggregateStacks(stacks, cardsToMove, currentStack.id)
             }
         }
     }
-    return state
+    return stacks
 }
 
 const condenseHand = (state) => {
     let handStacks = listToDenormalized(state.hand.stacks.map((stackId) => state.stacks.byId[stackId]), StateTypes.Stack)
-    return listToDenormalized(condenseEmptyStacks(condenseAggregateCards(handStacks, state.cards)), StateTypes.Stack)
+    return listToDenormalized(
+            sortStacks(
+                condenseAggregateCards(
+                    sortStacks(
+                        denormalizedToList(handStacks), 
+                        state.cards
+                    ), 
+                    state.cards
+                ),
+                state.cards
+            ), StateTypes.Stack)
 }
 
 const fullAggregators = (state) => {

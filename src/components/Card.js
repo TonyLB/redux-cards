@@ -18,13 +18,13 @@ export const Card = ({
         className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
         onClick={onClick}
     >
-        <div className='positioning-center'>
+        <div className='positioning-center' style={{width:76}}>
             {children}
         </div>
-        <div className='positioning-header'>
+        <div className='positioning-header' style={{width:76}}>
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].header : ''}
         </div>
-        <div className='positioning-footer'>
+        <div className='positioning-footer' style={{width:76}}>
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].footer : ''}
         </div>
         <div className='positioning-center'>
