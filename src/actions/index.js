@@ -40,6 +40,12 @@ export const condenseHand = () => {
     }
 }
 
+export const checkHand = () => {
+    return {
+        type: 'CHECK_HAND'
+    }
+}
+
 export const startTimer = (timerId) => {
     return {
         type: 'START_TIMER',

@@ -11,7 +11,8 @@ export const CardTemplates = {
     Types: TemplateTypes,
     ACard: {
         id: 'ACard',
-        value: 'A',
+        header: 'Fuel EVA',
+        value: '',
         style: 'control',
         type: TemplateTypes.Payload,
         payload: ['ZCard']
@@ -42,15 +43,26 @@ export const CardTemplates = {
         style: 'plain',
         type: TemplateTypes.Resource
     },
+    Ore1: {
+        id: 'Ore1',
+        header: 'Ore',
+        footer: (<div>1<Glyph size={10} shape='ORE' /></div>),
+        value: (<Glyph size={50} shape='ORE' />),
+        style: 'plain',
+        type: TemplateTypes.Resource
+    },
     ZCard: {
         id: 'ZCard',
-        footer: 'Test',
-        value: 'Z',
+        header: 'EVA Mining',
+        footer: (<div>2<Glyph size={10} shape='ASTEROID' /></div>),
         type: TemplateTypes.Aggregator,
         style: 'control',
         aggregates: [{
             cardTemplate: 'XCard',
-            maxStack: 5
+            maxStack: 2
+        }],
+        purchases: [{
+            cardTemplate: 'Ore1',
         }]
     }
 }

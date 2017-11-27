@@ -6,7 +6,8 @@ import { stacks, shuffleStacks } from './stacks'
 import timers from './timers'
 import tracks from './tracks'
 import { combineDenormalizedObjects, listToDenormalized, denormalizedToList, StateTypes } from '../state'
-import CardTemplates from "../state/CardTemplates"
+import { moveCard, addCard } from '../actions'
+import { CardTemplates, TemplateTypes } from "../state/CardTemplates"
 
 const passThru = (defaultVal) => (state=defaultVal, action) => (state)
 
@@ -66,10 +67,50 @@ const condenseAggregateCards = (stacks = { byId: {}, allIds: []}, cards = { byId
 const condenseHand = (state) => {
     let handStacks = listToDenormalized(state.hand.stacks.map((stackId) => state.stacks.byId[stackId]), StateTypes.Stack)
     return listToDenormalized(condenseEmptyStacks(condenseAggregateCards(handStacks, state.cards)), StateTypes.Stack)
-} 
+}
+
+const fullAggregators = (state) => {
+    let stacks = state.hand.stacks.map((stackId) => state.stacks.byId[stackId])
+    return stacks
+        .filter(stack => (
+            (stack.cards.length > 0) &&
+            (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].type === TemplateTypes.Aggregator) &&
+            (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].aggregates
+                    .reduce((result, val) => ( result + val.maxStack), 0) < stack.cards.length)
+        ))
+        .map(stack => ( stack.id ))
+}
+
+const combinedReducer = combineReducers({
+    cards,
+    hand,
+    random,
+    stacks,
+    timers,
+    tracks,
+    trackId: passThru('TEST')
+})
+
+const activateAggregator = (state, stackId) => {
+    let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
+    let newState = state.stacks.byId[stackId].cards.reduce((state, card) => (
+        combinedReducer(state, moveCard(
+            state.cards.byId[card].id,
+            stackId,
+            state.hand.discardId
+        ))
+    ), state)
+    return purchases.reduce((priorState, purchase) => (
+            combinedReducer(priorState, addCard(purchase.cardTemplate, state.hand.discardId))
+        ), newState)
+}
 
 const testApp = (state, action) => {
     switch(action.type) {
+        case 'CHECK_HAND':
+            let purchaseStacks = fullAggregators(state)
+            let newState = purchaseStacks.reduce(activateAggregator, state)
+            return newState
         case 'CONDENSE_HAND':
             return {
                 ...state,
@@ -92,15 +133,7 @@ const testApp = (state, action) => {
                     randomList(state.random, randomsNeeded)
                 ),
             }
-        default: return combineReducers({
-            cards,
-            hand,
-            random,
-            stacks,
-            timers,
-            tracks,
-            trackId: passThru('TEST')
-        })(state, action)        
+        default: return combinedReducer(state, action)
     }
 }
 
