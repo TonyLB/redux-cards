@@ -18,8 +18,12 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['X', 'Y', 'X', 'Y', 'X', 'X', 'X', 'Y', 'X', 'X'].map(cardValue => 
-            ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
+        ['Asteroid', 'Comet', 'Asteroid', 'Bussard', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Comet', 'Asteroid', 'Asteroid'].map(cardValue => 
+            ({ 
+                cardTemplate: CardTemplate[cardValue].id,
+                uses: CardTemplate[cardValue].maxUses ? 0 : undefined,
+                maxUses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
+            })),
         StateTypes.Card
     )
     let decks = listToDenormalized([{
@@ -75,7 +79,7 @@ const preloadHand = (state) => {
             byId: {
                 [timerId]: {
                     id: timerId,
-                    duration: 5000,
+                  duration: 5000,
                     startTime: new Date()
                 }
             },
@@ -87,8 +91,8 @@ const preloadHand = (state) => {
 const preloadTracks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['A', 'B', 'C', 'C', 'B', 'A'].map(cardValue => 
-            ({ cardTemplate: CardTemplate[cardValue + 'Card'].id })),
+        ['EVAFuel'].map(cardValue => 
+            ({ cardTemplate: CardTemplate[cardValue].id })),
         StateTypes.Card
     )
     let decks = {

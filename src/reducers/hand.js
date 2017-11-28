@@ -1,4 +1,4 @@
-import { StateTypes, moveItemReducer } from '../state'
+import { StateTypes, moveItemReducer, moveCardsReducer } from '../state'
 
 const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Date(), drawDeck: 'NULL-STACK', discardDeck: 'NULL-STACK'}, action) => {
     switch(action.type) {
@@ -9,8 +9,15 @@ const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Dat
                     ...state,
                     timerStarted: new Date()
                 }
-        case 'MOVE_CARD':
-            return moveItemReducer(state, StateTypes.Card, action.cardId, action.destination, action.source)
+        case 'SORT_HAND':
+            return {
+                ...state,
+                stacks: action.stacks
+            }
+        case 'REMOVE_CARD':
+            return moveItemReducer(state, StateTypes.Card, action.cardId, null, action.source)
+        case 'MOVE_CARDS':
+            return moveCardsReducer(state, action.cards)
         default:
             return state
     }

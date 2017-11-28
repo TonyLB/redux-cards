@@ -1,20 +1,38 @@
 import { generateKey } from '../reducers/keys'
 import { StateTypes } from '../state/index'
 
-export const removeCardFromHand = id => {
+export const removeCard = id => {
     return {
         type: 'REMOVE_CARD',
         id
     }
 }
 
-export const moveCard = (cardId, source, destination) => {
-    return {
-        type: 'MOVE_CARD',
-        cardId,
+export const moveCards = (cards = []) => ({
+    type: 'MOVE_CARDS',
+    cards
+})
+
+export const moveCard = (cardId, source, destination) => (dispatch) => {
+    dispatch(moveCards([{
+        id: cardId,
         source,
         destination
+    }]))
+}
+
+export const markUse = (cardId) => ({
+    type: 'MARK_USE',
+    cardId
+})
+
+export const useCard = (cardId, source, destination) => (dispatch, getState) => {
+    let state = getState()
+    let card = state.cards.byId[cardId]
+    if (card.maxUses) {
+        dispatch(markUse(cardId))
     }
+    dispatch(moveCard(cardId, source, destination))
 }
 
 export const addCard = (cardTemplate, destination) => {
@@ -31,18 +49,6 @@ export const combineStacks = (source, destination) => {
         type: 'COMBINE_STACKS',
         source,
         destination
-    }
-}
-
-export const condenseHand = () => {
-    return {
-        type: 'CONDENSE_HAND'
-    }
-}
-
-export const checkHand = () => {
-    return {
-        type: 'CHECK_HAND'
     }
 }
 

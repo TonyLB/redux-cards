@@ -12,7 +12,9 @@ export const Card = ({
         onClick, 
         children, 
         showBack=false, 
-        cardId 
+        cardId,
+        uses,
+        maxUses
     }) => (
     <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
         className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
@@ -25,6 +27,7 @@ export const Card = ({
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].header : ''}
         </div>
         <div className='positioning-footer' style={{width:76}}>
+    { !showBack && maxUses ? (<div>Uses: {uses}/{maxUses}</div>) : ''}
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].footer : ''}
         </div>
         <div className='positioning-center'>
@@ -42,7 +45,9 @@ Card.PropTypes = {
     value: PropTypes.string.isRequired,
     cardTemplate: PropTypes.string,
     showBack: PropTypes.bool,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    uses: PropTypes.number,
+    maxUses: PropTypes.number
 }
 
 export default Card

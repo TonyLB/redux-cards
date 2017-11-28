@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { StateTypes, moveItemReducer } from '../state'
+import { StateTypes, moveCardsReducer } from '../state'
 
 const deckDefault = { id: 'TEST', cards: []}
 
@@ -17,8 +17,10 @@ const shuffleArray = (start, randoms) => {
 
 const deck = (state = deckDefault, action) => {
     switch(action.type) {
-        case 'MOVE_CARD':
-            return moveItemReducer(state, StateTypes.Card, action.cardId, action.destination, action.source)
+        case 'REMOVE_CARD':
+            return moveItemReducer(state, StateTypes.Card, action.cardId, null, action.source)
+        case 'MOVE_CARDS':
+            return moveCardsReducer(state, action.cards)
         default:
             return state
     }

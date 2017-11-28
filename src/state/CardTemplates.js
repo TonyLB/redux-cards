@@ -69,6 +69,7 @@ export const CardTemplates = {
         footer: (<div>2<Glyph size={10} shape='ASTEROID' />&rArr;1<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
         style: 'control',
+        maxUses: 3,
         aggregates: [{
             cardTemplate: 'Asteroid',
             maxStack: 2

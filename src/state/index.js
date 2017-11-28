@@ -12,6 +12,20 @@ export const stateTypeKey = (stateType) => (
     stateType.toLowerCase() + 's'
 )
 
+export const moveCardsReducer = (state, cards) => (
+    cards ? 
+        cards
+            .reduce((state, card) => 
+                ( moveItemReducer(
+                    state, 
+                    StateTypes.Card, 
+                    card.id, 
+                    card.destination, 
+                    card.source)), 
+                state) :
+        state
+)
+
 export const moveItemReducer = (state, stateType, itemId, destinationId, sourceId) => (
     !itemId ? 
         state :

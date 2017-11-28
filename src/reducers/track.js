@@ -1,11 +1,11 @@
-import { StateTypes, moveItemReducer } from '../state'
+import { moveCardsReducer } from '../state'
 
 const trackDefault = { id: 'TEST', cards: [], deck: 'NULL-STACK'}
 
 const track = (state = trackDefault, action) => {
     switch(action.type) {
-        case 'MOVE_CARD':
-            return moveItemReducer(state, StateTypes.Card, action.cardId, action.destination, action.source)
+        case 'MOVE_CARDS':
+            return moveCardsReducer(state, action.cards)
         default:
             return state
     }
