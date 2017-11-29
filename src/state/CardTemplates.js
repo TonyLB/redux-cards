@@ -3,6 +3,7 @@ import Glyph from '../components/SVG/Glyph'
 
 export const TemplateTypes = {
     Payload: 'PAYLOAD',
+    Planete: 'PLANETE',
     Resource: 'RESOURCE',
     Aggregator: 'AGGREGATOR',
     Priority: {
@@ -21,7 +22,10 @@ export const CardTemplates = {
         style: 'control',
         type: TemplateTypes.Payload,
         payload: ['EVAMining'],
-        priority: 2
+        priority: 2,
+        cost: {
+            FUEL: 2
+        }
     },
     Asteroid: {
         id: 'Asteroid',
@@ -29,7 +33,7 @@ export const CardTemplates = {
         footer: (<div>1<Glyph size={10} shape='ASTEROID' /></div>),
         value: (<Glyph size={50} shape='ASTEROID' />),
         style: 'plain',
-        type: TemplateTypes.Resource
+        type: TemplateTypes.Planete
     },
     Comet: {
         id: 'Comet',
@@ -37,7 +41,7 @@ export const CardTemplates = {
         footer: (<div>1<Glyph size={10} shape='COMET' /></div>),
         value: (<Glyph size={50} shape='COMET' />),
         style: 'plain',
-        type: TemplateTypes.Resource
+        type: TemplateTypes.Planete
     },
     Gas: {
         id: 'Gas',
@@ -45,22 +49,28 @@ export const CardTemplates = {
         footer: (<div>1<Glyph size={10} shape='GAS' /></div>),
         value: (<Glyph size={50} shape='GAS' />),
         style: 'plain',
-        type: TemplateTypes.Resource
+        type: TemplateTypes.Planete
     },
     Fuel1: {
         id: 'Fuel1',
         header: 'Fuel',
-        footer: (<div>1<Glyph size={10} shape='FUEL' /></div>),
         value: (<Glyph size={50} shape='FUEL' />),
+        resources: {
+            FUEL: 1
+        },
         style: 'plain',
+        maxUses: 1,
         type: TemplateTypes.Resource        
     },
     Ore1: {
         id: 'Ore1',
         header: 'Ore',
-        footer: (<div>1<Glyph size={10} shape='ORE' /></div>),
         value: (<Glyph size={50} shape='ORE' />),
+        resources: {
+            ORE: 1
+        },
         style: 'plain',
+        maxUses: 1,
         type: TemplateTypes.Resource
     },
     EVAMining: {

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import CardTemplates from '../state/CardTemplates'
+import { resourceShortForm }from '../state/Resources'
 
 export const Card = ({ 
         className, 
@@ -27,8 +28,12 @@ export const Card = ({
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].header : ''}
         </div>
         <div className='positioning-footer' style={{width:76}}>
-    { !showBack && maxUses ? (<div>Uses: {uses}/{maxUses}</div>) : ''}
+            { !showBack && maxUses ? (<div>Uses: {uses}/{maxUses}</div>) : ''}
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].footer : ''}
+            { !showBack && cardTemplate && CardTemplates[cardTemplate].resources ?  
+                resourceShortForm(`${cardId}-RESOURCE-`, CardTemplates[cardTemplate].resources) : ''}
+            { !showBack && cardTemplate && CardTemplates[cardTemplate].cost ?  
+                resourceShortForm(`${cardId}-COST-`, CardTemplates[cardTemplate].cost) : ''}
         </div>
         <div className='positioning-center'>
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].value : ''}
