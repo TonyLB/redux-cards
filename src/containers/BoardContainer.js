@@ -3,7 +3,7 @@ import Board from '../components/Board'
 
 const mapStateToProps = state => {
     return {
-        trackId: state.trackId,
+        trackId: state.hand.equipmentTrack,
     }
 }
 

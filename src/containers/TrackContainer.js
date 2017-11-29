@@ -5,9 +5,9 @@ import Track from '../components/Track'
 import { cardsToSpend } from '../state/hand'
 import CardTemplates from '../state/CardTemplates'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
 
-    let track = state.tracks.byId[state.trackId]
+    let track = state.tracks.byId[ownProps.trackId]
     return {
         ...track,
         
@@ -24,24 +24,29 @@ const mapStateToProps = state => {
                 .map(card => (state.cards.byId[card]))
         },
         handDiscard: state.hand.discardId,
+        shortCuts: state.hand.shortCuts,
         state: state
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onClick: (track, trackDiscard, handDiscard, state) => (card, payload=[], deploy=[]) => () => {
+        onClick: (track, trackDiscard, shortCuts, state) => (card, payload=[], deploy=[]) => () => {
             let cards = cardsToSpend(state, CardTemplates[state.cards.byId[card].cardTemplate].cost)
             if (cards.length) {
                 dispatch(moveCard(card, track, trackDiscard))
-                dispatch(useCards(cards.map(spentCard => ({ ...spentCard, destination: handDiscard }))))
+                dispatch(useCards(cards.map(spentCard => ({ ...spentCard, destination: shortCuts['DISCARD'] }))))
                 dispatch(condenseHand())
-                payload.forEach(newCard => {
-                    dispatch(addCard(newCard, handDiscard))
-                })    
-                deploy.forEach(newCard => {
-                    dispatch(deployCard(newCard, card, handDiscard))
-                })    
+                Object.entries(payload).forEach(([key, val]) => {
+                    val.forEach(newCard => {
+                        dispatch(addCard(newCard, shortCuts[key]))
+                    })
+                })
+                Object.entries(deploy).forEach(([key, val]) => {
+                    val.forEach(newCard => {
+                        dispatch(deployCard(newCard, card, shortCuts[key]))
+                    })
+                })
             }
         },
         cardDrawClick: (card, deck, track, discard) => () => {
@@ -72,9 +77,9 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         onClick: propsFromDispatch.onClick(
             propsFromState.id, 
             propsFromState.deck.id, 
-            propsFromState.handDiscard,
+            propsFromState.shortCuts,
             propsFromState.state),
-
+        ...ownProps
     }  
 }
 

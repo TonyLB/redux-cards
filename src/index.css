@@ -25,6 +25,11 @@ body {
     border: 1px solid #ff89ff;
   }
 
+  .card-science {
+    background: rgb(255, 234, 140);
+    border: 1px solid #fcc205;
+  }
+
   .card-empty {
     background: rgb(228, 228, 228);
     border: 1px solid #c2c2c2;
@@ -124,6 +129,15 @@ body {
 
   .svg-pinks text {
     fill: #ff89ff;
+  }
+
+  .svg-golds {
+    fill: rgb(255, 234, 140);
+    stroke: #fcc205;  
+  }
+
+  .svg-golds text {
+    fill: #fcc205;  
   }
 
 

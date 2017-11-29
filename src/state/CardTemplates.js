@@ -64,13 +64,54 @@ export const CardTemplates = {
         maxUses: 1,
         type: TemplateTypes.Resource
     },
+    Science1: {
+        id: 'Science1',
+        header: 'Science',
+        value: (<Glyph size={50} shape='SCIENCE' />),
+        resources: {
+            SCIENCE: 1
+        },
+        style: 'plain',
+        maxUses: 1,
+        type: TemplateTypes.Resource
+    },
     EVAFuel: {
         id: 'EVAFuel',
         header: 'Fuel EVA',
         value: '',
         style: 'control',
         type: TemplateTypes.Payload,
-        deploy: ['EVAMining'],
+        deploy: {
+            DISCARD: ['EVAMining']
+        },
+        cost: {
+            FUEL: 2
+        }
+    },
+    Intercept: {
+        id: 'Intercept',
+        header: 'Intercept',
+        footer: (<div>1<Glyph size={10} shape='COMET' />&rArr;1<Glyph size={10} shape='SCIENCE' /></div>),
+        type: TemplateTypes.Aggregator,
+        style: 'control',
+        maxUses: 1,
+        aggregates: [{
+            cardTemplate: 'Comet',
+            maxStack: 1
+        }],
+        purchases: [{
+            cardTemplate: 'Science1',
+        }]
+    },
+    PlotIntercept: {
+        id: 'PlotIntercept',
+        header: 'Plot Intercept',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['Intercept']
+        },
         cost: {
             FUEL: 2
         }
@@ -104,13 +145,28 @@ export const CardTemplates = {
             cardTemplate: 'Fuel1',
         }]
     },
+    DesignCargoBay: {
+        id: 'DesignCargoBay',
+        header: 'Cargo Bay',
+        value: '',
+        style: 'science',
+        type: TemplateTypes.Design,
+        deploy: {
+            EQUIPMENT: ['BuildCargoBay']
+        },
+        cost: {
+            SCIENCE: 3,
+        }
+    },
     BuildCargoBay: {
         id: 'BuildCargoBay',
         header: 'Cargo Bay',
         value: '',
         style: 'control',
         type: TemplateTypes.Payload,
-        payload: ['CargoBay'],
+        deploy: {
+            DISCARD: ['CargoBay']
+        },
         cost: {
             ORE: 5
         }

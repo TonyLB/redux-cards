@@ -6,8 +6,6 @@ import { stacks, shuffleStacks } from './stacks'
 import timers from './timers'
 import tracks from './tracks'
 
-const passThru = (defaultVal) => (state=defaultVal, action) => (state)
-
 const testApp = (state, action) => {
     switch(action.type) {
         // Call out anything requiring randomness or shuffling,
@@ -33,8 +31,7 @@ const testApp = (state, action) => {
             random,
             stacks,
             timers,
-            tracks,
-            trackId: passThru('TEST')
+            tracks
         })(state, action)
     }
 }

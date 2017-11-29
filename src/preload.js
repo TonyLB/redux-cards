@@ -18,7 +18,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Asteroid', 'Comet', 'Asteroid', 'Bussard', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Comet', 'Asteroid', 'Asteroid'].map(cardValue => 
+        ['Asteroid', 'Gas', 'Bussard', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Comet', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? 0 : undefined,
@@ -88,10 +88,10 @@ const preloadHand = (state) => {
     }
 }
 
-const preloadTracks = (state) => {
+const preloadTrack = (preloadCardTemplates, key) => (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['EVAFuel', 'BuildCargoBay'].map(cardValue => 
+        preloadCardTemplates.map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue].id })),
         StateTypes.Card
     )
@@ -118,7 +118,10 @@ const preloadTracks = (state) => {
     } 
     return {
         ...state,
-        trackId: trackId,
+        hand: {
+            ...state.hand,
+            [key]: trackId
+        },
         cards: combineDenormalizedObjects(state.cards, cards),
         tracks: combineDenormalizedObjects(state.tracks, tracks),
         stacks: combineDenormalizedObjects(state.stacks, decks)
@@ -152,18 +155,30 @@ const preloadDeployedEVA = (state) => {
             ...state.stacks,
             byId: {
                 ...state.stacks.byId,
-                [state.tracks.byId[state.trackId].deck]: {
-                    ...(state.stacks.byId[state.tracks.byId[state.trackId].deck]),
+                [state.tracks.byId[state.hand.equipmentTrack].deck]: {
+                    ...(state.stacks.byId[state.tracks.byId[state.hand.equipmentTrack].deck]),
                     cards: [
-                        ...(state.stacks.byId[state.tracks.byId[state.trackId].deck].cards),
+                        ...(state.stacks.byId[state.tracks.byId[state.hand.equipmentTrack].deck].cards),
                         filteredCardId
                     ]
                 }
             }
         }
     }
-
 }
+
+const preloadShortCuts = (state) => ({
+    ...state,
+    hand: {
+        ...state.hand,
+        shortCuts: {
+            DISCARD: state.hand.discardId,
+            DRAW: state.hand.drawId,
+            EQUIPMENT: state.tracks.byId[state.hand.equipmentTrack].deck,
+            SCIENCE: state.tracks.byId[state.hand.scienceTrack].deck
+        }
+    }
+})
 
 const preloadState = () => { 
     let loadFuncs = [
@@ -171,8 +186,10 @@ const preloadState = () => {
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTracks,
-        preloadDeployedEVA
+        preloadTrack(['EVAFuel', 'PlotIntercept'], 'equipmentTrack'),
+        preloadTrack(['DesignCargoBay'], 'scienceTrack'),
+        preloadDeployedEVA,
+        preloadShortCuts
     ]
     return loadFuncs.reduce((state, loadFunc) => ( loadFunc(state) ), {})
 }

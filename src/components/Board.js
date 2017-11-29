@@ -1,18 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import HandContainer from '../containers/HandContainer'
-import TrackContainer from '../containers/TrackContainer'
 
-const Board = ({ hand, trackId }) => {
-    return (
+const Board = ({ hand, trackId }) => (
     <div>
-        <table className="positioning-table"><tbody><tr><td>
-            <TrackContainer trackId={trackId} />
-        </td></tr><tr><td>
-            <HandContainer />
-        </td></tr></tbody></table>
+        <HandContainer />
     </div>
-)}
+)
 
 Board.PropTypes = {
     deck: PropTypes.arrayOf(
