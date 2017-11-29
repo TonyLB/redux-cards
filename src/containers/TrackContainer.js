@@ -1,6 +1,9 @@
 import { connect } from 'react-redux'
-import { moveCard, addCard } from '../actions'
+import { moveCard, addCard, useCards } from '../actions'
+import { condenseHand } from '../actions/hand'
 import Track from '../components/Track'
+import { cardsToSpend } from '../state/hand'
+import CardTemplates from '../state/CardTemplates'
 
 const mapStateToProps = state => {
 
@@ -18,17 +21,23 @@ const mapStateToProps = state => {
             id: track.deck,
             ...(state.stacks.byId[track.deck])
         },
-        handDiscard: state.hand.discardId
+        handDiscard: state.hand.discardId,
+        state: state
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onClick: (track, trackDiscard, handDiscard) => (card, payload=[]) => () => {
-            dispatch(moveCard(card, track, trackDiscard))
-            payload.forEach(newCard => {
+        onClick: (track, trackDiscard, handDiscard, state) => (card, payload=[]) => () => {
+            let cards = cardsToSpend(state, CardTemplates[state.cards.byId[card].cardTemplate].cost)
+            if (cards.length) {
+                dispatch(moveCard(card, track, trackDiscard))
+                dispatch(useCards(cards.map(spentCard => ({ ...spentCard, destination: handDiscard }))))
+                dispatch(condenseHand())
+                payload.forEach(newCard => {
                     dispatch(addCard(newCard, handDiscard))
-            })
+                })    
+            }
         },
         cardDrawClick: (card, deck, track, discard) => () => {
             if (discard) { 
@@ -58,7 +67,8 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         onClick: propsFromDispatch.onClick(
             propsFromState.id, 
             propsFromState.deck.id, 
-            propsFromState.handDiscard),
+            propsFromState.handDiscard,
+            propsFromState.state),
 
         // Replace denormalized deck ID with normal form now that we're done
         // with the extracted data.
