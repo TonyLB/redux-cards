@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Card from './Card'
 import CardTemplates from '../state/CardTemplates'
 import SideArrow from './SVG/SideArrow'
-import DeckContainer from '../containers/DeckContainer'
+import Deck from './Deck'
 
 class Track extends React.Component {
 
@@ -28,17 +28,19 @@ class Track extends React.Component {
                         {...card}
                         top={0}
                         left={90*(index+empties.length)}
-                        onClick={(card.cardTemplate && CardTemplates[card.cardTemplate].payload) ? 
+                        onClick={(card.cardTemplate && (CardTemplates[card.cardTemplate].payload ||
+                                CardTemplates[card.cardTemplate].deploy)) ? 
                             props.onClick(
                                 card.id,
-                                CardTemplates[card.cardTemplate].payload
+                                CardTemplates[card.cardTemplate].payload,
+                                CardTemplates[card.cardTemplate].deploy
                             ) : () => {} }
                          key={card.id}
                     />
                 ))
             }
                 <SideArrow top={8} left={width-140} className='svg-pinks' onClick={ props.cardDrawClick } />
-                <DeckContainer deck={ props.deck } top={0} left={width-100} className='svg-pinks' />
+                <Deck { ...props.deck } top={0} left={width-100} className='svg-pinks' />
             </div>
         )
     }

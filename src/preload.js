@@ -19,7 +19,7 @@ const preloadDecks = (state) => {
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
         ['Asteroid', 'Comet', 'Asteroid', 'Bussard', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Comet', 'Asteroid', 'Asteroid'].map(cardValue => 
-            ({ 
+            ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? 0 : undefined,
                 maxUses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
@@ -79,7 +79,7 @@ const preloadHand = (state) => {
             byId: {
                 [timerId]: {
                     id: timerId,
-                  duration: 5000,
+                    duration: 5000,
                     startTime: new Date()
                 }
             },
@@ -91,7 +91,7 @@ const preloadHand = (state) => {
 const preloadTracks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['EVAFuel'].map(cardValue => 
+        ['EVAFuel', 'BuildCargoBay'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue].id })),
         StateTypes.Card
     )
@@ -125,13 +125,54 @@ const preloadTracks = (state) => {
     }        
 }
 
+const preloadDeployedEVA = (state) => {
+    let filteredCard = listToDenormalized(
+        ['EVAFuel'].map(cardValue => 
+            ({ cardTemplate: CardTemplate[cardValue].id })),
+        StateTypes.Card
+    )
+    const filteredCardId = filteredCard.allIds[0]
+    const deployedCard = Object.entries(state.cards.byId)
+        .filter(([key, val]) => (val.cardTemplate === 'EVAMining'))
+        .map(([key, val]) => (key))[0]
+    filteredCard = {
+        ...filteredCard,
+        byId: {
+            ...filteredCard,
+            [filteredCardId]: {
+                ...filteredCard.byId[filteredCardId],
+                deployed: deployedCard
+            }
+        }
+    }
+    return {
+        ...state,
+        cards: combineDenormalizedObjects(state.cards, filteredCard),
+        stacks: {
+            ...state.stacks,
+            byId: {
+                ...state.stacks.byId,
+                [state.tracks.byId[state.trackId].deck]: {
+                    ...(state.stacks.byId[state.tracks.byId[state.trackId].deck]),
+                    cards: [
+                        ...(state.stacks.byId[state.tracks.byId[state.trackId].deck].cards),
+                        filteredCardId
+                    ]
+                }
+            }
+        }
+    }
+
+}
+
 const preloadState = () => { 
     let loadFuncs = [
         preloadNulls,
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTracks
+        preloadTracks,
+        preloadDeployedEVA
     ]
     return loadFuncs.reduce((state, loadFunc) => ( loadFunc(state) ), {})
 }

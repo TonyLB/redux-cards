@@ -3,16 +3,17 @@ import { moveCards, useCards, addCard } from './index'
 
 const handPriority = (state, stack) => (
     state.stacks.byId[stack].cards.length ? 
-        CardTemplates[state.cards.byId[state.stacks.byId[stack].cards[0]].cardTemplate].type 
-            === CardTemplates.Types.Aggregator ? 0 : 1
-    : 2
+        CardTemplates.Types.Priority[
+            CardTemplates[state.cards.byId[state.stacks.byId[stack].cards[0]].cardTemplate].type
+        ]
+    : 0
 )
 
 export const sortHand = () => (dispatch, getState) => {
     let state = getState()
     let stacks = [ ...state.hand.stacks ]
     stacks.sort((a, b) => (
-        handPriority(state, a) - handPriority(state, b)
+        handPriority(state, b) - handPriority(state, a)
     ))
     if (stacks.some((val, index) => ( state.hand.stacks[index] !== val ))) {
         dispatch({

@@ -54,6 +54,16 @@ export const addCard = (cardTemplate, destination) => {
     }
 }
 
+export const deployCard = (cardTemplate, source, destination) => {
+    return {
+        type: 'DEPLOY_CARD',
+        cardTemplate,
+        source,
+        destination,
+        cardId: generateKey(StateTypes.Card)
+    }
+}
+
 export const combineStacks = (source, destination) => {
     return {
         type: 'COMBINE_STACKS',

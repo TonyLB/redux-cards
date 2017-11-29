@@ -2,31 +2,22 @@ import React from 'react'
 import Glyph from '../components/SVG/Glyph'
 
 export const TemplateTypes = {
+    Aggregator: 'AGGREGATOR',
     Payload: 'PAYLOAD',
     Planete: 'PLANETE',
     Resource: 'RESOURCE',
-    Aggregator: 'AGGREGATOR',
+    Storage: 'STORAGE',
     Priority: {
         PAYLOAD: 1,
+        PLANETE: 1,
         RESOURCE: 1,
-        AGGREGATOR: 2
+        STORAGE: 2,
+        AGGREGATOR: 3
     }
 }
 
 export const CardTemplates = {
     Types: TemplateTypes,
-    EVAFuel: {
-        id: 'EVAFuel',
-        header: 'Fuel EVA',
-        value: '',
-        style: 'control',
-        type: TemplateTypes.Payload,
-        payload: ['EVAMining'],
-        priority: 2,
-        cost: {
-            FUEL: 2
-        }
-    },
     Asteroid: {
         id: 'Asteroid',
         header: 'Asteroid',
@@ -73,6 +64,17 @@ export const CardTemplates = {
         maxUses: 1,
         type: TemplateTypes.Resource
     },
+    EVAFuel: {
+        id: 'EVAFuel',
+        header: 'Fuel EVA',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: ['EVAMining'],
+        cost: {
+            FUEL: 2
+        }
+    },
     EVAMining: {
         id: 'EVAMining',
         header: 'EVA Mining',
@@ -102,7 +104,28 @@ export const CardTemplates = {
             cardTemplate: 'Fuel1',
         }]
     },
-    
+    BuildCargoBay: {
+        id: 'BuildCargoBay',
+        header: 'Cargo Bay',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        payload: ['CargoBay'],
+        cost: {
+            ORE: 5
+        }
+    },
+    CargoBay: {
+        id: 'CargoBay',
+        header: 'Cargo Bay',
+        footer: <div>Holds 5<Glyph size={10} shape='ORE' /></div>,
+        type: TemplateTypes.Storage,
+        style: 'control',        
+        aggregates: [{
+            cardTemplate: 'Ore1',
+            maxStack: 5
+        }],
+    }
 }
 
 export default CardTemplates
