@@ -1,11 +1,18 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, addCard } from './index'
+import { moveCards, useCards, addCard } from './index'
+
+const handPriority = (state, stack) => (
+    state.stacks.byId[stack].cards.length ? 
+        CardTemplates[state.cards.byId[state.stacks.byId[stack].cards[0]].cardTemplate].type 
+            === CardTemplates.Types.Aggregator ? 0 : 1
+    : 2
+)
 
 export const sortHand = () => (dispatch, getState) => {
     let state = getState()
     let stacks = [ ...state.hand.stacks ]
     stacks.sort((a, b) => (
-        (state.stacks.byId[a].cards.length ? 0 : 1) - (state.stacks.byId[b].cards.length ? 0 : 1)
+        handPriority(state, a) - handPriority(state, b)
     ))
     if (stacks.some((val, index) => ( state.hand.stacks[index] !== val ))) {
         dispatch({
@@ -109,12 +116,17 @@ const fullAggregators = (state) => {
 const activateAggregator = (stackId) => (dispatch, getState) => {
     let state = getState()
     let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
-    dispatch(moveCards(state.stacks.byId[stackId].cards.map(card => ({
+    dispatch(useCards(state.stacks.byId[stackId].cards.map(card => ({
         id: state.cards.byId[card].id,
         source: stackId,
         destination: state.hand.discardId
     }))))
-    purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, state.hand.discardId)) })
+    if (purchases.count > 1) {
+        purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, state.hand.discardId)) })
+    }
+    else {
+        purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, stackId)) })        
+    }
 }
 
 export const checkHand = () => (dispatch, getState) => {

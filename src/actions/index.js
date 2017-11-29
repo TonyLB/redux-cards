@@ -1,10 +1,11 @@
 import { generateKey } from '../reducers/keys'
 import { StateTypes } from '../state/index'
+//import CardTemplates from '../state/CardTemplates'
 
-export const removeCard = id => {
+export const removeCards = cards => {
     return {
-        type: 'REMOVE_CARD',
-        id
+        type: 'REMOVE_CARDS',
+        cards
     }
 }
 
@@ -21,18 +22,27 @@ export const moveCard = (cardId, source, destination) => (dispatch) => {
     }]))
 }
 
-export const markUse = (cardId) => ({
+export const markUse = (cards) => ({
     type: 'MARK_USE',
-    cardId
+    cards
 })
 
-export const useCard = (cardId, source, destination) => (dispatch, getState) => {
+export const useCards = (cards) => (dispatch, getState) => {
     let state = getState()
-    let card = state.cards.byId[cardId]
-    if (card.maxUses) {
-        dispatch(markUse(cardId))
-    }
-    dispatch(moveCard(cardId, source, destination))
+    dispatch(markUse(cards
+        .filter(card => (state.cards.byId[card.id].maxUses))
+        .map(card => (card.id))
+    ))
+    dispatch(removeCards(cards
+        .filter(card => ( state.cards.byId[card.id].maxUses <= state.cards.byId[card.id].uses + 1 ))
+        .map(card => ({ id: card.id, source: card.source }))
+    ))
+    dispatch(moveCards(cards
+        .filter(card => {
+            let maxUses = state.cards.byId[card.id].maxUses 
+            return maxUses === undefined || maxUses > state.cards.byId[card.id].uses + 1
+        })
+    ))
 }
 
 export const addCard = (cardTemplate, destination) => {

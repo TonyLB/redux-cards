@@ -5,20 +5,21 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
         case 'MARK_USE':
             return {
                 ...state,
-                byId: {
-                    ...state.byId,
-                    [action.cardId]: {
-                        ...(state.byId[action.cardId]),
-                        uses: state.byId[action.cardId].uses+1
-                    }
-                }
+                byId: action.cards
+                    .reduce((output, card) => ({
+                        ...output,
+                        [card]: {
+                            ...(output[card]),
+                            uses: output[card].uses+1
+                        }
+                    }), state.byId)
             }
-        case 'REMOVE_CARD': 
+        case 'REMOVE_CARDS': 
             let newById = { ...state.byId }
-            newById.delete(action.cardId)
+            action.cards.forEach(card => { delete newById[card.id] })
             return {
                 byId: newById,
-                allIds: state.allIds.filter(id => (id !== action.cardId))
+                allIds: state.allIds.filter(id => (!action.cards.some(card => (card.id === id))))
             }
         case 'ADD_CARD': return {
             ...state,

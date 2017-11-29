@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { moveCard, useCard, combineStacks, startTimer } from '../actions'
+import { moveCard, moveCards, combineStacks, startTimer } from '../actions'
 import { condenseHand, checkHand, sortHand } from '../actions/hand'
 import CardTemplate from '../state/CardTemplates'
 import Hand from '../components/Hand'
@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }, 500)
         },
         discardClick: (discard) => (stack) => (card) => () => {
-            dispatch(useCard(card, stack, discard)) 
+            dispatch(moveCards([{id: card, source: stack, destination: discard}])) 
             dispatch(sortHand())
         },
         shuffleClick: (discard, deck) => () => dispatch(combineStacks(discard, deck))
