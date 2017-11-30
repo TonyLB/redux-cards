@@ -2,6 +2,7 @@ import CardTemplates from '../state/CardTemplates'
 import { moveCards, useCards, addCard, removeCards, combineStacks, moveCard, startTimer } from './index'
 import { canRecycle } from '../state/hand'
 import { willAggregate } from '../state/stack'
+import testApp from '../reducers/testApp'
 
 const handPriority = (state, stack) => (
     state.stacks.byId[stack].cards.length ? 
@@ -25,27 +26,58 @@ export const sortHand = () => (dispatch, getState) => {
     }
 }
 
-export const condenseHand = () => (dispatch, getState) => {
-    const state = getState()
-    dispatch( sortHand() )
-    const neededMoves = state.hand.stacks.reduce((output, stack) => {
-        if (output.stackId) return output
-        const cardsMoved = willAggregate(state, stack)
+//
+// Returns an object with:
+//      - moves:  A moveCards property list for the cards that must move
+//                to condense the hand into aggregators.
+//      - state:  An updated state that is the anticipated outcome of those
+//                moves being applied.
+//
+const movesToCondenseHand = (state) => {
+    const sortedState = {
+        ...state,
+        hand: {
+            ...state.hand,
+            stacks: state.hand.stacks.sort((a, b) => (
+                handPriority(state, b) - handPriority(state, a)
+            ))
+        }
+    }
+
+    const neededMoves = sortedState.hand.stacks.reduce((output, stack) => {
+        if (output.length) return output
+        const cardsMoved = willAggregate(sortedState, stack)
         if (cardsMoved.length) {
-            return {
-                stackId: stack,
-                cardsMoved: cardsMoved
-            }
+            return cardsMoved
         }
         else {
             return output
         }
-    }, { stackId: false })
-    if (neededMoves.stackId) {
-        dispatch(moveCards(neededMoves.cardsMoved))
-        condenseHand()(dispatch, getState)
+    }, [])
+    
+    if (neededMoves.length) {
+        const newState = testApp(state, moveCards(neededMoves), true)
+        const recurse = movesToCondenseHand(newState)
+        return {
+            state: recurse.state,
+            moves: [...neededMoves, ...recurse.moves]
+        }
+    } 
+    else {
+        return { 
+            state: state,
+            moves: []
+        }
     }
+}
 
+export const condenseHand = () => (dispatch, getState) => {
+    const state = getState()
+    const neededMoves = movesToCondenseHand(state).moves
+    if (neededMoves.length) {
+        dispatch(moveCards(neededMoves))
+    }
+    dispatch( sortHand() )
 }
 
 const shuffleIfNeeded = () => (dispatch, getState) => {

@@ -6,7 +6,7 @@ import { stacks, shuffleStacks } from './stacks'
 import timers from './timers'
 import tracks from './tracks'
 
-const testApp = (state, action) => {
+const testApp = (state, action, simulated=false) => {
     switch(action.type) {
         // Call out anything requiring randomness or shuffling,
         // so that a slice of the random-sequence backbone can
