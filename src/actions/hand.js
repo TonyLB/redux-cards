@@ -1,6 +1,7 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, useCards, addCard, removeCards } from './index'
+import { moveCards, useCards, addCard, removeCards, combineStacks, moveCard, startTimer } from './index'
 import { canRecycle } from '../state/hand'
+import { willAggregate } from '../state/stack'
 
 const handPriority = (state, stack) => (
     state.stacks.byId[stack].cards.length ? 
@@ -24,83 +25,53 @@ export const sortHand = () => (dispatch, getState) => {
     }
 }
 
-const listOfAggregatedCards = (stacks, cards, cardTemplate, maxStack) => ( 
-    stacks
-        .reduce((state, stack, index) => 
-            (state.concat(
-                stack.cards
-                    .map(card => ({ 
-                        card: card, 
-                        stack: stack.id, 
-                        stackNum: index}))
-                    )
-            ), 
-            [])
-        .filter(card => (cards.byId[card.card].cardTemplate === cardTemplate))
-        .slice(0,maxStack)
-)
-
-//
-// The condenseSortedHand function applies the aggregator rules of
-// any control cards, to snarf cards further than them in the
-// hand, and pull them into the aggregate.
-//
-const condenseSortedHand = () => (dispatch, getState) => {
-    let state = getState()
-    let anticipatedStacks = state.hand.stacks
-        .map(stack => ({ ...state.stacks.byId[stack]}))
-        .filter(stack => (stack.cards.length > 0))
-    let cardMoves = []
-
-    //
-    // Have to make some local constant functions, because I'm
-    // reducing, filtering, and mapping arrays inside of a loop,
-    // and JS throws warnings when creating functions in loops.
-    // Ideally, I'd like to do the anticipatedStacks parsing in
-    // a way that doesn't depend on in-place mutation of the
-    // array ... maybe reduce and a carried state?
-    //
-    const aggTypeReducer = (anticipatedStacks) => (output, aggType) => 
-        (output.concat(
-            listOfAggregatedCards(
-                anticipatedStacks, 
-                state.cards, 
-                aggType.cardTemplate, 
-                aggType.maxStack)
-            )
-        )
-    const cardLooper = card => {
-        anticipatedStacks[card.stackNum].cards = 
-            anticipatedStacks[card.stackNum].cards.filter(val => (val !== card.card))
-    }
-    const cardMapper = (destId) => card => ({
-        id: card.card,
-        source: card.stack,
-        destination: destId
-    })
-    while (anticipatedStacks.length) {
-        let firstCard = state.cards.byId[anticipatedStacks[0].cards[0]]
-        let aggregatorTypes = CardTemplates[firstCard.cardTemplate].aggregates
-        if (aggregatorTypes) {
-            let cardsToMove = aggregatorTypes
-                .reduce(aggTypeReducer(anticipatedStacks), [])
-            cardsToMove = cardsToMove
-                .filter(card => (card.stackNum > 0))
-            cardMoves = cardMoves.concat(
-                cardsToMove.map(cardMapper(anticipatedStacks[0].id))
-            )
-            cardsToMove.forEach(cardLooper)
+export const condenseHand = () => (dispatch, getState) => {
+    const state = getState()
+    dispatch( sortHand() )
+    const neededMoves = state.hand.stacks.reduce((output, stack) => {
+        if (output.stackId) return output
+        const cardsMoved = willAggregate(state, stack)
+        if (cardsMoved.length) {
+            return {
+                stackId: stack,
+                cardsMoved: cardsMoved
+            }
         }
-        anticipatedStacks = anticipatedStacks.slice(1)
-        anticipatedStacks = anticipatedStacks.filter(stack => (stack.cards.length > 0))
+        else {
+            return output
+        }
+    }, { stackId: false })
+    if (neededMoves.stackId) {
+        dispatch(moveCards(neededMoves.cardsMoved))
+        condenseHand()(dispatch, getState)
     }
-    if (cardMoves.length) dispatch(moveCards(cardMoves))
+
 }
 
-export const condenseHand = () => dispatch => {
-    dispatch( sortHand() )
-    dispatch( condenseSortedHand() )
-    dispatch( sortHand() )
+const shuffleIfNeeded = () => (dispatch, getState) => {
+    const state = getState()
+    if (!state.stacks.byId[state.hand.drawId].cards.length) {
+        dispatch(combineStacks(state.hand.discardId, state.hand.drawId))
+    }
+}
+
+export const drawCard = (firstOpenStack) => (dispatch, getState) => {
+    const state = getState()
+    if (firstOpenStack && state.stacks.byId[state.hand.drawId].cards.length) {
+        dispatch(moveCard(
+            state.stacks.byId[state.hand.drawId].cards[0], 
+            state.hand.drawId,
+            firstOpenStack
+        ))
+        dispatch(sortHand())
+        dispatch(condenseHand())
+        dispatch(startTimer(state.hand.timerId))
+        setTimeout(() => {
+            dispatch(checkHand())
+            dispatch(condenseHand())
+        }, 500)    
+    }
+    dispatch(shuffleIfNeeded())
 }
 
 const fullAggregators = (state) => {

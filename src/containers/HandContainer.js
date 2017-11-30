@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { moveCard, moveCards, combineStacks, startTimer } from '../actions'
-import { condenseHand, checkHand, recycleCards } from '../actions/hand'
+import { moveCards, combineStacks } from '../actions'
+import { drawCard, condenseHand, recycleCards } from '../actions/hand'
 import CardTemplate from '../state/CardTemplates'
 import Hand from '../components/Hand'
 import { canRecycle } from '../state/hand'
@@ -25,30 +25,17 @@ const mapStateToProps = state => {
     })
     return {
         ...state.hand,
-        stacks: [ 
-            ...stacks,
-
-            //  Add discard and draw decks into stacks passed in propsFromState
-
-            ...([state.hand.drawId, state.hand.discardId].map(stackLookup(state)))
-        ],
+        stacks: stacks,
+        drawDeck: stackLookup(state)(state.hand.drawId),
+        discardDeck: stackLookup(state)(state.hand.discardId),
         firstOpenStack: openStackFound
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        cardDrawClick: (card, deck, discard, shuffle, stack, timerId) => () => {
-            dispatch(moveCard(card, deck, stack))
-            dispatch(condenseHand())
-            dispatch(startTimer(timerId))
-            if (shuffle) {
-                dispatch(combineStacks(discard, deck))
-            }
-            setTimeout(() => {
-                dispatch(checkHand())
-                dispatch(condenseHand())
-            }, 500)
+        cardDrawClick: (firstOpenStack) => () => {
+            dispatch(drawCard(firstOpenStack))
         },
         discardClick: (discard) => (stack) => (card) => () => {
             dispatch(moveCards([{id: card, source: stack, destination: discard}])) 
@@ -63,43 +50,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
 
-    // Assure that we only attempt to draw when there is both a card
-    // on the drawdeck, and an open stack to receive that card.
-
-    let drawStacks = propsFromState.stacks.filter((stack) => ( stack.id === propsFromState.drawId))
-    let drawStack = drawStacks.length ? drawStacks[0] : null
-    let drawCards = drawStack ? drawStack.cards : null
-    let drawCard = drawCards.length ? drawCards[0].id : null
-    let discardStacks = propsFromState.stacks.filter((stack) => ( stack.id === propsFromState.discardId))
-    let discardStack = discardStacks.length ? discardStacks[0] : null
-
     return {
         ...propsFromState,
 
         // Pass payload arguments to dispatch functions
 
-        drawClick: (propsFromState.firstOpenStack && drawCard) ? propsFromDispatch.cardDrawClick(
-            drawCard, 
-            propsFromState.drawId,
-            propsFromState.discardId,
-            drawCards.length<=1,
-            propsFromState.firstOpenStack,
-            propsFromState.timerId
-        ) : () => {},
+        drawClick: propsFromState.firstOpenStack ?
+            propsFromDispatch.cardDrawClick(propsFromState.firstOpenStack) :
+            () => {},
         discardClick: propsFromDispatch.discardClick(propsFromState.discardId),
         shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discardId, propsFromState.drawId),
         alternateClick: propsFromDispatch.alternateClick(propsFromState.discardId),
 
-        drawDeck: drawStack,
-        discardDeck: discardStack,
-
-        // Filter discard and draw deck denormalization out of stacks, now that 
-        // we've assigned them to named properties
-
-        stacks: propsFromState.stacks.filter((stack) => (
-            stack.id !== propsFromState.drawId &&
-            stack.id !== propsFromState.discardId
-        )),
         ...ownProps
     }
 }

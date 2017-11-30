@@ -50,6 +50,7 @@ export const cardSeparatedStack = ( { id,
         styles: cards.length ? cards.map((card, index) => ({
             top: top+20*index,
             left: left+(index?10:0),
+            zIndex: index,
             cardId: card.id,
             ...card
         })) : []

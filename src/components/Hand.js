@@ -37,6 +37,7 @@ class Hand extends React.Component {
             }), { jsx: [], styles: []})
 
         let styles=[...drawDeck.styles, ...discardDeck.styles, ...stackRender.styles]
+            .sort((a, b) => ( a.cardId > b.cardId ? 1 : a.cardId < b.cardId ? -1 : 0 ))
             .map(val => ({key: val.cardId, data: val, style: {top:spring(val.top), left:spring(val.left)} }))
         return (
             <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
