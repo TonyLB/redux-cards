@@ -181,7 +181,69 @@ export const CardTemplates = {
             cardTemplate: 'Ore1',
             maxStack: 5
         }],
+    },
+    DesignFuelTank: {
+        id: 'DesignFuelTank',
+        header: 'Fuel Tank',
+        value: '',
+        style: 'science',
+        type: TemplateTypes.Design,
+        deploy: {
+            EQUIPMENT: ['BuildFuelTank']
+        },
+        cost: {
+            SCIENCE: 3,
+        }
+    },
+    BuildFuelTank: {
+        id: 'BuildFuelTank',
+        header: 'Fuel Tank',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['FuelTank']
+        },
+        cost: {
+            ORE: 5
+        }
+    },
+    FuelTank: {
+        id: 'FuelTank',
+        header: 'Fuel Tank',
+        footer: <div>Holds 5<Glyph size={10} shape='FUEL' /></div>,
+        type: TemplateTypes.Storage,
+        style: 'control',        
+        aggregates: [{
+            cardTemplate: 'Fuel1',
+            maxStack: 5
+        }],
+    },
+    DesignAsteroidBelt: {
+        id: 'DesignAsteroidBelt',
+        header: 'Asteroid Belt',
+        value: '',
+        style: 'science',
+        type: TemplateTypes.Design,
+        deploy: {
+            DISCARD: ['AsteroidBelt']
+        },
+        cost: {
+            SCIENCE: 2,
+        }
+    },
+    AsteroidBelt: {
+        id: 'AsteroidBelt',
+        header: 'Asteroid Belt',
+        footer: <div>Holds 5<Glyph size={10} shape='ASTEROID' /></div>,
+        type: TemplateTypes.Storage,
+        style: 'control',        
+        aggregates: [{
+            cardTemplate: 'Asteroid',
+            maxStack: 5
+        }],
     }
+    
 }
 
 export default CardTemplates

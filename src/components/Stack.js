@@ -3,17 +3,38 @@ import PropTypes from 'prop-types'
 import Card from './Card'
 import Header from './SVG/Header'
 
-export const cardSeparatedStack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, children} ) => {
+export const cardSeparatedStack = ( { id, 
+        cards=[], 
+        discardClick=()=>{}, 
+        alternateName='',
+        alternateClick=()=>{},
+        top=0, 
+        left=0, 
+        children} ) => {
     return {
         jsx: cards.length ? [(
-            <div style={{top:top+250, left:left, position:"absolute"}} key={`STATIC-${id}`}>
-                <Header width='76' height='20' onClick={discardClick(cards[cards.length-1].id)}>
-                    <circle cx="38" cy="10" r="6" />
-                </Header>
-            </div>        
+            <div key={`STATIC-${id}`} >
+            <div style={{top:top+250, left:left, width:76, height:20, position:"absolute"}}>
+                <Header width={76} height={20} gap={50} onClick={discardClick(cards[cards.length-1].id)} />
+                <div className='positioning-center color-blues' style={{ fontSize:'90%' }} onClick={discardClick(cards[cards.length-1].id)}>
+                    Discard
+                </div>
+            </div>
+            { alternateName ? (
+                <div style={{top:top+290, left:left, width:76, height:20, position:"absolute"}}>
+                    <Header width={76} height={20} gap={50} onClick={alternateClick} />
+                    <div className='positioning-center color-blues' style={{ fontSize:'90%' }} onClick={alternateClick}>
+                        {alternateName}
+                    </div>
+                </div>            
+            ) : null
+            }   
+            </div>
         )] : [(
-            <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}} key={`STATIC-${id}`}>
-                <Header className='svg-greys' width='76' height='20' />
+            <div key={`STATIC-${id}`} >
+            <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}}>
+                <Header className='svg-greys' width={76} height={20} gap={50} />
+            </div>
             </div>
         ), (
             <Card 
@@ -47,10 +68,11 @@ export const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, child
                     {...card}
                 />
             ))}
-            <div style={{top:top+250, left:left, position:"absolute"}}>
-                <Header width='76' height='20' onClick={discardClick(cards[cards.length-1].id)}>
-                    <circle cx="38" cy="10" r="6" />
-                </Header>
+            <div style={{top:top+250, left:left, width:76, height:20, position:"absolute"}}>
+                <Header width={76} height={20} onClick={discardClick(cards[cards.length-1].id)} />
+                <div className='positioning-center color-blues' style={{ fontSize:'90%' }} onClick={discardClick(cards[cards.length-1].id)}>
+                    Discard
+                </div>
             </div>
         </div>
     ) :
@@ -68,7 +90,7 @@ export const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, child
             </Card>
 
             <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}}>
-                <Header className='svg-greys' width='76' height='20' />
+                <Header className='svg-greys' width={76} height={20} gap={40} />
             </div>
         </div>
     )

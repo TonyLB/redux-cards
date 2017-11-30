@@ -14,7 +14,7 @@ export const cardSeparatedDeck = ( {
     zIndex=0, 
     className='svg-blues'} ) => {
     let header = (
-        <Header className={ cards.length ? className : 'svg-greys'} width='76'>
+        <Header className={ cards.length ? className : 'svg-greys'} width={76}>
             <text x="38" y="15">{cards.length}</text>
         </Header>
     )
@@ -54,7 +54,7 @@ export const Deck = ( {
         zIndex=0, 
         className='svg-blues'} ) => {
     let header = (
-        <Header className={ cards.length ? className : 'svg-greys'} width='76'>
+        <Header className={ cards.length ? className : 'svg-greys'} width={76}>
             <text x="38" y="15">{cards.length}</text>
         </Header>
     )

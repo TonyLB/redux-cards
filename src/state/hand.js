@@ -60,3 +60,9 @@ export const cardsToSpend = (state, resources = { FUEL: 2 }) => {
             }
     ), { totals: {}, cards: []}).cards.map(card => ({ id: card.cardId, source: card.stackId }))
 }
+
+export const canRecycle = (state, stackId) => (
+    state.stacks.byId[stackId].cards.length ? 
+        CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].type !== CardTemplates.Types.Planete :
+        false
+)

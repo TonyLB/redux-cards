@@ -13,8 +13,12 @@ body {
     width: 78px;
     height: 130px;
     position: relative;
+    cursor: default;
   }
 
+  .color-blues {
+    color: #89ddff;
+  }
   .card-plain {
     background: rgb(198, 226, 231);
     border: 1px solid #89ddff;
@@ -39,6 +43,7 @@ body {
     position: relative;
     top: 0px;
     left: 0px;
+    cursor: default;
   }
 
   .positioning-sidearrow {
@@ -98,6 +103,7 @@ body {
   }
   [class*="svg-"] {
     stroke-miterlimit: 10;
+    cursor: default;
   }
 
   [class*="svg-"] text {

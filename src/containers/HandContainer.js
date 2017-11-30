@@ -1,11 +1,13 @@
 import { connect } from 'react-redux'
 import { moveCard, moveCards, combineStacks, startTimer } from '../actions'
-import { condenseHand, checkHand } from '../actions/hand'
+import { condenseHand, checkHand, recycleCards } from '../actions/hand'
 import CardTemplate from '../state/CardTemplates'
 import Hand from '../components/Hand'
+import { canRecycle } from '../state/hand'
 
 const stackLookup = (state) => (stack) => ({
     ...(state.stacks.byId[stack]),
+    alternateName: canRecycle(state, stack) ? 'Recycle' : '',
     cards: state.stacks.byId[stack].cards.map(card => ({
             ...(state.cards.byId[card]),
             value: CardTemplate[state.cards.byId[card].cardTemplate].value
@@ -52,6 +54,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(moveCards([{id: card, source: stack, destination: discard}])) 
             dispatch(condenseHand())
         },
+        alternateClick: (discard) => (stack) => () => {
+            dispatch(recycleCards(stack, discard))
+        },
         shuffleClick: (discard, deck) => () => dispatch(combineStacks(discard, deck))
     }
 }
@@ -83,6 +88,7 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         ) : () => {},
         discardClick: propsFromDispatch.discardClick(propsFromState.discardId),
         shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discardId, propsFromState.drawId),
+        alternateClick: propsFromDispatch.alternateClick(propsFromState.discardId),
 
         drawDeck: drawStack,
         discardDeck: discardStack,

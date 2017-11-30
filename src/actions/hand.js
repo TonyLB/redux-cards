@@ -1,5 +1,6 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, useCards, addCard } from './index'
+import { moveCards, useCards, addCard, removeCards } from './index'
+import { canRecycle } from '../state/hand'
 
 const handPriority = (state, stack) => (
     state.stacks.byId[stack].cards.length ? 
@@ -136,4 +137,18 @@ export const checkHand = () => (dispatch, getState) => {
     aggregators.forEach(agg => {
         dispatch(activateAggregator(agg))
     })
+}
+
+export const recycleCards = (stackId, destination) => (dispatch, getState) => {
+    let state = getState()
+    let stack = state.stacks.byId[stackId]
+
+    if (canRecycle(state, stackId)) {
+
+        dispatch(moveCards(stack.cards.slice(1), stackId, destination))
+        dispatch(removeCards([{id: stack.cards[0], source: stackId}]))
+        dispatch(condenseHand())
+    
+    }
+
 }

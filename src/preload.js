@@ -18,7 +18,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Asteroid', 'Gas', 'Bussard', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Comet', 'Asteroid'].map(cardValue => 
+        ['Fuel1', 'Asteroid', 'Bussard', 'Asteroid', 'Gas', 'Comet', 'Gas', 'Gas', 'EVAMining', 'Asteroid', 'Asteroid', 'Comet', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? 0 : undefined,
@@ -187,7 +187,7 @@ const preloadState = () => {
         preloadHand,
         preloadDecks,
         preloadTrack(['EVAFuel', 'PlotIntercept'], 'equipmentTrack'),
-        preloadTrack(['DesignCargoBay'], 'scienceTrack'),
+        preloadTrack(['DesignCargoBay', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
         preloadDeployedEVA,
         preloadShortCuts
     ]

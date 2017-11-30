@@ -24,6 +24,7 @@ class Hand extends React.Component {
                 top: 400,
                 left: 95*index,
                 discardClick: props.discardClick(stack.id),
+                alternateClick: props.alternateClick(stack.id),
                 children: stack.firstOpenStack ? (
                         <Countdown timerId={props.timerId}>
                             <Arrow onClick={ props.drawClick } />
