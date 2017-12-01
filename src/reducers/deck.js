@@ -17,7 +17,6 @@ const shuffleArray = (start, randoms) => {
 
 const deck = (state = deckDefault, action) => {
     switch(action.type) {
-        case 'REMOVE_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)
         default:

@@ -2,10 +2,11 @@ import { generateKey } from '../reducers/keys'
 import { StateTypes } from '../state/index'
 import { uniqueMoves } from '../state'
 
-export const removeCards = cards => {
+export const removeCards = (cards =[], stacks=null) => {
     return {
-        type: 'REMOVE_CARDS',
-        cards
+        type: 'MOVE_CARDS',
+        cards: cards.map(card => ({ id: card.id, source: card.source })),
+        stacks
     }
 }
 

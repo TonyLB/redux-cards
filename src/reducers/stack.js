@@ -40,7 +40,6 @@ const stack = (state = stackDefault, action) => {
                 source: null,
                 destination: action.destination
             }])
-        case 'REMOVE_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)
         default:

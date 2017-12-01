@@ -14,24 +14,18 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                         }
                     }), state.byId)
             }
-        case 'REMOVE_CARDS': 
-            //
-            // Depends on mutation.  Some day when my brain is fresh, this
-            // needs to be refactored to be immutable.
-            //
+        case 'MOVE_CARDS': 
+            let removedCards = action.cards
+                .filter(card => ( !card.destination ))
+                .map(card => ( card.id ))
+            let newById = Object.values(state.byId)
+                .filter(card => ( !removedCards.includes(card.id) ))
+                .map(card => ({ ...card, deployed: removedCards.includes(card.deployed) ? undefined : card.deployed }))
+                .reduce((output, card) => ( { ...output, [card.id]: card } ), {})
 
-            let newById = { ...state.byId }
-            action.cards.forEach(card => { 
-                delete newById[card.id]
-                for (let key in newById) {
-                    if (newById[key].deployed === card.id) {
-                        delete newById[key].deployed
-                    }
-                }
-            })
             return {
                 byId: newById,
-                allIds: state.allIds.filter(id => (!action.cards.some(card => (card.id === id))))
+                allIds: Object.keys(newById)
             }
         case 'DEPLOY_CARD': return {
             ...state,
