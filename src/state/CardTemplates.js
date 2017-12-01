@@ -242,8 +242,20 @@ export const CardTemplates = {
             cardTemplate: 'Asteroid',
             maxStack: 5
         }],
+    },
+    Survey: {
+        id: 'Survey',
+        header: 'Survey',
+        style: 'science',
+        type: TemplateTypes.Payload,
+        maxUses: 1,
+        payload: {
+            DISCARD: ['Asteroid', 'Asteroid', 'Gas', 'Comet']
+        },
+        cost: {
+            FUEL: 4,
+        }
     }
-    
 }
 
 export default CardTemplates

@@ -1,4 +1,4 @@
-import { moveCardsReducer } from '../state'
+import assert from 'assert'
 
 const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Date(), drawDeck: 'NULL-STACK', discardDeck: 'NULL-STACK'}, action) => {
     switch(action.type) {
@@ -10,13 +10,17 @@ const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Dat
                     timerStarted: new Date()
                 }
         case 'SORT_HAND':
-            return {
+        case 'MOVE_CARDS':
+            if (!(action.stacks === null || Array.isArray(action.stacks))) {
+                console.log(action)
+            }
+            assert(action.stacks === null || Array.isArray(action.stacks))
+            return action.stacks ?
+            {
                 ...state,
                 stacks: action.stacks
-            }
-        case 'REMOVE_CARDS':
-        case 'MOVE_CARDS':
-            return moveCardsReducer(state, action.cards)
+            } :
+            state
         default:
             return state
     }

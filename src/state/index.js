@@ -12,18 +12,42 @@ export const stateTypeKey = (stateType) => (
     stateType.toLowerCase() + 's'
 )
 
-export const moveCardsReducer = (state, cards) => (
-    cards ? 
-        cards
-            .reduce((state, card) => 
-                ( moveItemReducer(
-                    state, 
-                    StateTypes.Card, 
-                    card.id, 
-                    card.destination, 
-                    card.source)), 
-                state) :
-        state
+export const moveCardsReducer = (state, cards=[]) => (
+    cards.length ?
+        {
+            ...state,
+            cards: state.cards
+                .filter(item => (
+                    !cards
+                        .filter(card => ( 
+                            card.source === state.id &&
+                            item === card.id
+                        ))
+                        .length
+                ))
+                .concat(
+                    cards
+                        .filter(card => ( card.destination === state.id ))
+                        .map(card => (card.id))
+                )
+        }
+    : state
+)
+
+export const uniqueMoves = (moves) => (
+    Object.values(
+        moves
+        .reduce((output, move) => (
+            output[move.id] ?
+                { ...output,
+                    [move.id]: {
+                        ...(output[move.id]),
+                        destination: move.destination
+                    }
+                } :
+                { ...output, [move.id]: move }
+        ), {})
+    )
 )
 
 export const moveItemReducer = (state, stateType, itemId, destinationId, sourceId) => (

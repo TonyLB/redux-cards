@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { StateTypes, moveItemReducer, moveCardsReducer } from '../state'
+import { moveCardsReducer } from '../state'
 
 const stackDefault = { id: 'TEST', cards: []}
 
@@ -35,7 +35,11 @@ const stack = (state = stackDefault, action) => {
     switch(action.type) {
         case 'ADD_CARD':
         case 'DEPLOY_CARD':
-            return moveItemReducer(state, StateTypes.Card, action.cardId, action.destination, null)
+            return moveCardsReducer(state, [{ 
+                id: action.cardId,
+                source: null,
+                destination: action.destination
+            }])
         case 'REMOVE_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)

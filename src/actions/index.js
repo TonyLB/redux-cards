@@ -1,6 +1,6 @@
 import { generateKey } from '../reducers/keys'
 import { StateTypes } from '../state/index'
-//import CardTemplates from '../state/CardTemplates'
+import { uniqueMoves } from '../state'
 
 export const removeCards = cards => {
     return {
@@ -9,9 +9,22 @@ export const removeCards = cards => {
     }
 }
 
-export const moveCards = (cards = []) => ({
+export const moveCards = (cards = [], stacks=null) => ({
     type: 'MOVE_CARDS',
-    cards
+    cards,
+    stacks
+})
+
+export const combineMoveCards = (actions = []) => ({
+    type: 'MOVE_CARDS',
+    cards: uniqueMoves(
+            actions
+                .map(action => ( action.cards ))
+                .reduce((output, cards) => ( output.concat(cards)), [])
+        ),
+    stacks: actions
+                .map(action => ( action.stacks ))
+                .reduceRight((output, stacks) => ( output || stacks), null)
 })
 
 export const moveCard = (cardId, source, destination) => (dispatch) => {

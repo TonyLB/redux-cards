@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { moveCards, combineStacks } from '../actions'
-import { drawCard, condenseHand, recycleCards } from '../actions/hand'
+import { combineStacks } from '../actions'
+import { drawCard, discardCard, condenseHand, recycleCards } from '../actions/hand'
 import CardTemplate from '../state/CardTemplates'
 import Hand from '../components/Hand'
 import { canRecycle } from '../state/hand'
@@ -37,8 +37,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         cardDrawClick: (firstOpenStack) => () => {
             dispatch(drawCard(firstOpenStack))
         },
-        discardClick: (discard) => (stack) => (card) => () => {
-            dispatch(moveCards([{id: card, source: stack, destination: discard}])) 
+        discardClick: (stack) => (card) => () => {
+            dispatch(discardCard(card, stack))
             dispatch(condenseHand())
         },
         alternateClick: (discard) => (stack) => () => {
@@ -58,7 +58,7 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
         drawClick: propsFromState.firstOpenStack ?
             propsFromDispatch.cardDrawClick(propsFromState.firstOpenStack) :
             () => {},
-        discardClick: propsFromDispatch.discardClick(propsFromState.discardId),
+        discardClick: propsFromDispatch.discardClick,
         shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discardId, propsFromState.drawId),
         alternateClick: propsFromDispatch.alternateClick(propsFromState.discardId),
 
