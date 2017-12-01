@@ -6,6 +6,7 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
             return {
                 ...state,
                 byId: action.cards
+                    .filter(card => (state.byId[card].id))
                     .reduce((output, card) => ({
                         ...output,
                         [card]: {

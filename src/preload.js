@@ -18,7 +18,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining', 'Asteroid', 'Asteroid'].map(cardValue => 
+        ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? 0 : undefined,

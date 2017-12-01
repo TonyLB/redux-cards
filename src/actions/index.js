@@ -41,24 +41,6 @@ export const markUse = (cards) => ({
     cards
 })
 
-export const useCards = (cards) => (dispatch, getState) => {
-    let state = getState()
-    dispatch(markUse(cards
-        .filter(card => (state.cards.byId[card.id].maxUses))
-        .map(card => (card.id))
-    ))
-    dispatch(removeCards(cards
-        .filter(card => ( state.cards.byId[card.id].maxUses <= state.cards.byId[card.id].uses + 1 ))
-        .map(card => ({ id: card.id, source: card.source }))
-    ))
-    dispatch(moveCards(cards
-        .filter(card => {
-            let maxUses = state.cards.byId[card.id].maxUses 
-            return maxUses === undefined || maxUses > state.cards.byId[card.id].uses + 1
-        })
-    ))
-}
-
 export const addCard = (cardTemplate, destination) => {
     return {
         type: 'ADD_CARD',

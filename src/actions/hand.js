@@ -1,5 +1,5 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, combineMoveCards, useCards, addCard, removeCards, combineStacks, startTimer } from './index'
+import { moveCards, combineMoveCards, addCard, removeCards, combineStacks, startTimer, markUse } from './index'
 import { canRecycle } from '../state/hand'
 import { willAggregate } from '../state/stack'
 import testApp from '../reducers/testApp'
@@ -90,6 +90,15 @@ const shuffleIfNeeded = () => (dispatch, getState) => {
     }
 }
 
+const moveThenCondense = (state, moves) => {
+    const newState = testApp(state, moves, true)
+    const condense = movesToCondenseHand(newState)
+    return combineMoveCards([
+        moves,
+        moveCards(condense.moves, sortStacks(condense.state).hand.stacks)
+    ])
+}
+
 export const drawCard = (firstOpenStack) => (dispatch, getState) => {
     const state = getState()
     if (firstOpenStack && state.stacks.byId[state.hand.drawId].cards.length) {
@@ -98,12 +107,7 @@ export const drawCard = (firstOpenStack) => (dispatch, getState) => {
             source: state.hand.drawId,
             destination: firstOpenStack
         }])
-        const newState = testApp(state, drawMove)
-        const condense = movesToCondenseHand(newState)
-        dispatch(combineMoveCards([
-            drawMove,
-            moveCards(condense.moves, sortStacks(condense.state).hand.stacks)
-        ]))
+        dispatch(moveThenCondense(state, drawMove))
         dispatch(startTimer(state.hand.timerId))
         setTimeout(() => {
             dispatch(checkHand())
@@ -121,12 +125,7 @@ export const discardCard = (card, source) => (dispatch, getState) => {
             source: source,
             destination: state.hand.discardId
         }])
-        const newState = testApp(state, discardMove)
-        const condense = movesToCondenseHand(newState)
-        dispatch(combineMoveCards([
-            discardMove,
-            moveCards(condense.moves, sortStacks(condense.state).hand.stacks)
-        ]))
+        dispatch(moveThenCondense(state, discardMove))
     }
 }
 
@@ -145,17 +144,17 @@ const fullAggregators = (state) => {
 const activateAggregator = (stackId) => (dispatch, getState) => {
     let state = getState()
     let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
-    dispatch(useCards(state.stacks.byId[stackId].cards.map(card => ({
-        id: state.cards.byId[card].id,
-        source: stackId,
-        destination: state.hand.discardId
-    }))))
     if (purchases.length > 1) {
         purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, state.hand.discardId)) })
     }
     else {
         purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, stackId)) })        
     }
+    dispatch(useCards(state.stacks.byId[stackId].cards.map(card => ({
+        id: state.cards.byId[card].id,
+        source: stackId,
+        destination: state.hand.discardId
+    }))))
 }
 
 export const checkHand = () => (dispatch, getState) => {
@@ -172,10 +171,34 @@ export const recycleCards = (stackId, destination) => (dispatch, getState) => {
 
     if (canRecycle(state, stackId)) {
 
-        dispatch(moveCards(stack.cards.slice(1).map(card => ({ id: card, source: stackId, destination: destination}))))
-        dispatch(removeCards([{id: stack.cards[0], source: stackId}]))
-        dispatch(condenseHand())
+        const recycleMove = combineMoveCards([
+            moveCards(stack.cards.slice(1).map(card => ({ id: card, source: stackId, destination: destination}))),
+            removeCards([{id: stack.cards[0], source: stackId}])
+        ])
+        dispatch(moveThenCondense(state, recycleMove))
     
     }
 
 }
+
+const useCardMoves = (state, cards=[]) => (
+    cards
+    .map(card => (
+        (state.cards.byId[card.id].maxUses <= state.cards.byId[card.id].uses + 1) ?
+            {
+                id: card.id,
+                source: card.source
+            } :
+            card
+    ))
+)
+
+export const useCards = (cards=[], stacks=null) => (dispatch, getState) => {
+    let state = getState()
+    dispatch(markUse(cards
+        .filter(card => (state.cards.byId[card.id].maxUses))
+        .map(card => (card.id))
+    ))
+    dispatch(moveCards(useCardMoves(state, cards), stacks))
+}
+

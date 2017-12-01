@@ -11,9 +11,6 @@ const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Dat
                 }
         case 'SORT_HAND':
         case 'MOVE_CARDS':
-            if (!(action.stacks === null || Array.isArray(action.stacks))) {
-                console.log(action)
-            }
             assert(action.stacks === null || Array.isArray(action.stacks))
             return action.stacks ?
             {
