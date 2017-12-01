@@ -28,7 +28,8 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                 byId: newById,
                 allIds: Object.keys(newById)
             }
-        case 'ADD_CARDS': return {
+        case 'ADD_CARDS': 
+        return {
             ...state,
             byId: action.cards
                 .reduce((newState, card) => (Object.assign(newState,
@@ -39,8 +40,8 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                         maxUses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined
                     }},
                     card.deployedBy ? {
-                        [cards.deployedBy]: {
-                            ...(state.byId[cards.deployedBy]),
+                        [card.deployedBy]: {
+                            ...(state.byId[card.deployedBy]),
                             deployed: card.id
                         }                                
                     } : undefined

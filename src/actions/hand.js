@@ -1,5 +1,5 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, combineMoveCards, addCard, removeCards, combineStacks, startTimer, markUse } from './index'
+import { moveCards, combineMoveCards, addCard, addCards, removeCards, combineStacks, startTimer, markUse } from './index'
 import { canRecycle } from '../state/hand'
 import { willAggregate } from '../state/stack'
 import testApp from '../reducers/testApp'
@@ -144,17 +144,24 @@ const fullAggregators = (state) => {
 const activateAggregator = (stackId) => (dispatch, getState) => {
     let state = getState()
     let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
-    if (purchases.length > 1) {
-        purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, state.hand.discardId)) })
-    }
-    else {
-        purchases.forEach(purchase => { dispatch(addCard(purchase.cardTemplate, stackId)) })        
-    }
-    dispatch(useCards(state.stacks.byId[stackId].cards.map(card => ({
+
+    let addCardMoves = purchases.length > 1 ?
+        addCards(purchases.map(purchase => ({ 
+            cardTemplate: purchase.cardTemplate,
+            destination: state.hand.discardId
+        }))) :
+        addCard(purchases[0].cardTemplate, stackId)
+
+    let newState = testApp(state, addCardMoves, true)
+
+    let expenditureMoves = moveCards(useCardMoves(newState, state.stacks.byId[stackId].cards.map(card => ({
         id: state.cards.byId[card].id,
         source: stackId,
         destination: state.hand.discardId
     }))))
+
+    dispatch(addCardMoves)
+    dispatch(moveThenCondense(newState, expenditureMoves))
 }
 
 export const checkHand = () => (dispatch, getState) => {
