@@ -28,35 +28,24 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                 byId: newById,
                 allIds: Object.keys(newById)
             }
-        case 'DEPLOY_CARD': return {
+        case 'ADD_CARDS': return {
             ...state,
-            byId: {
-                ...state.byId,
-                [action.cardId]: {
-                    id: action.cardId,
-                    cardTemplate: action.cardTemplate,
-                    uses: CardTemplates[action.cardTemplate].maxUses ? 0 : undefined,
-                    maxUses: CardTemplates[action.cardTemplate].maxUses ? CardTemplates[action.cardTemplate].maxUses : undefined
-                },
-                [action.source]: {
-                    ...(state.byId[action.source]),
-                    deployed: action.cardId
-                }
-            },
-            allIds: [...state.allIds, action.cardId]
-        }
-        case 'ADD_CARD': return {
-            ...state,
-            byId: {
-                ...state.byId,
-                [action.cardId]: {
-                    id: action.cardId,
-                    cardTemplate: action.cardTemplate,
-                    uses: CardTemplates[action.cardTemplate].maxUses ? 0 : undefined,
-                    maxUses: CardTemplates[action.cardTemplate].maxUses ? CardTemplates[action.cardTemplate].maxUses : undefined
-                }
-            },
-            allIds: [...state.allIds, action.cardId]
+            byId: action.cards
+                .reduce((newState, card) => (Object.assign(newState,
+                    { [card.id]: {
+                        id: card.id,
+                        cardTemplate: card.cardTemplate,
+                        uses: CardTemplates[card.cardTemplate].maxUses ? 0 : undefined,
+                        maxUses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined
+                    }},
+                    card.deployedBy ? {
+                        [cards.deployedBy]: {
+                            ...(state.byId[cards.deployedBy]),
+                            deployed: card.id
+                        }                                
+                    } : undefined
+                )), state.byId),
+            allIds: state.allIds.concat(action.cards.map(card => (card.id)))
         }
         default: return state
     }

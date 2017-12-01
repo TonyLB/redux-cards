@@ -41,24 +41,27 @@ export const markUse = (cards) => ({
     cards
 })
 
-export const addCard = (cardTemplate, destination) => {
-    return {
-        type: 'ADD_CARD',
-        cardTemplate,
-        destination,
-        cardId: generateKey(StateTypes.Card)
-    }
-}
+export const addCards = (cards = []) => ({
+    type: 'ADD_CARDS',
+    cards
+})
 
-export const deployCard = (cardTemplate, source, destination) => {
-    return {
-        type: 'DEPLOY_CARD',
-        cardTemplate,
-        source,
-        destination,
-        cardId: generateKey(StateTypes.Card)
-    }
-}
+export const addCard = (cardTemplate, destination) => (
+    addCards([{
+        cardTemplate: cardTemplate,
+        destination: destination,
+        id: generateKey(StateTypes.Card)    
+    }])
+)
+
+export const deployCard = (cardTemplate, source, destination) => (
+    addCards([{
+        cardTemplate: cardTemplate,
+        deployedBy: source,
+        destination: destination,
+        id: generateKey(StateTypes.Card)    
+    }])
+)
 
 export const combineStacks = (source, destination) => {
     return {

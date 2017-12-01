@@ -33,13 +33,7 @@ const shuffleStack = (state = stackDefault, action, cards, randoms) => {
 
 const stack = (state = stackDefault, action) => {
     switch(action.type) {
-        case 'ADD_CARD':
-        case 'DEPLOY_CARD':
-            return moveCardsReducer(state, [{ 
-                id: action.cardId,
-                source: null,
-                destination: action.destination
-            }])
+        case 'ADD_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)
         default:
