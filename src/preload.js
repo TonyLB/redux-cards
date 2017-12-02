@@ -21,7 +21,7 @@ const preloadDecks = (state) => {
         ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
-                uses: CardTemplate[cardValue].maxUses ? 0 : undefined,
+                uses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
                 maxUses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
             })),
         StateTypes.Card
@@ -62,7 +62,6 @@ const preloadRandoms = (state) => {
 }
 
 const preloadHand = (state) => {
-//    let timerId = generateKey(StateTypes.Timer)
     const timerId = 'HARVEST-TIMER'
     let stacks = listToDenormalized(
         [1, 2, 3, 4, 5].map((stack) => ({ cards: [] })),
@@ -142,7 +141,7 @@ const preloadDeployedEVA = (state) => {
     filteredCard = {
         ...filteredCard,
         byId: {
-            ...filteredCard,
+            ...filteredCard.byId,
             [filteredCardId]: {
                 ...filteredCard.byId[filteredCardId],
                 deployed: deployedCard

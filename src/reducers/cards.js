@@ -20,12 +20,12 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
             return {
                 ...state,
                 byId: action.cards
-                    .filter(card => (state.byId[card].id))
+                    .filter(card => (state.byId[card].id && state.byId[card].uses))
                     .reduce((output, card) => ({
                         ...output,
                         [card]: {
                             ...(output[card]),
-                            uses: output[card].uses+1
+                            uses: output[card].uses-1
                         }
                     }), state.byId)
             }
@@ -50,7 +50,7 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                     { [card.id]: {
                         id: card.id,
                         cardTemplate: card.cardTemplate,
-                        uses: CardTemplates[card.cardTemplate].maxUses ? 0 : undefined,
+                        uses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined,
                         maxUses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined
                     }},
                     card.deployedBy ? {

@@ -67,8 +67,8 @@ const emptyDenormalizedObject = { byId: {}, allIds: [] }
 
 export const listToDenormalized = (list, prefix) => {
     const values = list.map(value => ({
-            ...value,
-            id: value.id || generateKey(prefix)
+            id: value.id || generateKey(prefix),
+            ...value
         }))
     return {
         byId: values.reduce((obj, value) => ({

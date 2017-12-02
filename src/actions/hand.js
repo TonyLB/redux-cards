@@ -138,15 +138,20 @@ const activateAggregator = (stackId) => (dispatch, getState) => {
         }))) :
         addCard(purchases[0].cardTemplate, stackId)
 
+    dispatch(addCardMoves)
+        
     let newState = testApp(state, addCardMoves, true)
 
-    let expenditureMoves = moveCards(useCardMoves(newState, state.stacks.byId[stackId].cards.map(card => ({
+    const maybeDiscards = state.stacks.byId[stackId].cards.map(card => ({
         id: state.cards.byId[card].id,
         source: stackId,
         destination: state.hand.discardId
-    }))))
+    }))
 
-    dispatch(addCardMoves)
+    dispatch(useCardMarks(newState, maybeDiscards))
+
+    const expenditureMoves = moveCards(useCardMoves(newState, maybeDiscards))
+
     dispatch(moveThenCondense(newState, expenditureMoves))
 }
 
@@ -177,7 +182,7 @@ export const recycleCards = (stackId, destination) => (dispatch, getState) => {
 export const useCardMoves = (state, cards=[]) => (
     cards
     .map(card => (
-        (state.cards.byId[card.id].maxUses <= state.cards.byId[card.id].uses + 1) ?
+        (state.cards.byId[card.id].uses <= 1) ?
             {
                 id: card.id,
                 source: card.source
@@ -186,12 +191,16 @@ export const useCardMoves = (state, cards=[]) => (
     ))
 )
 
-export const useCards = (cards=[], stacks=null) => (dispatch, getState) => {
-    let state = getState()
-    dispatch(markUse(cards
+const useCardMarks = (state, cards=[]) => (
+    markUse(cards
         .filter(card => (state.cards.byId[card.id].maxUses))
         .map(card => (card.id))
-    ))
+    )
+)
+
+export const useCards = (cards=[], stacks=null) => (dispatch, getState) => {
+    let state = getState()
+    dispatch(useCardMarks(state, cards))
     dispatch(moveCards(useCardMoves(state, cards), stacks))
 }
 
