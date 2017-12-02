@@ -12,20 +12,6 @@ const handPriority = (state, stack) => (
     : 0
 )
 
-export const sortHand = () => (dispatch, getState) => {
-    let state = getState()
-    let stacks = [ ...state.hand.stacks ]
-    stacks.sort((a, b) => (
-        handPriority(state, b) - handPriority(state, a)
-    ))
-    if (stacks.some((val, index) => ( state.hand.stacks[index] !== val ))) {
-        dispatch({
-            type: 'SORT_HAND',
-            stacks: stacks
-        })
-    }
-}
-
 const sortStacks = (state) => ({
     ...state,
     hand: {
@@ -90,7 +76,7 @@ const shuffleIfNeeded = () => (dispatch, getState) => {
     }
 }
 
-const moveThenCondense = (state, moves) => {
+export const moveThenCondense = (state, moves) => {
     const newState = testApp(state, moves, true)
     const condense = movesToCondenseHand(newState)
     return combineMoveCards([
@@ -188,7 +174,7 @@ export const recycleCards = (stackId, destination) => (dispatch, getState) => {
 
 }
 
-const useCardMoves = (state, cards=[]) => (
+export const useCardMoves = (state, cards=[]) => (
     cards
     .map(card => (
         (state.cards.byId[card.id].maxUses <= state.cards.byId[card.id].uses + 1) ?

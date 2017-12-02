@@ -186,7 +186,7 @@ const preloadState = () => {
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTrack(['EVAFuel', 'PlotIntercept', 'Survey'], 'equipmentTrack'),
+        preloadTrack(['UpgradeBussard1', 'EVAFuel', 'PlotIntercept', 'Survey'], 'equipmentTrack'),
         preloadTrack(['DesignCargoBay', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
         preloadDeployedEVA,
         preloadShortCuts

@@ -1,9 +1,7 @@
 import { connect } from 'react-redux'
-import { moveCard, addCard, deployCard } from '../actions'
-import { condenseHand, useCards } from '../actions/hand'
+import { moveCard } from '../actions'
 import Track from '../components/Track'
-import { cardsToSpend } from '../state/hand'
-import CardTemplates from '../state/CardTemplates'
+import { purchaseCard } from '../actions/track'
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -31,23 +29,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onClick: (track, trackDiscard, shortCuts, state) => (card, payload=[], deploy=[]) => () => {
-            let cards = cardsToSpend(state, CardTemplates[state.cards.byId[card].cardTemplate].cost)
-            if (cards.length) {
-                dispatch(moveCard(card, track, trackDiscard))
-                dispatch(useCards(cards.map(spentCard => ({ ...spentCard, destination: shortCuts['DISCARD'] }))))
-                dispatch(condenseHand())
-                Object.entries(payload).forEach(([key, val]) => {
-                    val.forEach(newCard => {
-                        dispatch(addCard(newCard, shortCuts[key]))
-                    })
-                })
-                Object.entries(deploy).forEach(([key, val]) => {
-                    val.forEach(newCard => {
-                        dispatch(deployCard(newCard, card, shortCuts[key]))
-                    })
-                })
-            }
+        onClick: (track) => (card) => () => {
+            dispatch(purchaseCard(card, track))
         },
         cardDrawClick: (card, deck, track, discard) => () => {
             if (discard) { 
@@ -74,11 +57,7 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
             propsFromState.id,
             discard
         ) : () => {},
-        onClick: propsFromDispatch.onClick(
-            propsFromState.id, 
-            propsFromState.deck.id, 
-            propsFromState.shortCuts,
-            propsFromState.state),
+        onClick: propsFromDispatch.onClick(propsFromState.id),
         ...ownProps
     }  
 }

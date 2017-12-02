@@ -64,6 +64,10 @@ export const deployCard = (cardTemplate, source, destination) => (
     }])
 )
 
+export const deployCards = (cards=[], source) => (
+    addCards(cards.map(card => ({ ...card, deployedBy: source })))
+)
+
 export const combineAddCards = (actions = []) => ({
     type: 'ADD_CARDS',
     cards: actions
@@ -72,6 +76,11 @@ export const combineAddCards = (actions = []) => ({
     stacks: actions
         .map(action => ( action.stacks ))
         .reduceRight((output, stacks) => ( output || stacks), null)
+})
+
+export const replaceCards = (cardMap) => ({
+    type: 'REPLACE_CARDS',
+    cardMap
 })
 
 export const combineStacks = (source, destination) => {
