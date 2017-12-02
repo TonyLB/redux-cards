@@ -1,5 +1,5 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, addCards, deployCards, combineMoveCards, replaceCards } from '../actions'
+import { moveCards, addCards, deployCards, combineMoveCards, replaceCards, setTimers, changeSetting } from '../actions'
 import { cardsToSpend } from '../state/hand'
 import { useCardMoves, moveThenCondense } from './hand'
 
@@ -41,6 +41,22 @@ export const purchaseCard = (card, track) => (dispatch, getState) => {
 
         if (purchaseTemplate.upgrade) {
             dispatch(replaceCards(purchaseTemplate.upgrade))
+        }
+
+        if (purchaseTemplate.boost) {
+            const timers = Object.entries(purchaseTemplate.boost)
+                .filter(([key, val]) => (state.timers.byId[key]))
+                .map(([key, val]) => ({ id: key, duration: val }))
+            const settings = Object.entries(purchaseTemplate.boost)
+                .filter(([key, val]) => (!state.timers.byId[key]))
+
+            if (timers.length) {
+                dispatch(setTimers(timers))
+            }
+            if (settings.length) {
+                dispatch(changeSetting(Object.assign({}, settings)))
+            }
+            
         }
 
     }

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import cards from "./cards";
 import hand from './hand'
 import { random, advanceRandom, randomList } from './random'
+import settings from './settings'
 import { stacks, shuffleStacks } from './stacks'
 import timers from './timers'
 import tracks from './tracks'
@@ -29,6 +30,7 @@ const testApp = (state, action, simulated=false) => {
             cards,
             hand,
             random,
+            settings,
             stacks,
             timers,
             tracks

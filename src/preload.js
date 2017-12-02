@@ -62,7 +62,8 @@ const preloadRandoms = (state) => {
 }
 
 const preloadHand = (state) => {
-    let timerId = generateKey(StateTypes.Timer)
+//    let timerId = generateKey(StateTypes.Timer)
+    const timerId = 'HARVEST-TIMER'
     let stacks = listToDenormalized(
         [1, 2, 3, 4, 5].map((stack) => ({ cards: [] })),
         StateTypes.Stack
@@ -79,7 +80,7 @@ const preloadHand = (state) => {
             byId: {
                 [timerId]: {
                     id: timerId,
-                    duration: 5000,
+                    duration: 2500,
                     startTime: new Date()
                 }
             },
@@ -180,16 +181,24 @@ const preloadShortCuts = (state) => ({
     }
 })
 
+const preloadSettings = (state) => ({
+    ...state,
+    settings: {
+
+    }
+})
+
 const preloadState = () => { 
     let loadFuncs = [
         preloadNulls,
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTrack(['UpgradeBussard1', 'EVAFuel', 'PlotIntercept', 'Survey'], 'equipmentTrack'),
-        preloadTrack(['DesignCargoBay', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
+        preloadTrack(['DrawSpeed1', 'UpgradeBussard1', 'EVAFuel', 'PlotIntercept'], 'equipmentTrack'),
+        preloadTrack(['DesignCargoBay', 'Survey', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
         preloadDeployedEVA,
-        preloadShortCuts
+        preloadShortCuts,
+        preloadSettings
     ]
     return loadFuncs.reduce((state, loadFunc) => ( loadFunc(state) ), {})
 }

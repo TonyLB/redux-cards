@@ -5,6 +5,7 @@ import DriveTech from './drivetech'
 import Surveys from './surveys'
 import Mining from './mining'
 import Storage from './storage'
+import Boosts from './boosts'
 
 export const CardTemplates = {
     Types: TemplateTypes,
@@ -13,7 +14,8 @@ export const CardTemplates = {
     ...DriveTech,
     ...Surveys,
     ...Mining,
-    ...Storage
+    ...Storage,
+    ...Boosts
 }
 
 export default CardTemplates

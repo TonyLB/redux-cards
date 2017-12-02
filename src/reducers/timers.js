@@ -16,6 +16,17 @@ const timers = (state = { byId: {}, allIds: []}, action) => {
                     }
                 }
             }
+        case 'SET_TIMERS':
+            return {
+                ...state,
+                byId: action.timers.reduce((output, timer) => (
+                    Object.assign(output, {
+                        [timer.id]: {
+                            ...state.byId[timer.id],
+                            duration: timer.duration
+                        }   
+                    })), state.byId)
+            }
         default:
             return state
     }

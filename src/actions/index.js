@@ -97,3 +97,15 @@ export const startTimer = (timerId) => {
         id: timerId
     }
 }
+
+export const setTimers = (timers) => ({
+    type: 'SET_TIMERS',
+    timers
+})
+
+export const changeSetting = (changes) => {
+    return {
+        type: 'CHANGE_SETTINGS',
+        changes
+    }
+}
