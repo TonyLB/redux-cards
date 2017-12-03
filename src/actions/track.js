@@ -13,7 +13,7 @@ export const purchaseCard = (card, track) => (dispatch, getState) => {
 
     if (cards.length) {
 
-        const discard = moveCards([{ id: card, source: track, destination: state.tracks.byId[track].deck }])
+        const discard = moveCards(useCardMoves(state, [{ id: card, source: track, destination: state.tracks.byId[track].deck }]))
         const price = moveCards(useCardMoves(state, cards.map(spentCard => ({ ...spentCard, destination: shortCuts['DISCARD'] }))))
         dispatch(moveThenCondense(state, combineMoveCards([ discard, price ])))
         

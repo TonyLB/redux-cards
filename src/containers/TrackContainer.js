@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import CardTemplates from '../state/CardTemplates'
 import { moveCard } from '../actions'
 import Track from '../components/Track'
 import { purchaseCard } from '../actions/track'
@@ -11,7 +12,10 @@ const mapStateToProps = (state, ownProps) => {
         
         // Denormalize cards on track
 
-        cards: track.cards.map(card => (state.cards.byId[card])),
+        cards: track.cards.map(card => ({
+            ...(CardTemplates[state.cards.byId[card].cardTemplate]),
+            ...(state.cards.byId[card])
+        })),
 
         // Denormalize cards for deck ID
 

@@ -15,7 +15,8 @@ export const Card = ({
         showBack=false, 
         cardId,
         uses,
-        maxUses
+        maxUses,
+        hideUses=false
     }) => (
     <div style={{top:top, left:left, zIndex:zIndex, position:"absolute"}}
         className={className?className:cardTemplate?('card-'+CardTemplates[cardTemplate].style):null} 
@@ -28,7 +29,7 @@ export const Card = ({
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].header : ''}
         </div>
         <div className='positioning-footer' style={{width:76}}>
-            { !showBack && maxUses ? (<div>Uses: {uses}/{maxUses}</div>) : ''}
+            { !showBack && maxUses && !hideUses ? (<div>Uses: {uses}/{maxUses}</div>) : ''}
             { !showBack && cardTemplate ? CardTemplates[cardTemplate].footer : ''}
             { !showBack && cardTemplate && CardTemplates[cardTemplate].resources ?  
                 resourceShortForm(`${cardId}-RESOURCE-`, CardTemplates[cardTemplate].resources) : ''}

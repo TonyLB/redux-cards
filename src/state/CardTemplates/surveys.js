@@ -37,6 +37,7 @@ export const Surveys = {
         style: 'science',
         type: TemplateTypes.Payload,
         maxUses: 1,
+        hideUses: true,
         payload: {
             DISCARD: ['Asteroid', 'Asteroid', 'Comet']
         },

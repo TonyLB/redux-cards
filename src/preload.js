@@ -20,7 +20,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining1', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
+        ['Fuel1', 'Asteroid', 'Bussard1', 'Gas', 'Comet', 'Gas', 'EVAMining1', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
@@ -99,7 +99,11 @@ const preloadTrack = (preloadCardTemplates, key) => (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
         preloadCardTemplates.map(cardValue => 
-            ({ cardTemplate: CardTemplate[cardValue].id })),
+            ({ 
+                cardTemplate: CardTemplate[cardValue].id,
+                uses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
+                maxUses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined
+            })),
         StateTypes.Card
     )
     let decks = {
@@ -135,15 +139,15 @@ const preloadTrack = (preloadCardTemplates, key) => (state) => {
     }        
 }
 
-const preloadDeployedEVA = (state) => {
+const preloadDeployed = (source, target) => (state) => {
     let filteredCard = listToDenormalized(
-        ['EVAFuel1'].map(cardValue => 
+        [source].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue].id })),
         StateTypes.Card
     )
     const filteredCardId = filteredCard.allIds[0]
     const deployedCard = Object.entries(state.cards.byId)
-        .filter(([key, val]) => (val.cardTemplate === 'EVAMining1'))
+        .filter(([key, val]) => (val.cardTemplate === target))
         .map(([key, val]) => (key))[0]
     filteredCard = {
         ...filteredCard,
@@ -202,7 +206,8 @@ const preloadState = () => {
         preloadDecks,
         preloadTrack(['PlotIntercept', 'EVAFuel1', 'UpgradeBussard1', 'UpgradeDrive1', 'UpgradeEVA1', 'AutoDraw'], 'equipmentTrack'),
         preloadTrack(['DesignCargoBay', 'Survey', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
-        preloadDeployedEVA,
+        preloadDeployed('EVAFuel1', 'EVAMining1'),
+        preloadDeployed('DeployBussard1', 'Bussard1'),
         preloadShortCuts,
         preloadSettings
     ]

@@ -6,26 +6,32 @@ export const Planetes = {
     Asteroid: {
         id: 'Asteroid',
         header: 'Asteroid',
-        footer: (<div>1<Glyph size={10} shape='ASTEROID' /></div>),
         value: (<Glyph size={50} shape='ASTEROID' />),
         style: 'plain',
-        type: TemplateTypes.Planete
+        type: TemplateTypes.Planete,
+        resources: {
+            ASTEROID: 1
+        }
     },
     Comet: {
         id: 'Comet',
         header: 'Comet',
-        footer: (<div>1<Glyph size={10} shape='COMET' /></div>),
         value: (<Glyph size={50} shape='COMET' />),
         style: 'plain',
-        type: TemplateTypes.Planete
+        type: TemplateTypes.Planete,
+        resources: {
+            COMET: 1
+        }
     },
     Gas: {
         id: 'Gas',
         header: 'Gas Cloud',
-        footer: (<div>1<Glyph size={10} shape='GAS' /></div>),
         value: (<Glyph size={50} shape='GAS' />),
         style: 'plain',
-        type: TemplateTypes.Planete
+        type: TemplateTypes.Planete,
+        resources: {
+            GAS: 1
+        }
     },
 }
 

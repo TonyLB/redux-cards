@@ -99,9 +99,9 @@ export const drawCard = () => (dispatch, getState) => {
         setTimeout(() => {
             dispatch(checkHand())
             dispatch(condenseHand())
-        }, 500)    
-        dispatch(shuffleIfNeeded())
+        }, 500)
     }
+    dispatch(shuffleIfNeeded())
 }
 
 export const maybeRebootDrawCycle = () => (dispatch, getState) => {

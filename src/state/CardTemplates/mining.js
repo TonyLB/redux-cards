@@ -44,7 +44,9 @@ export const Mining = {
         cost: {
             ORE: 3,
             FUEL: 3
-        }
+        },
+        maxUses: 1,
+        hideUses: true
     },
     EVAFuel2: {
         id: 'EVAFuel1',

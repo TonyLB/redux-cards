@@ -15,7 +15,9 @@ export const Boosts = {
         cost: {
             ORE: 6,
             FUEL: 4
-        }
+        },
+        maxUses: 1,
+        hideUses: true
     },
 }
 
