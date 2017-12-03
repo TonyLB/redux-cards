@@ -10,7 +10,7 @@ export const DriveTech = {
         type: TemplateTypes.Aggregator,
         style: 'control',
         aggregates: [{
-            cardTemplate: 'Gas',
+            cardTemplates: 'Gas',
             maxStack: 2
         }],
         purchases: [{
@@ -37,7 +37,7 @@ export const DriveTech = {
         type: TemplateTypes.Aggregator,
         style: 'control',
         aggregates: [{
-            cardTemplate: 'Gas',
+            cardTemplates: 'Gas',
             maxStack: 3
         }],
         purchases: [{

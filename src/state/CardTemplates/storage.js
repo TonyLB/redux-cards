@@ -36,7 +36,7 @@ export const Storage = {
         type: TemplateTypes.Storage,
         style: 'control',        
         aggregates: [{
-            cardTemplate: 'Ore1',
+            cardTemplates: ['Ore1', 'Ore2'],
             maxStack: 5
         }],
     },
@@ -73,7 +73,7 @@ export const Storage = {
         type: TemplateTypes.Storage,
         style: 'control',        
         aggregates: [{
-            cardTemplate: 'Fuel1',
+            cardTemplates: ['Fuel1', 'Fuel2'],
             maxStack: 5
         }],
     },
@@ -97,7 +97,7 @@ export const Storage = {
         type: TemplateTypes.Storage,
         style: 'control',        
         aggregates: [{
-            cardTemplate: 'Asteroid',
+            cardTemplates: 'Asteroid',
             maxStack: 5
         }],
     }

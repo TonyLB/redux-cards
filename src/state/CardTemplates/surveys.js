@@ -24,7 +24,7 @@ export const Surveys = {
         style: 'control',
         maxUses: 1,
         aggregates: [{
-            cardTemplate: 'Comet',
+            cardTemplates: 'Comet',
             maxStack: 1
         }],
         purchases: [{

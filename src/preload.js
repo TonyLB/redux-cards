@@ -18,7 +18,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
+        ['Fuel1', 'Asteroid', 'Bussard', 'Gas', 'Comet', 'Gas', 'EVAMining1', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
@@ -130,13 +130,13 @@ const preloadTrack = (preloadCardTemplates, key) => (state) => {
 
 const preloadDeployedEVA = (state) => {
     let filteredCard = listToDenormalized(
-        ['EVAFuel'].map(cardValue => 
+        ['EVAFuel1'].map(cardValue => 
             ({ cardTemplate: CardTemplate[cardValue].id })),
         StateTypes.Card
     )
     const filteredCardId = filteredCard.allIds[0]
     const deployedCard = Object.entries(state.cards.byId)
-        .filter(([key, val]) => (val.cardTemplate === 'EVAMining'))
+        .filter(([key, val]) => (val.cardTemplate === 'EVAMining1'))
         .map(([key, val]) => (key))[0]
     filteredCard = {
         ...filteredCard,
@@ -193,7 +193,7 @@ const preloadState = () => {
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTrack(['DrawSpeed1', 'UpgradeBussard1', 'EVAFuel', 'PlotIntercept'], 'equipmentTrack'),
+        preloadTrack(['UpgradeEVA1', 'DrawSpeed1', 'UpgradeBussard1', 'EVAFuel1', 'PlotIntercept'], 'equipmentTrack'),
         preloadTrack(['DesignCargoBay', 'Survey', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
         preloadDeployedEVA,
         preloadShortCuts,

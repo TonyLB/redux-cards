@@ -55,19 +55,26 @@ export const willAggregate = (state, stackId) => {
 
     // This checks how much of the aggregation is already full.
 
-    const cardsNeeded = aggregationTypes.map(({cardTemplate, maxStack}) => ({
-        cardTemplate: cardTemplate,
-        cardsNeeded: maxStack - anticipatedStacks[0].cards
-            .slice(1)
-            .filter(card => ( card.cardTemplate === cardTemplate ))
-            .length
-    }))
+    const cardsNeeded = aggregationTypes
+        .map(aggType => ({ 
+            ...aggType, 
+            cardTemplates: Array.isArray(aggType.cardTemplates) ? 
+                aggType.cardTemplates : 
+                [ aggType.cardTemplates ] 
+            }))
+        .map(({cardTemplates, maxStack}) => ({
+            cardTemplates: cardTemplates,
+            cardsNeeded: maxStack - anticipatedStacks[0].cards
+                .slice(1)
+                .filter(card => ( cardTemplates.includes(card.cardTemplate) ))
+                .length
+        }))
 
     return cardsNeeded.reduce((output, card) => ([
         ...output,
         ...(listOfAggregatedCards(
             anticipatedStacks.slice(1),
-            card.cardTemplate,
+            card.cardTemplates,
             card.cardsNeeded)
             .map(card => ({ ...card, destination: stackId })))
     ]), [])
