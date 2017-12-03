@@ -12,7 +12,8 @@ const timers = (state = { byId: {}, allIds: []}, action) => {
                     ...state.byId,
                     [action.id]: {
                         ...state.byId[action.id],
-                        startTime: new Date()
+                        startTime: new Date(),
+                        timeoutId: action.timeoutId
                     }
                 }
             }
@@ -26,6 +27,18 @@ const timers = (state = { byId: {}, allIds: []}, action) => {
                             duration: timer.duration
                         }   
                     })), state.byId)
+            }
+        case 'CLEAR_TIMER':
+            clearTimeout(state.byId[action.id].timeoutId)
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [action.id]: {
+                        ...state.byId[action.id],
+                        timeoutId: null
+                    }
+                }
             }
         default:
             return state

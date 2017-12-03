@@ -85,8 +85,9 @@ export const moveThenCondense = (state, moves) => {
     ])
 }
 
-export const drawCard = (firstOpenStack) => (dispatch, getState) => {
+export const drawCard = () => (dispatch, getState) => {
     const state = getState()
+    const firstOpenStack = state.hand.stacks.find(stack => ( state.stacks.byId[stack].cards.length === 0 ))
     if (firstOpenStack && state.stacks.byId[state.hand.drawId].cards.length) {
         const drawMove = moveCards([{
             id: state.stacks.byId[state.hand.drawId].cards[0], 
@@ -99,8 +100,18 @@ export const drawCard = (firstOpenStack) => (dispatch, getState) => {
             dispatch(checkHand())
             dispatch(condenseHand())
         }, 500)    
+        dispatch(shuffleIfNeeded())
     }
-    dispatch(shuffleIfNeeded())
+}
+
+export const maybeRebootDrawCycle = () => (dispatch, getState) => {
+    const state = getState()
+    if (state.settings['AUTO-DRAW']) {
+        const timer = state.timers.byId[state.hand.timerId]
+        if (!timer.timeoutId) {
+            dispatch(drawCard())
+        }    
+    }
 }
 
 export const discardCard = (card, source) => (dispatch, getState) => {
@@ -112,6 +123,7 @@ export const discardCard = (card, source) => (dispatch, getState) => {
             destination: state.hand.discardId
         }])
         dispatch(moveThenCondense(state, discardMove))
+        dispatch(maybeRebootDrawCycle())
     }
 }
 
@@ -153,6 +165,7 @@ const activateAggregator = (stackId) => (dispatch, getState) => {
     const expenditureMoves = moveCards(useCardMoves(newState, maybeDiscards))
 
     dispatch(moveThenCondense(newState, expenditureMoves))
+    dispatch(maybeRebootDrawCycle())
 }
 
 export const checkHand = () => (dispatch, getState) => {
@@ -174,7 +187,7 @@ export const recycleCards = (stackId, destination) => (dispatch, getState) => {
             removeCards([{id: stack.cards[0], source: stackId}])
         ])
         dispatch(moveThenCondense(state, recycleMove))
-    
+        dispatch(maybeRebootDrawCycle())
     }
 
 }
@@ -202,5 +215,6 @@ export const useCards = (cards=[], stacks=null) => (dispatch, getState) => {
     let state = getState()
     dispatch(useCardMarks(state, cards))
     dispatch(moveCards(useCardMoves(state, cards), stacks))
+    dispatch(maybeRebootDrawCycle())
 }
 

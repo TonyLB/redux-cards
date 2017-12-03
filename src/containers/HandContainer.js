@@ -16,26 +16,24 @@ const stackLookup = (state) => (stack) => ({
 
 const mapStateToProps = state => {
     let stacks = state.hand.stacks.map(stackLookup(state))
-    let openStackFound = ''
-    stacks.forEach((stack) => {
-        if (!openStackFound && stack.cards.length === 0) {
-            stack.firstOpenStack = true
-            openStackFound = stack.id
-        }
-    })
+    const openStack = stacks.findIndex(stack => ( stack.cards.length === 0 ))
+    if (openStack !== -1) {
+        stacks[openStack] = Object.assign(stacks[openStack], {
+            firstOpenStack: true
+        })
+    }
     return {
         ...state.hand,
         stacks: stacks,
         drawDeck: stackLookup(state)(state.hand.drawId),
-        discardDeck: stackLookup(state)(state.hand.discardId),
-        firstOpenStack: openStackFound
+        discardDeck: stackLookup(state)(state.hand.discardId)
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        cardDrawClick: (firstOpenStack) => () => {
-            dispatch(drawCard(firstOpenStack))
+        cardDrawClick: () => {
+            dispatch(drawCard())
         },
         discardClick: (stack) => (card) => () => {
             dispatch(discardCard(card, stack))
@@ -55,9 +53,7 @@ const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
 
         // Pass payload arguments to dispatch functions
 
-        drawClick: propsFromState.firstOpenStack ?
-            propsFromDispatch.cardDrawClick(propsFromState.firstOpenStack) :
-            () => {},
+        drawClick: propsFromDispatch.cardDrawClick,
         discardClick: propsFromDispatch.discardClick,
         shuffleClick: propsFromDispatch.shuffleClick(propsFromState.discardId, propsFromState.drawId),
         alternateClick: propsFromDispatch.alternateClick(propsFromState.discardId),

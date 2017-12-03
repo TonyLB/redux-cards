@@ -1,6 +1,8 @@
 import { generateKey } from './reducers/keys'
 import { StateTypes, listToDenormalized, combineDenormalizedObjects } from './state'
 import CardTemplate from './state/CardTemplates'
+import { clearTimer } from './actions'
+import { drawCard } from './actions/hand'
 
 const preloadNulls = (state) => {
     let nullProp = 'NULL-STACK'
@@ -80,7 +82,12 @@ const preloadHand = (state) => {
                 [timerId]: {
                     id: timerId,
                     duration: 2500,
-                    startTime: new Date()
+                    execute: (dispatch, getState) => {
+                        dispatch(clearTimer('HARVEST-TIMER'))
+                        if (getState().settings['AUTO-DRAW']) {
+                            dispatch(drawCard())                            
+                        }
+                    }
                 }
             },
             allIds: [timerId]
@@ -193,7 +200,7 @@ const preloadState = () => {
         preloadRandoms,
         preloadHand,
         preloadDecks,
-        preloadTrack(['UpgradeEVA1', 'DrawSpeed1', 'UpgradeBussard1', 'EVAFuel1', 'PlotIntercept'], 'equipmentTrack'),
+        preloadTrack(['PlotIntercept', 'EVAFuel1', 'UpgradeBussard1', 'UpgradeDrive1', 'UpgradeEVA1', 'AutoDraw'], 'equipmentTrack'),
         preloadTrack(['DesignCargoBay', 'Survey', 'DesignAsteroidBelt', 'DesignFuelTank'], 'scienceTrack'),
         preloadDeployedEVA,
         preloadShortCuts,

@@ -7,12 +7,15 @@ import testApp from './reducers/testApp'
 import App from './components/App'
 import './index.css';
 import preloadState from './preload'
+import { startTimer } from './actions'
 
 let store = createStore(
     testApp, 
     preloadState(),
     applyMiddleware(thunk)
 );
+
+store.dispatch(startTimer('HARVEST-TIMER'))
 
 render(
     <Provider store={store}>

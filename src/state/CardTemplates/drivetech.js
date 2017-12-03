@@ -43,6 +43,20 @@ export const DriveTech = {
         purchases: [{
             cardTemplate: 'Fuel2',
         }]
+    },
+    UpgradeDrive1: {
+        id: 'UpgradeDrive1',
+        header: 'Upgrade Drive',
+        footer: (<div style={{ fontSize:'140%' }}>&dArr;<Glyph size={15} shape='CARD' /><Glyph size={15} shape='CLOCK' /></div>),
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        settings: {
+            'HARVEST-TIMER': 1500
+        },
+        cost: {
+            ORE: 5
+        }
     }
 }
 

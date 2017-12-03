@@ -31,7 +31,7 @@ class Track extends React.Component {
                         onClick={(card.cardTemplate && (CardTemplates[card.cardTemplate].payload ||
                                 CardTemplates[card.cardTemplate].deploy ||
                                 CardTemplates[card.cardTemplate].upgrade ||
-                                CardTemplates[card.cardTemplate].boost)) ? 
+                                CardTemplates[card.cardTemplate].settings)) ? 
                             props.onClick(card.id) : () => {} }
                          key={card.id}
                     />
