@@ -23,12 +23,17 @@ export const DriveTech = {
         type: TemplateTypes.Aggregator,
         style: 'control',
         aggregates: [{
-            cardTemplates: 'Gas',
+            cardTemplates: ['Gas'],
             maxStack: 2
         }],
         purchases: [{
+            price: [{
+                cardTemplate: 'Gas',
+                required: 2,
+            }],
             cardTemplate: 'Fuel1',
-        }]
+        }],
+        alternateName: 'Stow'
     },
     UpgradeBussard1: {
         id: 'UpgradeBussard1',
@@ -38,12 +43,12 @@ export const DriveTech = {
         type: TemplateTypes.Payload,
         upgrade: {
             'Bussard1': 'Bussard2',
-            'DeployBussard1': 'DeployBussard2'
+            'DeployBussard1': 'DeployBussard2',
+            'UpgradeBussard1': 'UpgradeBussard2'
         },
         cost: {
             ORE: 4
         },
-        maxUses: 1,
         hideUses: true
     },
     DeployBussard2: {
@@ -70,7 +75,93 @@ export const DriveTech = {
             maxStack: 3
         }],
         purchases: [{
+            price: [{
+                cardTemplate: 'Gas',
+                required: 3,
+            }],
             cardTemplate: 'Fuel2',
+        }],
+        alternateName: 'Stow'
+    },
+    UpgradeBussard2: {
+        id: 'UpgradeBussard1',
+        header: 'Upgrade Bussard',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        upgrade: {
+            'Bussard2': 'Bussard3',
+            'DeployBussard2': 'DeployBussard3'
+        },
+        cost: {
+            ORE: 20
+        },
+        maxUses: 1,
+        hideUses: true
+    },
+    DeployBussard3: {
+        id: 'DeployBussard3',
+        header: 'Kickstart Bussard',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['Bussard2']
+        },
+        cost: {
+            GAS: 2
+        }
+    },
+    Bussard3: {
+        id: 'Bussard3',
+        header: 'Bussard Collector',
+        footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
+        type: TemplateTypes.Aggregator,
+        style: 'control',
+        aggregates: [{
+            cardTemplates: ['Gas', 'Fuel2'],
+            maxStack: 5
+        }],
+        purchases: [{
+            persistent: true,
+            price: [{
+                cardTemplate: 'Gas',
+                required: 3,
+            }],
+            cardTemplate: 'Fuel2',
+        }],
+        alternateName: 'Stow'
+    },
+    DeployFracking1: {
+        id: 'DeployFracking1',
+        header: 'Drive Fracking',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['Fracking1']
+        },
+        cost: {
+            FUEL: 3
+        }
+    },
+    Fracking1: {
+        id: 'Fracking1',
+        header: 'Fracture Asteroid',
+        footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;2<Glyph size={10} shape='ORE' /></div>,
+        type: TemplateTypes.Aggregator,
+        style: 'control',
+        maxUses: 1,        
+        aggregates: [{
+            cardTemplates: ['Asteroid'],
+            maxStack: 1
+        }],
+        purchases: [{
+            price: [{
+                cardTemplate: 'Asteroid',
+                required: 1,
+            }],
+            cardTemplate: 'Ore2',
         }]
     },
     UpgradeDrive1: {
@@ -83,12 +174,48 @@ export const DriveTech = {
         settings: {
             'HARVEST-TIMER': 1500
         },
+        upgrade: {
+            'Fracking1': 'Fracking2',
+            'DeployFracking1': 'DeployFracking2'
+        },
         cost: {
             ORE: 5
         },
         maxUses: 1,
         hideUses: true
-    }
+    },
+    DeployFracking2: {
+        id: 'DeployFracking2',
+        header: 'Drive Fracking',
+        value: '',
+        style: 'control',
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['Fracking2']
+        },
+        cost: {
+            FUEL: 5
+        }
+    },
+    Fracking2: {
+        id: 'Fracking2',
+        header: 'Fracture Asteroid',
+        footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;5<Glyph size={10} shape='ORE' /></div>,
+        type: TemplateTypes.Aggregator,
+        style: 'control',
+        maxUses: 1,
+        aggregates: [{
+            cardTemplates: ['Asteroid'],
+            maxStack: 1
+        }],
+        purchases: [{
+            price: [{
+                cardTemplate: 'Asteroid',
+                required: 1,
+            }],
+            cardTemplate: 'Ore5',
+        }]
+    },
 }
 
 export default DriveTech

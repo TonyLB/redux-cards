@@ -36,7 +36,7 @@ export const Storage = {
         type: TemplateTypes.Storage,
         style: 'control',        
         aggregates: [{
-            cardTemplates: ['Ore1', 'Ore2'],
+            cardTemplates: ['Ore1', 'Ore2', 'Ore5'],
             maxStack: 5
         }],
     },

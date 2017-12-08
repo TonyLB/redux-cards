@@ -105,3 +105,7 @@ export const combineDenormalizedObjects = (
             allIds: Object.keys(byId)
         }
 }
+
+export const denormalize = (list, byId) => (
+    list.map(item => (byId[item]))
+)

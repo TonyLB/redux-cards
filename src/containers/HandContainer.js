@@ -7,7 +7,10 @@ import { canRecycle } from '../state/hand'
 
 const stackLookup = (state) => (stack) => ({
     ...(state.stacks.byId[stack]),
-    alternateName: canRecycle(state, stack) ? 'Recycle' : '',
+    alternateName: canRecycle(state, stack) ? 
+        CardTemplate[state.cards.byId[state.stacks.byId[stack].cards[0]].cardTemplate].alternateName ?
+            CardTemplate[state.cards.byId[state.stacks.byId[stack].cards[0]].cardTemplate].alternateName :
+            'Recycle' : '',
     cards: state.stacks.byId[stack].cards.map(card => ({
             ...(state.cards.byId[card]),
             value: CardTemplate[state.cards.byId[card].cardTemplate].value

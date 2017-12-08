@@ -47,12 +47,34 @@ export const Resources = {
         maxUses: 1,
         type: TemplateTypes.Resource
     },
+    Ore5: {
+        id: 'Ore5',
+        header: 'Ore',
+        value: (<div>5<Glyph size={50} shape='ORE' /></div>),
+        resources: {
+            ORE: 5
+        },
+        style: 'plain',
+        maxUses: 1,
+        type: TemplateTypes.Resource
+    },
     Science1: {
         id: 'Science1',
         header: 'Science',
         value: (<Glyph size={50} shape='SCIENCE' />),
         resources: {
             SCIENCE: 1
+        },
+        style: 'plain',
+        maxUses: 1,
+        type: TemplateTypes.Resource
+    },
+    Science2: {
+        id: 'Science2',
+        header: 'Science',
+        value: (<div>2<Glyph size={50} shape='SCIENCE' /></div>),
+        resources: {
+            SCIENCE: 2
         },
         style: 'plain',
         maxUses: 1,

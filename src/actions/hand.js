@@ -1,5 +1,7 @@
+import assert from 'assert'
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, combineMoveCards, addCard, addCards, removeCards, combineStacks, startTimer, markUse } from './index'
+import { moveCards, combineMoveCards, addCard, removeCards, combineStacks, startTimer, markUse } from './index'
+import { denormalize } from '../state'
 import { canRecycle } from '../state/hand'
 import { willAggregate } from '../state/stack'
 import testApp from '../reducers/testApp'
@@ -133,38 +135,84 @@ const fullAggregators = (state) => {
         .filter(stack => (
             (stack.cards.length > 0) &&
             (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].type === CardTemplates.Types.Aggregator) &&
-            (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].aggregates
-                    .reduce((result, val) => ( result + val.maxStack), 0) < stack.cards.length)
+            CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].purchases.length &&
+            (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].purchases
+                .find(purchase => (cardsToAggregate(stack.id, purchase, state).length)))
         ))
         .map(stack => ( stack.id ))
+}
+
+const cardsToAggregate = (stackId, purchase, state) => {
+    const cards = denormalize(state.stacks.byId[stackId].cards, state.cards.byId)
+    assert(cards.length)
+
+    const spendableCards = cards
+        .slice(1) // Get rid of the aggregate control card
+        .filter(card => (purchase.price.find(price => (price.cardTemplate === card.cardTemplate))))
+    const spentCards = purchase.price.reduce((out, price) => (
+            out.concat(spendableCards
+                .filter(card => (card.cardTemplate === price.cardTemplate))
+                .slice(0, price.required)
+        )), [])
+    const allPricesSatisfied = purchase.price.reduce((out, price) => (
+        out && (spendableCards.filter(card => (card.cardTemplate === price.cardTemplate)).length === price.required)
+    ), true)
+
+    return allPricesSatisfied ? spentCards : []
 }
 
 const activateAggregator = (stackId) => (dispatch, getState) => {
     let state = getState()
     let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
 
-    let addCardMoves = purchases.length > 1 ?
-        addCards(purchases.map(purchase => ({ 
-            cardTemplate: purchase.cardTemplate,
-            destination: state.hand.discardId
-        }))) :
-        addCard(purchases[0].cardTemplate, stackId)
+    const [purchase, price] = purchases
+        .reduce((out, purchase) => {
+            if (out.length) return out;
+            const cardsList = cardsToAggregate(stackId, purchase, state)
+            if (cardsList.length) {
+                return [
+                    purchase,
+                    cardsList
+                ]
+            }
+            else {
+                return []
+            }
+        }, [])
+    
+    let addCardMoves = addCard(purchase.cardTemplate, stackId)
 
     dispatch(addCardMoves)
         
     let newState = testApp(state, addCardMoves, true)
-
-    const maybeDiscards = state.stacks.byId[stackId].cards.map(card => ({
-        id: state.cards.byId[card].id,
-        source: stackId,
-        destination: state.hand.discardId
-    }))
+    
+    const maybeDiscards = (purchase.persistent ? 
+            [] : [{ 
+                id: state.stacks.byId[stackId].cards[0],
+                source: stackId,
+                destination: state.hand.discardId
+            }])
+        .concat(price.map(card => ({
+            id: card.id,
+            source: stackId,
+            destination: state.hand.discardId
+        })))
 
     dispatch(useCardMarks(newState, maybeDiscards))
 
     const expenditureMoves = moveCards(useCardMoves(newState, maybeDiscards))
 
-    dispatch(moveThenCondense(newState, expenditureMoves))
+    const discardMoves = (purchase.persistent ? [] :
+        state.stacks.byId[stackId].cards
+            .slice(1)
+            .filter(card => (!price.find(priceCard => priceCard.id === card))))
+                .map(card => ({ 
+                    id: card, 
+                    source: stackId,
+                    destination: state.hand.discardId
+                }))
+
+    dispatch(moveThenCondense(newState, combineMoveCards([expenditureMoves, moveCards(discardMoves)])))
     dispatch(maybeRebootDrawCycle())
 }
 

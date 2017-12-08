@@ -28,6 +28,10 @@ export const Mining = {
             maxStack: 2
         }],
         purchases: [{
+            price: [{
+                cardTemplate: 'Asteroid',
+                required: 2,
+            }],
             cardTemplate: 'Ore1',
         }]
     },
@@ -73,6 +77,10 @@ export const Mining = {
             maxStack: 3
         }],
         purchases: [{
+            price: [{
+                cardTemplate: 'Asteroid',
+                required: 3,
+            }],
             cardTemplate: 'Ore2',
         }]
     }
