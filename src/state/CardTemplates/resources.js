@@ -25,6 +25,17 @@ export const Resources = {
         maxUses: 1,
         type: TemplateTypes.Resource        
     },
+    Fuel5: {
+        id: 'Fuel5',
+        header: 'Fuel',
+        value: (<div>5<Glyph size={50} shape='FUEL' /></div>),
+        resources: {
+            FUEL: 5
+        },
+        style: 'plain',
+        maxUses: 1,
+        type: TemplateTypes.Resource        
+    },
     Ore1: {
         id: 'Ore1',
         header: 'Ore',

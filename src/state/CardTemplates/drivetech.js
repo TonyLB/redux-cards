@@ -46,9 +46,13 @@ export const DriveTech = {
             'DeployBussard1': 'DeployBussard2',
             'UpgradeBussard1': 'UpgradeBussard2'
         },
+        payload: {
+            SCIENCE: ['DesignBussard3']
+        },
         cost: {
             ORE: 4
         },
+        maxUses: 1,
         hideUses: true
     },
     DeployBussard2: {
@@ -82,6 +86,21 @@ export const DriveTech = {
             cardTemplate: 'Fuel2',
         }],
         alternateName: 'Stow'
+    },
+    DesignBussard3: {
+        id: 'DesignBussard3',
+        header: 'Bussard 3.0',
+        value: '',
+        style: 'science',
+        type: TemplateTypes.Design,
+        deploy: {
+            EQUIPMENT: ['UpgradeBussard2']
+        },
+        cost: {
+            SCIENCE: 5,
+        },
+        maxUses: 1,
+        hideUses: true
     },
     UpgradeBussard2: {
         id: 'UpgradeBussard1',
@@ -119,7 +138,7 @@ export const DriveTech = {
         type: TemplateTypes.Aggregator,
         style: 'control',
         aggregates: [{
-            cardTemplates: ['Gas', 'Fuel2'],
+            cardTemplates: ['Gas', 'Fuel5'],
             maxStack: 5
         }],
         purchases: [{
@@ -128,7 +147,7 @@ export const DriveTech = {
                 cardTemplate: 'Gas',
                 required: 3,
             }],
-            cardTemplate: 'Fuel2',
+            cardTemplate: 'Fuel5',
         }],
         alternateName: 'Stow'
     },
