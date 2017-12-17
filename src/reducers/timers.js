@@ -3,7 +3,7 @@ const timerExpired = ({ startTime = new Date(), duration=10000 }) => {
     new Date() - startTime > duration
 )}
 
-const timers = (state = { byId: {}, allIds: []}, action) => {
+const timers = (state = { byId: {}, allIds: []}, action = { type: 'NULL' }) => {
     switch(action.type) {
         case 'START_TIMER':
             return {
@@ -12,8 +12,9 @@ const timers = (state = { byId: {}, allIds: []}, action) => {
                     ...state.byId,
                     [action.id]: {
                         ...state.byId[action.id],
-                        startTime: new Date(),
-                        timeoutId: action.timeoutId
+                        startTime: action.startTime,
+                        timeoutId: action.timeoutId,
+                        duration: action.duration ? action.duration : state.byId[action.id].duration
                     }
                 }
             }
@@ -26,10 +27,9 @@ const timers = (state = { byId: {}, allIds: []}, action) => {
                             ...state.byId[timer.id],
                             duration: timer.duration
                         }   
-                    })), state.byId)
+                    })), { ...state.byId })
             }
         case 'CLEAR_TIMER':
-            clearTimeout(state.byId[action.id].timeoutId)
             return {
                 ...state,
                 byId: {

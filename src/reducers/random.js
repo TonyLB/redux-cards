@@ -1,4 +1,4 @@
-const random = (state = { values: [0.5], index:0}, action) => {
+const random = (state = { values: [0.5], index:0}, action = { type: 'NULL' }) => {
     switch(action.type) {
         default:
             return state
@@ -6,22 +6,24 @@ const random = (state = { values: [0.5], index:0}, action) => {
 }
 
 const advanceRandom = (state = { values: [0.5], index:0}, action, randomsNeeded) => {
+    const randomsAvailable = state.values.length
     switch(action.type) {
         default:
             return {
                 ...state,
-                index: (state.index+randomsNeeded) % 2000
+                index: (state.index+randomsNeeded) % randomsAvailable
             }
     }
 }
 
 const randomList = (state, randomsNeeded) => {
-    if (state.index + randomsNeeded < 2000) {
+    const randomsAvailable = state.values.length
+    if (state.index + randomsNeeded < randomsAvailable) {
         return state.values.slice(state.index, state.index + randomsNeeded )
     }
     else {
-        return [ ...state.values.slice(state.index, 2000),
-            ...randomList({values:state.values, index:0}, randomsNeeded - 2000 + state.index)]
+        return [ ...state.values.slice(state.index),
+            ...randomList({values:state.values, index:0}, randomsNeeded - randomsAvailable + state.index)]
     }
 }
 

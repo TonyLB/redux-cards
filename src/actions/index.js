@@ -91,15 +91,20 @@ export const combineStacks = (source, destination) => {
     }
 }
 
-export const clearTimer = (timerId) => ({
-    type: 'CLEAR_TIMER',
-    id: timerId
-})
+export const clearTimer = (timerId) => (dispatch, getState) => {
+    const state = getState()
+    clearTimeout(state.timers.byId[timerId].timeoutId)    
+    dispatch({
+        type: 'CLEAR_TIMER',
+        id: timerId
+    })
+}
 
 export const startTimer = (timerId) => (dispatch, getState) => {
-    let state = getState()
-    let timer = state.timers.byId[timerId]
+    const state = getState()
+    const timer = state.timers.byId[timerId]
     let timeoutId = null
+    const startTime = new Date()
     if (timer.timeoutId) {
         dispatch(clearTimer(timerId))
     }
@@ -112,7 +117,8 @@ export const startTimer = (timerId) => (dispatch, getState) => {
     dispatch({
         type: 'START_TIMER',
         id: timerId,
-        timeoutId: timeoutId
+        timeoutId: timeoutId,
+        startTime: startTime
     })
 }
 

@@ -1,9 +1,9 @@
 import CardTemplates from '../state/CardTemplates'
 
-const cards = (state = { byId: {}, allIds: [] }, action) => {
+const cards = (state = { byId: {}, allIds: [] }, action = { type: 'NULL' }) => {
     switch (action.type) {
         case 'REPLACE_CARDS':
-        let temp= {
+            return {
                 ...state,
                 byId: Object.values(state.byId)
                     .filter(card => ( action.cardMap[card.cardTemplate]))
@@ -13,9 +13,8 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                     }))
                     .reduce((output, card) => (Object
                             .assign(output, 
-                                { [card.id]: card })), state.byId)
+                                { [card.id]: card })), { ...state.byId })
             }
-            return temp
         case 'MARK_USE':
             return {
                 ...state,
@@ -27,7 +26,7 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                             ...(output[card]),
                             uses: output[card].uses-1
                         }
-                    }), state.byId)
+                    }), { ...state.byId })
             }
         case 'MOVE_CARDS': 
             let removedCards = action.cards
@@ -35,33 +34,41 @@ const cards = (state = { byId: {}, allIds: [] }, action) => {
                 .map(card => ( card.id ))
             let newById = Object.values(state.byId)
                 .filter(card => ( !removedCards.includes(card.id) ))
-                .map(card => ({ ...card, deployed: removedCards.includes(card.deployed) ? undefined : card.deployed }))
+                .map(card => {
+                    if (!(card.deployed && removedCards.includes(card.deployed))) { return card }
+                    return { ...card, deployed: undefined }
+                })
                 .reduce((output, card) => ( { ...output, [card.id]: card } ), {})
 
             return {
                 byId: newById,
                 allIds: Object.keys(newById)
             }
-        case 'ADD_CARDS': 
-        return {
-            ...state,
-            byId: action.cards
-                .reduce((newState, card) => (Object.assign(newState,
-                    { [card.id]: {
+        case 'ADD_CARDS':
+            let addById = { ...state.byId }
+            action.cards.forEach(card => {
+                Object.assign(addById, {
+                    [card.id]: {
                         id: card.id,
                         cardTemplate: card.cardTemplate,
                         uses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined,
                         maxUses: CardTemplates[card.cardTemplate].maxUses ? CardTemplates[card.cardTemplate].maxUses : undefined
-                    }},
-                    card.deployedBy ? {
+                    }
+                })
+                if (card.deployedBy) {
+                    Object.assign(addById, {
                         [card.deployedBy]: {
                             ...(state.byId[card.deployedBy]),
                             deployed: card.id
-                        }                                
-                    } : undefined
-                )), state.byId),
-            allIds: state.allIds.concat(action.cards.map(card => (card.id)))
-        }
+                        }
+                    })
+                }
+            })
+            return {
+                ...state,
+                byId: addById,
+                allIds: [ ...state.allIds, ...(action.cards.map(card => (card.id))) ]
+            }
         default: return state
     }
 }

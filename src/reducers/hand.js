@@ -1,17 +1,23 @@
 import assert from 'assert'
 
-const hand = (state = {id: 'TEST', stacks: [], timerId: 0, timerStarted: new Date(), drawDeck: 'NULL-STACK', discardDeck: 'NULL-STACK'}, action) => {
+const hand = (state = {
+        id: 'TEST', 
+        stacks: [], 
+        timerId: 'NULL-TIMER', 
+        timerStarted: Date.parse("May 25, 1977"), 
+        drawDeck: 'NULL-STACK', 
+        discardDeck: 'NULL-STACK'}, action={type: 'NULL'}) => {
     switch(action.type) {
         case 'START_TIMER':
             return (state.timerId !== action.id) ?
                 state :
                 {
                     ...state,
-                    timerStarted: new Date()
+                    timerStarted: action.startTime
                 }
         case 'SORT_HAND':
         case 'MOVE_CARDS':
-            assert(action.stacks === null || Array.isArray(action.stacks))
+            assert(action.stacks === null || action.stacks === undefined || Array.isArray(action.stacks))
             return action.stacks ?
             {
                 ...state,

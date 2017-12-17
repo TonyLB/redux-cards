@@ -31,7 +31,7 @@ const shuffleStack = (state = stackDefault, action, cards, randoms) => {
     }
 }
 
-const stack = (state = stackDefault, action) => {
+const stack = (state = stackDefault, action = { type: 'NULL' }) => {
     switch(action.type) {
         case 'ADD_CARDS':
         case 'MOVE_CARDS':

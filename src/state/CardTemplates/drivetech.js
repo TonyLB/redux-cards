@@ -6,7 +6,7 @@ export const DriveTech = {
     DeployBussard1: {
         id: 'DeployBussard1',
         header: 'Kickstart Bussard',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'control',
         type: TemplateTypes.Payload,
         deploy: {
@@ -19,6 +19,7 @@ export const DriveTech = {
     Bussard1: {
         id: 'Bussard1',
         header: 'Bussard Collector',
+        value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>2<Glyph size={10} shape='GAS' />&rArr;1<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
         style: 'control',
@@ -38,7 +39,7 @@ export const DriveTech = {
     UpgradeBussard1: {
         id: 'UpgradeBussard1',
         header: 'Upgrade Bussard',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'control',
         type: TemplateTypes.Payload,
         upgrade: {
@@ -58,7 +59,7 @@ export const DriveTech = {
     DeployBussard2: {
         id: 'DeployBussard2',
         header: 'Kickstart Bussard',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'control',
         type: TemplateTypes.Payload,
         deploy: {
@@ -71,6 +72,7 @@ export const DriveTech = {
     Bussard2: {
         id: 'Bussard2',
         header: 'Bussard Collector',
+        value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
         style: 'control',
@@ -90,7 +92,7 @@ export const DriveTech = {
     DesignBussard3: {
         id: 'DesignBussard3',
         header: 'Bussard 3.0',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'science',
         type: TemplateTypes.Design,
         deploy: {
@@ -105,7 +107,7 @@ export const DriveTech = {
     UpgradeBussard2: {
         id: 'UpgradeBussard1',
         header: 'Upgrade Bussard',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'control',
         type: TemplateTypes.Payload,
         upgrade: {
@@ -121,7 +123,7 @@ export const DriveTech = {
     DeployBussard3: {
         id: 'DeployBussard3',
         header: 'Kickstart Bussard',
-        value: '',
+        value: <Glyph size={50} shape='BUSSARD' />,
         style: 'control',
         type: TemplateTypes.Payload,
         deploy: {
@@ -134,6 +136,7 @@ export const DriveTech = {
     Bussard3: {
         id: 'Bussard3',
         header: 'Bussard Collector',
+        value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
         style: 'control',
