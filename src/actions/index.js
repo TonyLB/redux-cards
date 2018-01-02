@@ -100,7 +100,7 @@ export const clearTimer = (timerId) => (dispatch, getState) => {
     })
 }
 
-export const startTimer = (timerId) => (dispatch, getState) => {
+export const startTimer = (timerId) => function startTimer(dispatch, getState) {
     const state = getState()
     const timer = state.timers.byId[timerId]
     let timeoutId = null

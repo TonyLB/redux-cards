@@ -73,7 +73,7 @@ export const Storage = {
         type: TemplateTypes.Storage,
         style: 'control',        
         aggregates: [{
-            cardTemplates: ['Fuel1', 'Fuel2'],
+            cardTemplates: ['Fuel1', 'Fuel2', 'Fuel5'],
             maxStack: 5
         }],
     },

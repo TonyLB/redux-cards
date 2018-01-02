@@ -18,7 +18,7 @@ const sortStacks = (state) => ({
     ...state,
     hand: {
         ...state.hand,
-        stacks: state.hand.stacks.sort((a, b) => (
+        stacks: [...state.hand.stacks].sort((a, b) => (
             handPriority(state, b) - handPriority(state, a)
         ))
     }
@@ -68,12 +68,19 @@ export const condenseHand = () => (dispatch, getState) => {
     const neededMoves = movesToCondenseHand(state)
     if (neededMoves.moves.length) {
         dispatch(combineMoveCards([moveCards(neededMoves.moves, sortStacks(neededMoves.state).hand.stacks)]))
+    } else
+    {
+        const sortedState = sortStacks(state)
+        if (sortedState.hand.stacks.some((value, index) => ( value !== state.hand.stacks[index]))) {
+            dispatch({ type: 'SORT_HAND', stacks: sortedState.hand.stacks })
+        }
     }
 }
 
-const shuffleIfNeeded = () => (dispatch, getState) => {
+export const shuffleIfNeeded = () => function shuffleIfNeeded(dispatch, getState) {
     const state = getState()
-    if (!state.stacks.byId[state.hand.drawId].cards.length) {
+    if (!state.stacks.byId[state.hand.drawId].cards.length && 
+            state.stacks.byId[state.hand.discardId].cards.length) {
         dispatch(combineStacks(state.hand.discardId, state.hand.drawId))
     }
 }
@@ -106,7 +113,7 @@ export const drawCard = () => (dispatch, getState) => {
     dispatch(shuffleIfNeeded())
 }
 
-export const maybeRebootDrawCycle = () => (dispatch, getState) => {
+export const maybeRebootDrawCycle = () => function maybeRebootDrawCycle(dispatch, getState) {
     const state = getState()
     if (state.settings['AUTO-DRAW']) {
         const timer = state.timers.byId[state.hand.timerId]
@@ -161,8 +168,10 @@ const cardsToAggregate = (stackId, purchase, state) => {
     return allPricesSatisfied ? spentCards : []
 }
 
-const activateAggregator = (stackId) => (dispatch, getState) => {
+export const activateAggregator = (stackId) => function activateAggregator(dispatch, getState) {
     let state = getState()
+    if (state.stacks.byId[stackId] === undefined) { return }
+    if (!state.stacks.byId[stackId].cards.length) { return }
     let purchases = CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].purchases
 
     const [purchase, price] = purchases
@@ -180,6 +189,8 @@ const activateAggregator = (stackId) => (dispatch, getState) => {
             }
         }, [])
     
+    if (!purchase) { return }
+
     let addCardMoves = addCard(purchase.cardTemplate, stackId)
 
     dispatch(addCardMoves)
