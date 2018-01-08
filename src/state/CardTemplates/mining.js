@@ -1,13 +1,13 @@
 import React from 'react'
 import Glyph from '../../components/SVG/Glyph'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const Mining = {
     EVAFuel1: {
         id: 'EVAFuel1',
         header: 'Fuel EVA',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['EVAMining1']
@@ -21,7 +21,7 @@ export const Mining = {
         header: 'EVA Mining',
         footer: (<div>2<Glyph size={10} shape='ASTEROID' />&rArr;1<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 3,
         aggregates: [{
             cardTemplates: 'Asteroid',
@@ -39,7 +39,7 @@ export const Mining = {
         id: 'UpgradeEVA1',
         header: 'Upgrade EVA',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         upgrade: {
             EVAFuel1: 'EVAFuel2',
@@ -59,7 +59,7 @@ export const Mining = {
         id: 'EVAFuel2',
         header: 'Fuel EVA',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['EVAMining2']
@@ -73,7 +73,7 @@ export const Mining = {
         header: 'EVA Mining',
         footer: (<div>3<Glyph size={10} shape='ASTEROID' />&rArr;2<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 3,
         aggregates: [{
             cardTemplates: 'Asteroid',
@@ -91,7 +91,7 @@ export const Mining = {
         id: 'DesignEVA3',
         header: 'EVA 3.0',
         value: '',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         deploy: {
             EQUIPMENT: ['UpgradeEVA2']
@@ -106,7 +106,7 @@ export const Mining = {
         id: 'UpgradeEVA2',
         header: 'Upgrade EVA',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         upgrade: {
             EVAFuel2: 'EVAFuel3',
@@ -123,7 +123,7 @@ export const Mining = {
         id: 'EVAFuel3',
         header: 'Fuel EVA',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['EVAMining3']
@@ -137,7 +137,7 @@ export const Mining = {
         header: 'EVA Mining',
         footer: (<div>3<Glyph size={10} shape='ASTEROID' />&rArr;5<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 3,
         aggregates: [{
             cardTemplates: 'Asteroid',

@@ -1,6 +1,6 @@
 import React from 'react'
 import Glyph from '../../components/SVG/Glyph'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const Resources = {
     Fuel1: {
@@ -10,7 +10,7 @@ export const Resources = {
         resources: {
             FUEL: 1
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource        
     },
@@ -21,7 +21,7 @@ export const Resources = {
         resources: {
             FUEL: 2
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource        
     },
@@ -32,7 +32,7 @@ export const Resources = {
         resources: {
             FUEL: 5
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource        
     },
@@ -43,7 +43,7 @@ export const Resources = {
         resources: {
             ORE: 1
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
     },
@@ -54,7 +54,7 @@ export const Resources = {
         resources: {
             ORE: 2
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
     },
@@ -65,7 +65,7 @@ export const Resources = {
         resources: {
             ORE: 5
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
     },
@@ -76,7 +76,7 @@ export const Resources = {
         resources: {
             SCIENCE: 1
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
     },
@@ -87,7 +87,7 @@ export const Resources = {
         resources: {
             SCIENCE: 2
         },
-        style: 'plain',
+        style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
     }

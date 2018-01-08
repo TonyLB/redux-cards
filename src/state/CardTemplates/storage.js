@@ -1,13 +1,13 @@
 import React from 'react'
 import Glyph from '../../components/SVG/Glyph'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const Storage = {
     DesignCargoBay: {
         id: 'DesignCargoBay',
         header: 'Cargo Bay',
         value: '',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         deploy: {
             EQUIPMENT: ['BuildCargoBay']
@@ -20,7 +20,7 @@ export const Storage = {
         id: 'BuildCargoBay',
         header: 'Cargo Bay',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['CargoBay']
@@ -34,7 +34,7 @@ export const Storage = {
         header: 'Cargo Bay',
         footer: <div>Holds 5<Glyph size={10} shape='ORE' /></div>,
         type: TemplateTypes.Storage,
-        style: 'control',        
+        style: StyleTypes.Control,        
         aggregates: [{
             cardTemplates: ['Ore1', 'Ore2', 'Ore5'],
             maxStack: 5
@@ -44,7 +44,7 @@ export const Storage = {
         id: 'DesignFuelTank',
         header: 'Fuel Tank',
         value: '',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         deploy: {
             EQUIPMENT: ['BuildFuelTank']
@@ -57,7 +57,7 @@ export const Storage = {
         id: 'BuildFuelTank',
         header: 'Fuel Tank',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['FuelTank']
@@ -71,7 +71,7 @@ export const Storage = {
         header: 'Fuel Tank',
         footer: <div>Holds 5<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Storage,
-        style: 'control',        
+        style: StyleTypes.Control,        
         aggregates: [{
             cardTemplates: ['Fuel1', 'Fuel2', 'Fuel5'],
             maxStack: 5
@@ -81,7 +81,7 @@ export const Storage = {
         id: 'DesignAsteroidBelt',
         header: 'Asteroid Belt',
         value: '',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         deploy: {
             DISCARD: ['AsteroidBelt']
@@ -95,7 +95,7 @@ export const Storage = {
         header: 'Asteroid Belt',
         footer: <div>Holds 5<Glyph size={10} shape='ASTEROID' /></div>,
         type: TemplateTypes.Storage,
-        style: 'control',        
+        style: StyleTypes.Control,        
         aggregates: [{
             cardTemplates: 'Asteroid',
             maxStack: 5

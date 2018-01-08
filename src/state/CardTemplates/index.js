@@ -1,4 +1,4 @@
-import TemplateTypes from './types'
+import { TemplateTypes } from './types'
 import Planetes from './planetes'
 import Resources from './resources'
 import DriveTech from './drivetech'

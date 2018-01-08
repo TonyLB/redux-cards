@@ -1,5 +1,5 @@
 import React from 'react'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const Boosts = {
     AutoDraw: {
@@ -7,7 +7,7 @@ export const Boosts = {
         header: 'Logistics Center',
         value: '',
         footer: <div>Auto-draw</div>,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         settings: {
             'AUTO-DRAW': true

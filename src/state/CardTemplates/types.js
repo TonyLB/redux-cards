@@ -13,4 +13,8 @@ export const TemplateTypes = {
     }
 }
 
-export default TemplateTypes
+export const StyleTypes = {
+    Science: 'science',
+    Control: 'control',
+    Plain: 'plain'
+}

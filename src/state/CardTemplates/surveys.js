@@ -1,13 +1,13 @@
 import React from 'react'
 import Glyph from '../../components/SVG/Glyph'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const Surveys = {
     PlotIntercept1: {
         id: 'PlotIntercept1',
         header: 'Plot Intercept',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Intercept1']
@@ -21,7 +21,7 @@ export const Surveys = {
         header: 'Intercept',
         footer: (<div>1<Glyph size={10} shape='COMET' />&rArr;1<Glyph size={10} shape='SCIENCE' /></div>),
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 1,
         aggregates: [{
             cardTemplates: 'Comet',
@@ -38,7 +38,7 @@ export const Surveys = {
     Survey: {
         id: 'Survey',
         header: 'Survey',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Payload,
         maxUses: 1,
         hideUses: true,
@@ -53,7 +53,7 @@ export const Surveys = {
         id: 'DesignSensor1',
         header: 'Sensor Dish',
         value: '',
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         maxUses: 1,
         hideUses: true,
@@ -68,7 +68,7 @@ export const Surveys = {
         id: 'BuildSensor1',
         header: 'Add Sensor Dish',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         maxUses: 1,
         hideUses: true,
@@ -85,7 +85,7 @@ export const Surveys = {
         id: 'PlotIntercept2',
         header: 'Plot Intercept',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Intercept2']
@@ -99,7 +99,7 @@ export const Surveys = {
         header: 'Intercept',
         footer: (<div>1<Glyph size={10} shape='COMET' />&rArr;2<Glyph size={10} shape='SCIENCE' /></div>),
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 1,
         aggregates: [{
             cardTemplates: 'Comet',

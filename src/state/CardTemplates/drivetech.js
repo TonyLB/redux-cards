@@ -1,13 +1,13 @@
 import React from 'react'
 import Glyph from '../../components/SVG/Glyph'
-import TemplateTypes from './types'
+import { TemplateTypes, StyleTypes } from './types'
 
 export const DriveTech = {
     DeployBussard1: {
         id: 'DeployBussard1',
         header: 'Kickstart Bussard',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Bussard1']
@@ -22,7 +22,7 @@ export const DriveTech = {
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>2<Glyph size={10} shape='GAS' />&rArr;1<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         aggregates: [{
             cardTemplates: ['Gas'],
             maxStack: 2
@@ -40,7 +40,7 @@ export const DriveTech = {
         id: 'UpgradeBussard1',
         header: 'Upgrade Bussard',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         upgrade: {
             'Bussard1': 'Bussard2',
@@ -60,7 +60,7 @@ export const DriveTech = {
         id: 'DeployBussard2',
         header: 'Kickstart Bussard',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Bussard2']
@@ -75,7 +75,7 @@ export const DriveTech = {
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         aggregates: [{
             cardTemplates: 'Gas',
             maxStack: 3
@@ -93,7 +93,7 @@ export const DriveTech = {
         id: 'DesignBussard3',
         header: 'Bussard 3.0',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'science',
+        style: StyleTypes.Science,
         type: TemplateTypes.Design,
         deploy: {
             EQUIPMENT: ['UpgradeBussard2']
@@ -105,10 +105,10 @@ export const DriveTech = {
         hideUses: true
     },
     UpgradeBussard2: {
-        id: 'UpgradeBussard1',
+        id: 'UpgradeBussard2',
         header: 'Upgrade Bussard',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         upgrade: {
             'Bussard2': 'Bussard3',
@@ -124,7 +124,7 @@ export const DriveTech = {
         id: 'DeployBussard3',
         header: 'Kickstart Bussard',
         value: <Glyph size={50} shape='BUSSARD' />,
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Bussard2']
@@ -139,7 +139,7 @@ export const DriveTech = {
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         aggregates: [{
             cardTemplates: ['Gas', 'Fuel5'],
             maxStack: 5
@@ -158,7 +158,7 @@ export const DriveTech = {
         id: 'DeployFracking1',
         header: 'Drive Fracking',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Fracking1']
@@ -172,7 +172,7 @@ export const DriveTech = {
         header: 'Fracture Asteroid',
         footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;2<Glyph size={10} shape='ORE' /></div>,
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 1,        
         aggregates: [{
             cardTemplates: ['Asteroid'],
@@ -191,7 +191,7 @@ export const DriveTech = {
         header: 'Upgrade Drive',
         footer: (<div ><Glyph size={15} shape='CARD' /><Glyph size={15} shape='CLOCK' /> Faster</div>),
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         settings: {
             'HARVEST-TIMER': 1500
@@ -210,7 +210,7 @@ export const DriveTech = {
         id: 'DeployFracking2',
         header: 'Drive Fracking',
         value: '',
-        style: 'control',
+        style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
             DISCARD: ['Fracking2']
@@ -224,7 +224,7 @@ export const DriveTech = {
         header: 'Fracture Asteroid',
         footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;5<Glyph size={10} shape='ORE' /></div>,
         type: TemplateTypes.Aggregator,
-        style: 'control',
+        style: StyleTypes.Control,
         maxUses: 1,
         aggregates: [{
             cardTemplates: ['Asteroid'],
