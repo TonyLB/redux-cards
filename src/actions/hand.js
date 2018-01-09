@@ -223,6 +223,11 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
                 }))
 
     dispatch(moveThenCondense(newState, combineMoveCards([expenditureMoves, moveCards(discardMoves)])))
+    
+    // How sure am I that the checkPurchases below will run against the correct (post-update) version
+    // of the state, as opposed to the getState prior to the dispatches above?  There's a risk of
+    // locking and activating purchases that will be made impossible by the above changes.
+    
     dispatch(checkPurchases())
     dispatch(maybeRebootDrawCycle())
 }

@@ -57,8 +57,7 @@ const emptyHand = {
         shortCuts: {
             DISCARD: 'STACK3',
             DRAW: 'STACK4',
-            EQUIPMENT: 'TRACK5',
-            SCIENCE: 'TRACK5'
+            EQUIPMENT: 'TRACK5'
         },
         stacks: [
             'STACK10',
