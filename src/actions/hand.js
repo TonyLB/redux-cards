@@ -106,7 +106,7 @@ export const drawCard = () => (dispatch, getState) => {
         dispatch(moveThenCondense(state, drawMove))
         dispatch(startTimer(state.hand.timerId))
         setTimeout(() => {
-            dispatch(checkHand())
+            dispatch(checkPurchases())
             dispatch(condenseHand())
         }, 500)
     }
@@ -136,7 +136,7 @@ export const discardCard = (card, source) => (dispatch, getState) => {
     }
 }
 
-const fullAggregators = (state) => {
+const fullPurchases = (state) => {
     let stacks = state.hand.stacks.map((stackId) => state.stacks.byId[stackId])
     return stacks
         .filter(stack => (
@@ -144,12 +144,12 @@ const fullAggregators = (state) => {
             (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].type === CardTemplates.Types.Aggregator) &&
             CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].purchases.length &&
             (CardTemplates[state.cards.byId[stack.cards[0]].cardTemplate].purchases
-                .find(purchase => (cardsToAggregate(stack.id, purchase, state).length)))
+                .find(purchase => (cardsToSpend(stack.id, purchase, state).length)))
         ))
         .map(stack => ( stack.id ))
 }
 
-const cardsToAggregate = (stackId, purchase, state) => {
+const cardsToSpend = (stackId, purchase, state) => {
     const cards = denormalize(state.stacks.byId[stackId].cards, state.cards.byId)
     assert(cards.length)
 
@@ -168,7 +168,7 @@ const cardsToAggregate = (stackId, purchase, state) => {
     return allPricesSatisfied ? spentCards : []
 }
 
-export const activateAggregator = (stackId) => function activateAggregator(dispatch, getState) {
+export const activatePurchase = (stackId) => function activatePurchase(dispatch, getState) {
     let state = getState()
     if (state.stacks.byId[stackId] === undefined) { return }
     if (!state.stacks.byId[stackId].cards.length) { return }
@@ -177,7 +177,7 @@ export const activateAggregator = (stackId) => function activateAggregator(dispa
     const [purchase, price] = purchases
         .reduce((out, purchase) => {
             if (out.length) return out;
-            const cardsList = cardsToAggregate(stackId, purchase, state)
+            const cardsList = cardsToSpend(stackId, purchase, state)
             if (cardsList.length) {
                 return [
                     purchase,
@@ -227,11 +227,11 @@ export const activateAggregator = (stackId) => function activateAggregator(dispa
     dispatch(maybeRebootDrawCycle())
 }
 
-export const checkHand = () => (dispatch, getState) => {
+export const checkPurchases = () => (dispatch, getState) => {
     let state = getState()
-    let aggregators = fullAggregators(state)
+    let aggregators = fullPurchases(state)
     aggregators.forEach(agg => {
-        dispatch(activateAggregator(agg))
+        dispatch(activatePurchase(agg))
     })
 }
 

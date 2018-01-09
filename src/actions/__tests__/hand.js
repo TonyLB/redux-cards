@@ -1,6 +1,6 @@
 import "babel-polyfill";
 import { Thunk } from 'redux-testkit'
-import { condenseHand, shuffleIfNeeded, drawCard, checkHand, activateAggregator } from '../hand.js'
+import { condenseHand, shuffleIfNeeded, drawCard, checkPurchases, activatePurchase } from '../hand.js'
 import reduce from '../../reducers/testApp'
 import { lockStack } from '../stacks'
 
@@ -384,20 +384,20 @@ describe('store/actions/hand/drawCard', () => {
     
 })
 
-describe('store/actions/hand/activateAggregator', () => {
+describe('store/actions/hand/activatePurchase', () => {
 
     beforeEach(() => {
         jest.resetAllMocks();
     });
 
     it('should dispatch nothing on an invalid stackId', () => {
-        const dispatches = Thunk(activateAggregator).withState(emptyHand).execute('garbage')
+        const dispatches = Thunk(activatePurchase).withState(emptyHand).execute('garbage')
 
         expect(dispatches.length).toBe(0)
     })
     
     it('should dispatch nothing on an empty stack', () => {
-        const dispatches = Thunk(activateAggregator).withState(emptyHand).execute('STACK10')
+        const dispatches = Thunk(activatePurchase).withState(emptyHand).execute('STACK10')
 
         expect(dispatches.length).toBe(0)
     })
@@ -408,7 +408,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
             { id: 'CARD22', cardTemplate: 'Gas', destination: 'STACK10' }
         ]})
-        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK11')
+        const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK11')
 
         expect(dispatches.length).toBe(0)
     })
@@ -418,7 +418,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' }
         ]})
-        const dispatches = Thunk(activateAggregator).withState(halfFullAggregator).execute('STACK10')
+        const dispatches = Thunk(activatePurchase).withState(halfFullAggregator).execute('STACK10')
 
         expect(dispatches.length).toBe(0)
     })
@@ -430,7 +430,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD22', cardTemplate: 'Gas', destination: 'STACK10' }
         ]})
         generateKey.mockReturnValueOnce('CARD23')
-        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK10')
+        const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
         expect(dispatches.length).toBe(4)
         expect(dispatches[0].isPlainObject()).toBe(true)
@@ -466,7 +466,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD22', cardTemplate: 'Asteroid', destination: 'STACK10' }
         ]})
         generateKey.mockReturnValueOnce('CARD23')
-        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK10')
+        const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
         expect(dispatches.length).toBe(4)
         expect(dispatches[0].isPlainObject()).toBe(true)
@@ -503,7 +503,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD22', cardTemplate: 'Gas', destination: 'STACK11' }
         ]})
         generateKey.mockReturnValueOnce('CARD23')
-        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK11')
+        const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK11')
 
         expect(dispatches.length).toBe(4)
         expect(dispatches[0].isPlainObject()).toBe(true)
@@ -541,7 +541,7 @@ describe('store/actions/hand/activateAggregator', () => {
             { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK10' }
         ]})
         generateKey.mockReturnValueOnce('CARD23')
-        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK10')
+        const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
         expect(dispatches.length).toBe(4)
         expect(dispatches[0].isPlainObject()).toBe(true)
@@ -572,10 +572,10 @@ describe('store/actions/hand/activateAggregator', () => {
     
 })
 
-describe('store/actions/hand/checkHand', () => {
+describe('store/actions/hand/checkPurchases', () => {
     
     it('should dispatch nothing when the hand is empty', () => {
-        const dispatches = Thunk(checkHand).withState(emptyHand).execute()
+        const dispatches = Thunk(checkPurchases).withState(emptyHand).execute()
 
         expect(dispatches.length).toBe(0)
     })
@@ -586,7 +586,7 @@ describe('store/actions/hand/checkHand', () => {
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' }
         ]})
 
-        const dispatches = Thunk(checkHand).withState(notFullHand).execute()
+        const dispatches = Thunk(checkPurchases).withState(notFullHand).execute()
 
         expect(dispatches.length).toBe(0)
     })
@@ -598,11 +598,11 @@ describe('store/actions/hand/checkHand', () => {
             { id: 'CARD22', cardTemplate: 'Gas', destination: 'STACK10' }
         ]})
 
-        const dispatches = Thunk(checkHand).withState(fullHand).execute()
+        const dispatches = Thunk(checkPurchases).withState(fullHand).execute()
 
         expect(dispatches.length).toBe(1)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activateAggregator')
+        expect(dispatches[0].getName()).toEqual('activatePurchase')
     })
 
     it('should aggregate twice when there are two full aggregators', () => {
@@ -615,13 +615,13 @@ describe('store/actions/hand/checkHand', () => {
             { id: 'CARD25', cardTemplate: 'Asteroid', destination: 'STACK11' }
         ]})
 
-        const dispatches = Thunk(checkHand).withState(fullHand).execute()
+        const dispatches = Thunk(checkPurchases).withState(fullHand).execute()
 
         expect(dispatches.length).toBe(2)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activateAggregator')
+        expect(dispatches[0].getName()).toEqual('activatePurchase')
         expect(dispatches[1].isFunction()).toBe(true)
-        expect(dispatches[1].getName()).toEqual('activateAggregator')
+        expect(dispatches[1].getName()).toEqual('activatePurchase')
     })
 
     it('should aggregate once when there one full and one empty aggregator', () => {
@@ -633,11 +633,11 @@ describe('store/actions/hand/checkHand', () => {
             { id: 'CARD25', cardTemplate: 'Asteroid', destination: 'STACK11' }
         ]})
 
-        const dispatches = Thunk(checkHand).withState(halfFullHand).execute()
+        const dispatches = Thunk(checkPurchases).withState(halfFullHand).execute()
 
         expect(dispatches.length).toBe(1)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activateAggregator')
+        expect(dispatches[0].getName()).toEqual('activatePurchase')
     })
     
 })
