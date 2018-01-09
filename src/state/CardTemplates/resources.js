@@ -90,6 +90,17 @@ export const Resources = {
         style: StyleTypes.Plain,
         maxUses: 1,
         type: TemplateTypes.Resource
+    },
+    Science5: {
+        id: 'Science5',
+        header: 'Science',
+        value: (<div>5<Glyph size={50} shape='SCIENCE' /></div>),
+        resources: {
+            SCIENCE: 5
+        },
+        style: StyleTypes.Plain,
+        maxUses: 1,
+        type: TemplateTypes.Resource
     }
 }
 

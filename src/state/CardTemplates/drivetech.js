@@ -18,7 +18,7 @@ export const DriveTech = {
     },
     Bussard1: {
         id: 'Bussard1',
-        header: 'Bussard Collector',
+        header: 'Little Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>2<Glyph size={10} shape='GAS' />&rArr;1<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
@@ -38,7 +38,7 @@ export const DriveTech = {
     },
     UpgradeBussard1: {
         id: 'UpgradeBussard1',
-        header: 'Upgrade Bussard',
+        header: 'Bigger Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -48,17 +48,18 @@ export const DriveTech = {
             'UpgradeBussard1': 'UpgradeBussard2'
         },
         payload: {
-            SCIENCE: ['DesignBussard3']
+            EQUIPMENT: ['DesignBussard3']
         },
         cost: {
-            ORE: 4
+            FUEL: 4,
+            ORE: 1
         },
         maxUses: 1,
         hideUses: true
     },
     DeployBussard2: {
         id: 'DeployBussard2',
-        header: 'Kickstart Bussard',
+        header: 'Kickstart Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -71,7 +72,7 @@ export const DriveTech = {
     },
     Bussard2: {
         id: 'Bussard2',
-        header: 'Bussard Collector',
+        header: 'Bigger Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
@@ -91,7 +92,7 @@ export const DriveTech = {
     },
     DesignBussard3: {
         id: 'DesignBussard3',
-        header: 'Bussard 3.0',
+        header: 'Resonant Fields',
         value: <Glyph size={50} shape='BUSSARD' />,
         style: StyleTypes.Science,
         type: TemplateTypes.Design,
@@ -99,14 +100,14 @@ export const DriveTech = {
             EQUIPMENT: ['UpgradeBussard2']
         },
         cost: {
-            SCIENCE: 5,
+            SCIENCE: 3,
         },
         maxUses: 1,
         hideUses: true
     },
     UpgradeBussard2: {
         id: 'UpgradeBussard2',
-        header: 'Upgrade Bussard',
+        header: 'Huge Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -115,14 +116,15 @@ export const DriveTech = {
             'DeployBussard2': 'DeployBussard3'
         },
         cost: {
-            ORE: 20
+            FUEL: 6,
+            ORE: 2
         },
         maxUses: 1,
         hideUses: true
     },
     DeployBussard3: {
         id: 'DeployBussard3',
-        header: 'Kickstart Bussard',
+        header: 'Kickstart Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -135,7 +137,7 @@ export const DriveTech = {
     },
     Bussard3: {
         id: 'Bussard3',
-        header: 'Bussard Collector',
+        header: 'Huge Collector',
         value: <Glyph size={50} shape='BUSSARD' />,
         footer: <div>3<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
@@ -154,36 +156,36 @@ export const DriveTech = {
         }],
         alternateName: 'Stow'
     },
-    DeployFracking1: {
-        id: 'DeployFracking1',
-        header: 'Drive Fracking',
+    DeploySkimmers1: {
+        id: 'DeploySkimmers1',
+        header: 'Fuel Skimmers',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
         deploy: {
-            DISCARD: ['Fracking1']
+            DISCARD: ['Skimmers1']
         },
         cost: {
-            FUEL: 3
+            ORE: 3
         }
     },
-    Fracking1: {
-        id: 'Fracking1',
-        header: 'Fracture Asteroid',
-        footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;2<Glyph size={10} shape='ORE' /></div>,
+    Skimmers1: {
+        id: 'Skimmers1',
+        header: 'Fuel Skimmers',
+        footer: <div>1<Glyph size={10} shape='GAS' />&rArr;2<Glyph size={10} shape='FUEL' /></div>,
         type: TemplateTypes.Aggregator,
         style: StyleTypes.Control,
         maxUses: 1,        
         aggregates: [{
-            cardTemplates: ['Asteroid'],
+            cardTemplates: ['Gas'],
             maxStack: 1
         }],
         purchases: [{
             price: [{
-                cardTemplate: 'Asteroid',
+                cardTemplate: 'Gas',
                 required: 1,
             }],
-            cardTemplate: 'Ore2',
+            cardTemplate: 'Fuel2',
         }]
     },
     UpgradeDrive1: {
@@ -196,47 +198,12 @@ export const DriveTech = {
         settings: {
             'HARVEST-TIMER': 1500
         },
-        upgrade: {
-            'Fracking1': 'Fracking2',
-            'DeployFracking1': 'DeployFracking2'
-        },
         cost: {
-            ORE: 5
+            FUEL: 5,
+            SCIENCE: 2
         },
         maxUses: 1,
         hideUses: true
-    },
-    DeployFracking2: {
-        id: 'DeployFracking2',
-        header: 'Drive Fracking',
-        value: '',
-        style: StyleTypes.Control,
-        type: TemplateTypes.Payload,
-        deploy: {
-            DISCARD: ['Fracking2']
-        },
-        cost: {
-            FUEL: 5
-        }
-    },
-    Fracking2: {
-        id: 'Fracking2',
-        header: 'Fracture Asteroid',
-        footer: <div>1<Glyph size={10} shape='ASTEROID' />&rArr;5<Glyph size={10} shape='ORE' /></div>,
-        type: TemplateTypes.Aggregator,
-        style: StyleTypes.Control,
-        maxUses: 1,
-        aggregates: [{
-            cardTemplates: ['Asteroid'],
-            maxStack: 1
-        }],
-        purchases: [{
-            price: [{
-                cardTemplate: 'Asteroid',
-                required: 1,
-            }],
-            cardTemplate: 'Ore5',
-        }]
     },
 }
 

@@ -483,6 +483,43 @@ describe('store/actions/hand/activateAggregator', () => {
         expect(dispatches[3].isFunction()).toBe(true)
         expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
     })
+
+    it('should aggregate a purchase from a multi-purchase card', () => {
+        const fullAggregator = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD19', cardTemplate: 'Smelter1', destination: 'STACK10' },
+            { id: 'CARD20', cardTemplate: 'Ore1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Ore1', destination: 'STACK10' },
+            { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK10' }
+        ]})
+        generateKey.mockReturnValueOnce('CARD23')
+        const dispatches = Thunk(activateAggregator).withState(fullAggregator).execute('STACK10')
+
+        expect(dispatches.length).toBe(4)
+        expect(dispatches[0].isPlainObject()).toBe(true)
+        expect(dispatches[0].getAction()).toEqual({
+            type: 'ADD_CARDS',
+            cards: [
+                { id: 'CARD23', cardTemplate: 'Ore2', destination: 'STACK10' }
+            ]
+        })
+        expect(dispatches[1].isPlainObject()).toBe(true)
+        expect(dispatches[1].getAction()).toEqual({
+            type: 'MARK_USE',
+            cards: ['CARD20', 'CARD21', 'CARD22']
+        })
+        expect(dispatches[2].isPlainObject()).toBe(true)
+        expect(dispatches[2].getAction()).toEqual({
+            type: 'MOVE_CARDS',
+            cards: [
+                { id: 'CARD20', source: 'STACK10' },
+                { id: 'CARD21', source: 'STACK10' },
+                { id: 'CARD22', source: 'STACK10' }
+            ],
+            stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
+        })
+        expect(dispatches[3].isFunction()).toBe(true)
+        expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
+    })
     
 })
 

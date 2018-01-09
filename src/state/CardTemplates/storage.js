@@ -79,7 +79,7 @@ export const Storage = {
     },
     DesignAsteroidBelt: {
         id: 'DesignAsteroidBelt',
-        header: 'Asteroid Belt',
+        header: 'Chart Asteroids',
         value: '',
         style: StyleTypes.Science,
         type: TemplateTypes.Design,
@@ -92,7 +92,7 @@ export const Storage = {
     },
     AsteroidBelt: {
         id: 'AsteroidBelt',
-        header: 'Asteroid Belt',
+        header: 'Asteroid Chart',
         footer: <div>Holds 5<Glyph size={10} shape='ASTEROID' /></div>,
         type: TemplateTypes.Storage,
         style: StyleTypes.Control,        

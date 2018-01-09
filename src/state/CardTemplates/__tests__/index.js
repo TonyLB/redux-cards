@@ -78,4 +78,8 @@ describe('store/state/CardTemplates', () => {
         FindErrors('Upgrade', (key, value) => (value.upgrade && Object.values(value.upgrade).some((upgradeValue) => ( !CardTemplates[upgradeValue]))))
     })
 
+    it('should only deploy legitimate templates', () => {
+        FindErrors('Deploy', (key, value) => (value.deploy && Object.values(value.deploy).some((deployValue) => !CardTemplates[deployValue])))
+    })
+
 })

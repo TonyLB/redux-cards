@@ -5,7 +5,7 @@ import { TemplateTypes, StyleTypes } from './types'
 export const Mining = {
     EVAFuel1: {
         id: 'EVAFuel1',
-        header: 'Fuel EVA',
+        header: 'Repair a Spacesuit',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -13,12 +13,12 @@ export const Mining = {
             DISCARD: ['EVAMining1']
         },
         cost: {
-            FUEL: 2
+            ORE: 1
         }
     },
     EVAMining1: {
         id: 'EVAMining1',
-        header: 'EVA Mining',
+        header: 'Dig in Space',
         footer: (<div>2<Glyph size={10} shape='ASTEROID' />&rArr;1<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
         style: StyleTypes.Control,
@@ -37,7 +37,7 @@ export const Mining = {
     },
     UpgradeEVA1: {
         id: 'UpgradeEVA1',
-        header: 'Upgrade EVA',
+        header: 'Plated Spacesuit',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -49,15 +49,15 @@ export const Mining = {
             SCIENCE: ['DesignEVA3']
         },
         cost: {
-            ORE: 3,
-            FUEL: 3
+            ORE: 4,
+            FUEL: 2
         },
         maxUses: 1,
         hideUses: true
     },
     EVAFuel2: {
         id: 'EVAFuel2',
-        header: 'Fuel EVA',
+        header: 'Fix a Spacesuit',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -65,12 +65,12 @@ export const Mining = {
             DISCARD: ['EVAMining2']
         },
         cost: {
-            FUEL: 2
+            ORE: 1
         }
     },
     EVAMining2: {
         id: 'EVAMining2',
-        header: 'EVA Mining',
+        header: 'Mining in Space',
         footer: (<div>3<Glyph size={10} shape='ASTEROID' />&rArr;2<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
         style: StyleTypes.Control,
@@ -89,7 +89,7 @@ export const Mining = {
     },
     DesignEVA3: {
         id: 'DesignEVA3',
-        header: 'EVA 3.0',
+        header: 'Invent Smartcloth',
         value: '',
         style: StyleTypes.Science,
         type: TemplateTypes.Design,
@@ -104,7 +104,7 @@ export const Mining = {
     },
     UpgradeEVA2: {
         id: 'UpgradeEVA2',
-        header: 'Upgrade EVA',
+        header: 'Smartcloth Spacesuit',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -121,7 +121,7 @@ export const Mining = {
     },
     EVAFuel3: {
         id: 'EVAFuel3',
-        header: 'Fuel EVA',
+        header: 'Fix a Spacesuit',
         value: '',
         style: StyleTypes.Control,
         type: TemplateTypes.Payload,
@@ -129,12 +129,12 @@ export const Mining = {
             DISCARD: ['EVAMining3']
         },
         cost: {
-            FUEL: 5
+            ORE: 2
         }
     },
     EVAMining3: {
         id: 'EVAMining3',
-        header: 'EVA Mining',
+        header: 'Laser Mining',
         footer: (<div>3<Glyph size={10} shape='ASTEROID' />&rArr;5<Glyph size={10} shape='ORE' /></div>),
         type: TemplateTypes.Aggregator,
         style: StyleTypes.Control,
@@ -150,6 +150,50 @@ export const Mining = {
             }],
             cardTemplate: 'Ore5',
         }]
+    },
+    DeploySmelter1: {
+        id: 'DeploySmelter1',
+        header: 'Small Smelter',
+        value: '',
+        style: StyleTypes.Control,
+        type: TemplateTypes.Payload,
+        deploy: {
+            DISCARD: ['Smelter1']
+        },
+        cost: {
+            FUEL: 3,
+            ORE: 3
+        }
+    },
+    Smelter1: {
+        id: 'Smelter1',
+        header: 'Small Smelter',
+        value: '',
+        footer: <div>3<Glyph size={10} shape='ORE' />&rArr;1 > <Glyph size={10} shape='ORE' /></div>,
+        type: TemplateTypes.Aggregator,
+        style: StyleTypes.Control,
+        aggregates: [{
+            cardTemplates: ['Ore1', 'Ore2', 'Ore5'],
+            maxStack: 5
+        }],
+        purchases: [
+            {
+                persistent: true,
+                price: [{
+                    cardTemplate: 'Ore1',
+                    required: 3,
+                }],
+                cardTemplate: 'Ore2',
+            },
+            {
+                persistent: true,
+                price: [{
+                    cardTemplate: 'Ore2',
+                    required: 3,
+                }],
+                cardTemplate: 'Ore5',
+            },
+        ]
     },
 }
 
