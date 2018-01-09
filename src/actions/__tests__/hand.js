@@ -2,6 +2,7 @@ import "babel-polyfill";
 import { Thunk } from 'redux-testkit'
 import { condenseHand, shuffleIfNeeded, drawCard, checkHand, activateAggregator } from '../hand.js'
 import reduce from '../../reducers/testApp'
+import { lockStack } from '../stacks'
 
 import { generateKey } from '../../reducers/keys.js'
 
@@ -242,8 +243,56 @@ describe('store/actions/hand/', () => {
             stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
         })
     })
-    
 
+    it('should not aggregate into a locked stack', () => {
+        const lockedHand = reduce(
+            reduce(emptyHand, lockStack('STACK10')),
+            { type: 'ADD_CARDS', cards: [
+                { id: 'CARD20', cardTemplate: 'FuelTank', destination: 'STACK10' },
+                { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK10' },
+                { id: 'CARD22', cardTemplate: 'Fuel1', destination: 'STACK11' }            
+            ]})
+
+        const dispatches = Thunk(condenseHand).withState(lockedHand).execute()
+        expect(dispatches.length).toBe(0)
+    })
+
+    it('should not aggregate out of a locked stack', () => {
+        const lockedHand = reduce(
+            reduce(emptyHand, lockStack('STACK11')),
+            { type: 'ADD_CARDS', cards: [
+                { id: 'CARD20', cardTemplate: 'FuelTank', destination: 'STACK10' },
+                { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK10' },
+                { id: 'CARD22', cardTemplate: 'Fuel1', destination: 'STACK11' }            
+            ]})
+
+        const dispatches = Thunk(condenseHand).withState(lockedHand).execute()
+        expect(dispatches.length).toBe(0)
+    })    
+
+    it('should aggregate past a locked stack', () => {
+        const lockedHand = reduce(
+            reduce(emptyHand, lockStack('STACK11')),
+            { type: 'ADD_CARDS', cards: [
+                { id: 'CARD20', cardTemplate: 'FuelTank', destination: 'STACK10' },
+                { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK10' },
+                { id: 'CARD22', cardTemplate: 'FuelTank', destination: 'STACK11' },
+                { id: 'CARD23', cardTemplate: 'Fuel1', destination: 'STACK11' },
+                { id: 'CARD24', cardTemplate: 'Fuel1', destination: 'STACK12' },
+            ]})
+
+        const dispatches = Thunk(condenseHand).withState(lockedHand).execute()
+        expect(dispatches.length).toBe(1)
+        expect(dispatches[0].isPlainObject()).toBe(true)
+        expect(dispatches[0].getAction()).toEqual({
+            type: 'MOVE_CARDS',
+            cards: [
+                { id: 'CARD24', source: 'STACK12', destination: 'STACK10' },
+            ],
+            stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
+        })
+    })    
+    
 })
 
 describe('store/actions/hand/shuffleIfNeeded', () => {

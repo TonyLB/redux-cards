@@ -39,6 +39,8 @@ export const willAggregate = (state, stackId) => {
         .map(stack => ({ ...state.stacks.byId[stack]}))
             // Remove empty stacks from consideration
         .filter(stack => (stack.cards.length > 0))
+            // Remove locked stacks from consideration
+        .filter(stack => (!stack.locked))
             // Denormalize card Ids into card structure
         .map(stack => ({
             ...stack,
