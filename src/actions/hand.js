@@ -192,8 +192,9 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
     let addCardMoves = addCard(purchase.cardTemplate, stackId)
 
     dispatch(addCardMoves)
+    dispatch(unlockStack(stackId))
         
-    let newState = testApp(state, addCardMoves, true)
+    let newState = testApp(testApp(state, addCardMoves, true), unlockStack(stackId), true)
     
     const maybeDiscards = (purchase.persistent ? 
             [] : [{ 
@@ -221,8 +222,8 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
                     destination: state.hand.discardId
                 }))
 
-    dispatch(unlockStack(stackId))
     dispatch(moveThenCondense(newState, combineMoveCards([expenditureMoves, moveCards(discardMoves)])))
+    dispatch(checkPurchases())
     dispatch(maybeRebootDrawCycle())
 }
 
