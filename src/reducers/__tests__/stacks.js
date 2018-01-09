@@ -2,6 +2,7 @@ import "babel-polyfill";
 import { stacks, shuffleStacks } from '../stacks'
 import { Reducer } from 'redux-testkit'
 import CardTemplates from '../../state/CardTemplates'
+import { lockStack, unlockStack } from '../../actions/stacks'
 
 const initialState = {
     byId: {},
@@ -241,6 +242,43 @@ describe('store/reducer/stacks', () => {
                 }
             }
         })
+    })
+
+    it('should lock a stack', () => {
+        Reducer(stacks)
+            .withState(existingState)
+            .expect(lockStack('STACK1'))
+            .toChangeInState({
+                byId: {
+                    STACK1: {
+                        locked: true
+                    }
+                }
+            })
+    })
+
+    it('should unlock a stack', () => {
+        const lockedState = {
+            ...existingState,
+            byId: {
+                ...existingState.byId,
+                'STACK1': {
+                    ...existingState.byId['STACK1'],
+                    locked: true
+                }
+            }
+        }
+
+        Reducer(stacks)
+            .withState(lockedState)
+            .expect(unlockStack('STACK1'))
+            .toChangeInState({
+                byId: {
+                    STACK1: {
+                        locked: false
+                    }
+                }
+            })
     })
     
 })

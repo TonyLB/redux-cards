@@ -36,6 +36,18 @@ const stack = (state = stackDefault, action = { type: 'NULL' }) => {
         case 'ADD_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)
+        case 'LOCK_STACK':
+            return action.stackId === state.id ? {
+                ...state,
+                locked: true
+            }
+            : state
+        case 'UNLOCK_STACK':
+            return action.stackId === state.id ? {
+                ...state,
+                locked: false
+            }
+            : state
         default:
             return state
     }
