@@ -5,6 +5,7 @@ import { denormalize } from '../state'
 import { canRecycle } from '../state/hand'
 import { willAggregate } from '../state/stack'
 import testApp from '../reducers/testApp'
+import { lockStack, unlockStack } from './stacks';
 
 const handPriority = (state, stack) => (
     state.stacks.byId[stack].cards.length ? 
@@ -105,10 +106,7 @@ export const drawCard = () => (dispatch, getState) => {
         }])
         dispatch(moveThenCondense(state, drawMove))
         dispatch(startTimer(state.hand.timerId))
-        setTimeout(() => {
-            dispatch(checkPurchases())
-            dispatch(condenseHand())
-        }, 500)
+        dispatch(checkPurchases())
     }
     dispatch(shuffleIfNeeded())
 }
@@ -223,15 +221,23 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
                     destination: state.hand.discardId
                 }))
 
+    dispatch(unlockStack(stackId))
     dispatch(moveThenCondense(newState, combineMoveCards([expenditureMoves, moveCards(discardMoves)])))
     dispatch(maybeRebootDrawCycle())
 }
 
-export const checkPurchases = () => (dispatch, getState) => {
+export const queuePurchase = (stackId) => function queuePurchase(dispatch, getState) {
+    dispatch(lockStack(stackId))
+    setTimeout(() => {
+        dispatch(activatePurchase(stackId))
+    }, 500)
+}
+
+export const checkPurchases = () => function checkPurchases(dispatch, getState) {
     let state = getState()
     let aggregators = fullPurchases(state)
     aggregators.forEach(agg => {
-        dispatch(activatePurchase(agg))
+        dispatch(queuePurchase(agg))
     })
 }
 

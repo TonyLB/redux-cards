@@ -369,7 +369,7 @@ describe('store/actions/hand/drawCard', () => {
 
         const dispatches = Thunk(drawCard).withState(fullHand).execute()
 
-        expect(dispatches.length).toBe(3)
+        expect(dispatches.length).toBe(4)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'MOVE_CARDS',
@@ -379,7 +379,9 @@ describe('store/actions/hand/drawCard', () => {
         expect(dispatches[1].isFunction()).toBe(true)
         expect(dispatches[1].getName()).toEqual('startTimer')
         expect(dispatches[2].isFunction()).toBe(true)
-        expect(dispatches[2].getName()).toEqual('shuffleIfNeeded')
+        expect(dispatches[2].getName()).toEqual('checkPurchases')
+        expect(dispatches[3].isFunction()).toBe(true)
+        expect(dispatches[3].getName()).toEqual('shuffleIfNeeded')
     })
     
 })
@@ -423,7 +425,7 @@ describe('store/actions/hand/activatePurchase', () => {
         expect(dispatches.length).toBe(0)
     })
 
-    it('should aggregate and discard, if no maxUses specified', () => {
+    it('should purchase and discard, if no maxUses specified', () => {
         const fullAggregator = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
@@ -432,7 +434,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(4)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -447,6 +449,11 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[2].isPlainObject()).toBe(true)
         expect(dispatches[2].getAction()).toEqual({
+            type: 'UNLOCK_STACK',
+            stackId: 'STACK10'
+        })
+        expect(dispatches[3].isPlainObject()).toBe(true)
+        expect(dispatches[3].getAction()).toEqual({
             type: 'MOVE_CARDS',
             cards: [
                 { id: 'CARD20', source: 'STACK10', destination: 'STACK3' },
@@ -455,11 +462,11 @@ describe('store/actions/hand/activatePurchase', () => {
             ],
             stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
         })
-        expect(dispatches[3].isFunction()).toBe(true)
-        expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
+        expect(dispatches[4].isFunction()).toBe(true)
+        expect(dispatches[4].getName()).toEqual('maybeRebootDrawCycle')
     })
 
-    it('should aggregate, mark, and discard, if maxUses specified', () => {
+    it('should purchase, mark, and discard, if maxUses specified', () => {
         const fullAggregator = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'EVAMining1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Asteroid', destination: 'STACK10' },
@@ -468,7 +475,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(4)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -483,6 +490,11 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[2].isPlainObject()).toBe(true)
         expect(dispatches[2].getAction()).toEqual({
+            type: 'UNLOCK_STACK',
+            stackId: 'STACK10'
+        })
+        expect(dispatches[3].isPlainObject()).toBe(true)
+        expect(dispatches[3].getAction()).toEqual({
             type: 'MOVE_CARDS',
             cards: [
                 { id: 'CARD20', source: 'STACK10', destination: 'STACK3' },
@@ -491,8 +503,8 @@ describe('store/actions/hand/activatePurchase', () => {
             ],
             stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
         })
-        expect(dispatches[3].isFunction()).toBe(true)
-        expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
+        expect(dispatches[4].isFunction()).toBe(true)
+        expect(dispatches[4].getName()).toEqual('maybeRebootDrawCycle')
     })
 
     it('should aggregate purchase into storage, if available', () => {
@@ -505,7 +517,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK11')
 
-        expect(dispatches.length).toBe(4)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -520,6 +532,11 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[2].isPlainObject()).toBe(true)
         expect(dispatches[2].getAction()).toEqual({
+            type: 'UNLOCK_STACK',
+            stackId: 'STACK11'
+        })
+        expect(dispatches[3].isPlainObject()).toBe(true)
+        expect(dispatches[3].getAction()).toEqual({
             type: 'MOVE_CARDS',
             cards: [
                 { id: 'CARD20', source: 'STACK11', destination: 'STACK3' },
@@ -529,11 +546,11 @@ describe('store/actions/hand/activatePurchase', () => {
             ],
             stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
         })
-        expect(dispatches[3].isFunction()).toBe(true)
-        expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
+        expect(dispatches[4].isFunction()).toBe(true)
+        expect(dispatches[4].getName()).toEqual('maybeRebootDrawCycle')
     })
 
-    it('should aggregate a purchase from a multi-purchase card', () => {
+    it('should purchase from a multi-purchase card', () => {
         const fullAggregator = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD19', cardTemplate: 'Smelter1', destination: 'STACK10' },
             { id: 'CARD20', cardTemplate: 'Ore1', destination: 'STACK10' },
@@ -543,7 +560,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(4)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -558,6 +575,11 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[2].isPlainObject()).toBe(true)
         expect(dispatches[2].getAction()).toEqual({
+            type: 'UNLOCK_STACK',
+            stackId: 'STACK10'
+        })
+        expect(dispatches[3].isPlainObject()).toBe(true)
+        expect(dispatches[3].getAction()).toEqual({
             type: 'MOVE_CARDS',
             cards: [
                 { id: 'CARD20', source: 'STACK10' },
@@ -566,8 +588,8 @@ describe('store/actions/hand/activatePurchase', () => {
             ],
             stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
         })
-        expect(dispatches[3].isFunction()).toBe(true)
-        expect(dispatches[3].getName()).toEqual('maybeRebootDrawCycle')
+        expect(dispatches[4].isFunction()).toBe(true)
+        expect(dispatches[4].getName()).toEqual('maybeRebootDrawCycle')
     })
     
 })
@@ -591,7 +613,7 @@ describe('store/actions/hand/checkPurchases', () => {
         expect(dispatches.length).toBe(0)
     })
 
-    it('should aggregate when there is a full aggregator', () => {
+    it('should queue purchase when there is a full aggregator', () => {
         const fullHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
@@ -602,10 +624,10 @@ describe('store/actions/hand/checkPurchases', () => {
 
         expect(dispatches.length).toBe(1)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activatePurchase')
+        expect(dispatches[0].getName()).toEqual('queuePurchase')
     })
 
-    it('should aggregate twice when there are two full aggregators', () => {
+    it('should queue twice when there are two full aggregators', () => {
         const fullHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
@@ -619,12 +641,12 @@ describe('store/actions/hand/checkPurchases', () => {
 
         expect(dispatches.length).toBe(2)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activatePurchase')
+        expect(dispatches[0].getName()).toEqual('queuePurchase')
         expect(dispatches[1].isFunction()).toBe(true)
-        expect(dispatches[1].getName()).toEqual('activatePurchase')
+        expect(dispatches[1].getName()).toEqual('queuePurchase')
     })
 
-    it('should aggregate once when there one full and one empty aggregator', () => {
+    it('should queue once when there one full and one empty aggregator', () => {
         const halfFullHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
             { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
@@ -637,7 +659,7 @@ describe('store/actions/hand/checkPurchases', () => {
 
         expect(dispatches.length).toBe(1)
         expect(dispatches[0].isFunction()).toBe(true)
-        expect(dispatches[0].getName()).toEqual('activatePurchase')
+        expect(dispatches[0].getName()).toEqual('queuePurchase')
     })
     
 })
