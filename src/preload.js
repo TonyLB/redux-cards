@@ -20,7 +20,7 @@ const preloadDecks = (state) => {
     const deckId = generateKey(StateTypes.Stack)
     const discardId = generateKey(StateTypes.Stack)
     const cards = listToDenormalized(
-        ['Fuel1', 'Asteroid', 'Bussard1', 'Gas', 'Comet', 'Gas', 'EVAMining1', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
+        ['Fuel1', 'Asteroid', 'Bussard1', 'Gas', 'Probe1', 'Comet', 'Gas', 'EVAMining1', 'Asteroid', 'Gas', 'Asteroid'].map(cardValue => 
             ({
                 cardTemplate: CardTemplate[cardValue].id,
                 uses: CardTemplate[cardValue].maxUses ? CardTemplate[cardValue].maxUses : undefined,
@@ -185,8 +185,7 @@ const preloadShortCuts = (state) => ({
         shortCuts: {
             DISCARD: state.hand.discardId,
             DRAW: state.hand.drawId,
-            EQUIPMENT: state.tracks.byId[state.hand.equipmentTrack].deck,
-            SCIENCE: state.tracks.byId[state.hand.scienceTrack].deck
+            EQUIPMENT: state.tracks.byId[state.hand.equipmentTrack].deck
         }
     }
 })
@@ -208,7 +207,7 @@ const preloadState = () => {
             'PlotIntercept1', 
             'EVAFuel1', 
             'DeploySkimmers1', 
-            'TargetProbe1', 
+            'TargetProbe1',
             'UpgradeBussard1', 
             'UpgradeDrive1', 
             'UpgradeEVA1', 
@@ -220,9 +219,9 @@ const preloadState = () => {
             'FindDeposit1',
             'DesignAsteroidBelt'
         ], 'equipmentTrack'),
-        preloadTrack([], 'scienceTrack'),
         preloadDeployed('EVAFuel1', 'EVAMining1'),
         preloadDeployed('DeployBussard1', 'Bussard1'),
+        preloadDeployed('TargetProbe1', 'Probe1'),
         preloadShortCuts,
         preloadSettings
     ]

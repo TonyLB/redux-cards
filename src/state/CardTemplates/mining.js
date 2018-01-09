@@ -46,7 +46,7 @@ export const Mining = {
             EVAMining1: 'EVAMining2'
         },
         payload: {
-            SCIENCE: ['DesignEVA3']
+            EQUIPMENT: ['DesignEVA3']
         },
         cost: {
             ORE: 4,
