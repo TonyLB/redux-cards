@@ -37,14 +37,6 @@ describe('store/reducer/tracks', () => {
             .toStayTheSame
     })
 
-/*  
-    At the moment, there is no functional need to directly add a card
-    to a track.  It might be worth refactoring the MOVE_CARD function
-    to include creating the card (when the source is NULL), and then
-    to test for card addition here ... or to fold the TRACK and STACK
-    functionality into each other, and simply change their display
-    functions.
-
     it('should add a single card', () => {
         Reducer(tracks)
             .withState(existingState)
@@ -78,7 +70,7 @@ describe('store/reducer/tracks', () => {
                     }                    
                 }
             })
-    })*/
+    })
 
     it('should remove a single card', () => {
         Reducer(tracks)

@@ -216,8 +216,7 @@ const preloadState = () => {
             'UpgradeSensor1',
             'DeploySmelter1',
             'UpgradeProbe1', 
-            'FindDeposit1',
-            'DesignAsteroidBelt'
+            'FindDeposit1'
         ], 'equipmentTrack'),
         preloadDeployed('EVAFuel1', 'EVAMining1'),
         preloadDeployed('DeployBussard1', 'Bussard1'),

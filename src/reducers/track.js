@@ -4,6 +4,7 @@ const trackDefault = { id: 'TEST', cards: [], deck: 'NULL-STACK'}
 
 const track = (state = trackDefault, action) => {
     switch(action.type) {
+        case 'ADD_CARDS':
         case 'MOVE_CARDS':
             return moveCardsReducer(state, action.cards)
         default:

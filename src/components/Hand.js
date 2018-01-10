@@ -16,21 +16,26 @@ class Hand extends React.Component {
         const stacks = props.stacks
         const width = props.width || 600
         const height = props.height || 800
-        let drawDeck = cardSeparatedDeck({id: props.drawId, cards: props.drawDeck.cards, top: 200, left: width-100})
+        let drawDeck = cardSeparatedDeck({
+            id: props.drawId, 
+            cards: props.drawDeck.cards,
+            children: (
+                <Countdown timerId={props.timerId}>
+                    <Arrow onClick={ props.drawClick } rotate={90} />
+                </Countdown>
+            ),
+            top: 200, 
+            left: width-100
+        })
         let discardDeck = cardSeparatedDeck({id: props.discardId, cards: props.discardDeck.cards, top: 390, left: width-100, headerTop: true, discard: true})
         let stackRender = stacks
             .map((stack, index) => cardSeparatedStack({
                 ...stack,
                 top: 200,
                 left: 95*index,
-                discardClick: props.discardClick(stack.id),
-                alternateClick: props.alternateClick(stack.id),
-                children: stack.firstOpenStack ? (
-                        <Countdown timerId={props.timerId}>
-                            <Arrow onClick={ props.drawClick } />
-                        </Countdown>
-                    ) : null})
-            )
+                discardClick: props.discardClick,
+                alternateClick: props.alternateClick(stack.id)
+            }))
             .reduce((state, object) => ({ 
                 jsx: state.jsx.concat(object.jsx),
                 styles: state.styles.concat(object.styles)

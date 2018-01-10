@@ -76,30 +76,6 @@ export const Storage = {
             cardTemplates: ['Fuel1', 'Fuel2', 'Fuel5'],
             maxStack: 5
         }],
-    },
-    DesignAsteroidBelt: {
-        id: 'DesignAsteroidBelt',
-        header: 'Chart Asteroids',
-        value: '',
-        style: StyleTypes.Science,
-        type: TemplateTypes.Design,
-        deploy: {
-            DISCARD: ['AsteroidBelt']
-        },
-        cost: {
-            SCIENCE: 2,
-        }
-    },
-    AsteroidBelt: {
-        id: 'AsteroidBelt',
-        header: 'Asteroid Chart',
-        footer: <div>Holds 5<Glyph size={10} shape='ASTEROID' /></div>,
-        type: TemplateTypes.Storage,
-        style: StyleTypes.Control,        
-        aggregates: [{
-            cardTemplates: 'Asteroid',
-            maxStack: 5
-        }],
     }
 }
 

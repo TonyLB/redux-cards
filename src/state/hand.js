@@ -84,7 +84,7 @@ export const cardsToSpend = (state, resources = { FUEL: 2 }) => {
 }
 
 export const canRecycle = (state, stackId) => (
-    state.stacks.byId[stackId].cards.length ? 
+    state.stacks.byId[stackId].cards.length === 1 ? 
         CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].type !== CardTemplates.Types.Planete :
         false
 )

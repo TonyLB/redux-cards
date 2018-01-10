@@ -190,7 +190,7 @@ export const DriveTech = {
     },
     UpgradeDrive1: {
         id: 'UpgradeDrive1',
-        header: 'Upgrade Drive',
+        header: 'Faster Rocket',
         footer: (<div ><Glyph size={15} shape='CARD' /><Glyph size={15} shape='CLOCK' /> Faster</div>),
         value: '',
         style: StyleTypes.Control,

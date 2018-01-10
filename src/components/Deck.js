@@ -8,7 +8,8 @@ export const cardSeparatedDeck = ( {
     cards, 
     headerTop=false, 
     discard=false, 
-    children, 
+    children,
+    onClick,
     top=0, 
     left=0, 
     zIndex=0, 
@@ -29,6 +30,7 @@ export const cardSeparatedDeck = ( {
                 left={left}
                 className='card-empty'
                 children={children}
+                onClick={onClick}
                 key={`STATIC-EMPTY-${id}`}
             />
         )]), 
@@ -36,7 +38,8 @@ export const cardSeparatedDeck = ( {
             top: (top+(headerTop?20:0))+index*5,
             left: left+index*5,
             zIndex: zIndex+3-index,
-            children: children,
+            children: index === 0 ? children : [],
+            onClick: onClick,
             showBack: !discard,
             cardId: card.id,
             ...card
@@ -68,7 +71,7 @@ export const Deck = ( {
                         top={(top+(headerTop?20:0))+index*5}
                         left={left+index*5}
                         zIndex={zIndex+3-index}
-                        children={children}
+                        children={ index === 0 ? children : ''}
                         showBack={!discard}
                         key={card.id}
                         cardId={card.id}

@@ -14,27 +14,18 @@ export const cardSeparatedStack = ( { id,
     return {
         jsx: cards.length ? [(
             <div key={`STATIC-${id}`} >
-            <div style={{top:top+250, left:left, width:76, height:20, position:"absolute"}}>
-                <Header width={76} height={20} gap={50} onClick={discardClick(cards[cards.length-1].id)} />
-                <div className='positioning-center color-blues' style={{ fontSize:'90%' }} onClick={discardClick(cards[cards.length-1].id)}>
-                    Discard
-                </div>
-            </div>
             { alternateName ? (
-                <div style={{top:top+290, left:left, width:76, height:20, position:"absolute"}}>
+                <div style={{top:top+150, left:left, width:76, height:20, position:"absolute"}}>
                     <Header width={76} height={20} gap={50} onClick={alternateClick} />
                     <div className='positioning-center color-blues' style={{ fontSize:'90%' }} onClick={alternateClick}>
                         {alternateName}
                     </div>
                 </div>            
             ) : null
-            }   
+            }
             </div>
         )] : [(
             <div key={`STATIC-${id}`} >
-            <div className='positioning-discard' style={{top:top+250, left:left, position:"absolute"}}>
-                <Header className='svg-greys' width={76} height={20} gap={50} />
-            </div>
             </div>
         ), (
             <Card 
@@ -52,6 +43,7 @@ export const cardSeparatedStack = ( { id,
             left: left+(index?10:0),
             zIndex: index,
             cardId: card.id,
+            onClick: discardClick(card.id),
             ...card
         })) : []
     }

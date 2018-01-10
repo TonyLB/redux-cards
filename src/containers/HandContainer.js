@@ -38,9 +38,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         cardDrawClick: () => {
             dispatch(drawCard())
         },
-        discardClick: (stack) => (card) => () => {
-            dispatch(discardCard(card, stack))
-            dispatch(condenseHand())
+        discardClick: (card) => () => {
+            dispatch(discardCard(card))
         },
         alternateClick: (discard) => (stack) => () => {
             dispatch(recycleCards(stack, discard))

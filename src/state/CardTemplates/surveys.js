@@ -134,20 +134,6 @@ export const Surveys = {
             cardTemplate: 'Ore2',
         }]
     },
-    Survey: {
-        id: 'Survey',
-        header: 'Survey',
-        style: StyleTypes.Science,
-        type: TemplateTypes.Payload,
-        maxUses: 1,
-        hideUses: true,
-        payload: {
-            DISCARD: ['Asteroid', 'Asteroid', 'Comet']
-        },
-        cost: {
-            FUEL: 4,
-        }
-    },
     UpgradeProbe1: {
         id: 'UpgradeProbe1',
         header: 'Smarter Probes',
