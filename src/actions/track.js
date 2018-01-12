@@ -64,3 +64,46 @@ export const purchaseCard = (card, track) => (dispatch, getState) => {
 
     }
 }
+
+export const advanceTrack = (trackId) => (dispatch, getState) => {
+    const state = getState()
+    if (!state) { return }
+
+    const track = state.tracks.byId[trackId]
+    if (!track) { return }
+
+    const discardAction = (track.cards.length >= track.trackSize) 
+        ? moveCards([{
+            id: track.cards[0],
+            source: trackId,
+            destination: track.deck
+        }])
+        : ''
+
+    const filteredDeck = state.stacks.byId[track.deck].cards
+        .filter(card => (state.cards.byId[card].deployed === undefined))
+
+    const cardAction = filteredDeck.length 
+        ? moveCards([{ 
+            id: filteredDeck[0],
+            source: track.deck,
+            destination: trackId
+        }])
+        : ''
+
+    if (discardAction) {
+        if (cardAction) {
+            dispatch(combineMoveCards([ discardAction, cardAction ]))
+        }
+        else {
+            dispatch(moveCards([{
+                id: track.cards[0],
+                source: trackId,
+                destination: trackId
+            }]))    
+        }
+    }
+    else if (cardAction) {
+        dispatch(cardAction)
+    }
+}

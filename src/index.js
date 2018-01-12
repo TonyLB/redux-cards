@@ -10,6 +10,7 @@ import './index.css';
 import preloadState from './preload'
 import { startTimer } from './actions/timers'
 import { drawCard } from './actions/hand'
+import { advanceTrack } from './actions/track'
 
 let store = createStore(
     testApp, 
@@ -25,6 +26,14 @@ store.dispatch(startTimer({
             dispatch(drawCard())                            
         }
     }
+}))
+store.dispatch(startTimer({
+    id: 'EQUIPMENT-TIMER',
+    duration: 4000,
+    execute: (dispatch, getState) => { 
+        dispatch(advanceTrack(getState().hand.equipmentTrack))
+    },
+    repeating: true
 }))
 
 render(

@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import CardTemplates from '../state/CardTemplates'
-import { moveCard } from '../actions'
 import Track from '../components/Track'
 import { purchaseCard } from '../actions/track'
 
@@ -31,40 +30,15 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        onClick: (track) => (card) => () => {
-            dispatch(purchaseCard(card, track))
-        },
-        cardDrawClick: (card, deck, track, discard) => () => {
-            if (discard) { 
-                dispatch(moveCard(discard, track, deck))
-            }
-            dispatch(moveCard(card, deck, track))
-        },
-    }
-}
+const mapDispatchToProps = (dispatch, ownProps) => ( { 
+    onClick: (card) => () => { dispatch(purchaseCard(card, ownProps.trackId)) }
+} )
 
-const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => {
-
-    // Select card to draw from deck, and card to discard from end of
-    // track (if available)
-
-    let card = propsFromState.deck.cards.length ? propsFromState.deck.cards[0].id : ''
-    let discard = propsFromState.cards.length >= propsFromState.trackSize ?
-        propsFromState.cards[0].id : ''
-    return {
-        ...propsFromState,
-        cardDrawClick: card ? propsFromDispatch.cardDrawClick(
-            card,
-            propsFromState.deck.id,
-            propsFromState.id,
-            discard
-        ) : () => {},
-        onClick: propsFromDispatch.onClick(propsFromState.id),
-        ...ownProps
-    }  
-}
+const mergeProps = ( propsFromState, propsFromDispatch, ownProps ) => ({
+    ...propsFromState,
+    ...propsFromDispatch,
+    ...ownProps
+})
 
 const TrackContainer = connect(
     mapStateToProps,
