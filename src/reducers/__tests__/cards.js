@@ -40,7 +40,7 @@ describe('store/reducer/cards', () => {
         Reducer(cards)
             .withState(existingState)
             .expect({ type: 'NOT_EXISTING'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should add a single card', () => {
@@ -172,7 +172,7 @@ describe('store/reducer/cards', () => {
                 type: 'MARK_USE', 
                 cards: ['CARD2']
             })
-            .toStayTheSame   
+            .toChangeInState({})
     })
             
     it('should mark use of a usable card', () => {

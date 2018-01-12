@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { combineStacks } from '../actions'
-import { drawCard, discardCard, condenseHand, recycleCards } from '../actions/hand'
+import { drawCard, discardCard, recycleCards } from '../actions/hand'
 import CardTemplate from '../state/CardTemplates'
 import Hand from '../components/Hand'
 import { canRecycle } from '../state/hand'

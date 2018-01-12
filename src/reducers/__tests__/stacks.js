@@ -36,7 +36,7 @@ describe('store/reducer/stacks', () => {
         Reducer(stacks)
             .withState(existingState)
             .expect({ type: 'NOT_EXISTING'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should add a single card', () => {

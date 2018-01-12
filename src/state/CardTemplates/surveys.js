@@ -18,7 +18,7 @@ export const Surveys = {
     },
     Probe1: {
         id: 'Probe1',
-        header: 'Dumb Comet Probe',
+        header: 'Basic Probe',
         value: '',
         footer: (<div>1<Glyph size={10} shape='COMET' />&rArr;1<Glyph size={10} shape='SCIENCE' /></div>),
         style: StyleTypes.Control,
@@ -51,7 +51,7 @@ export const Surveys = {
     },
     Probe2: {
         id: 'Probe2',
-        header: 'Smart Comet Probe',
+        header: 'Smart Probe',
         value: '',
         footer: (<div>1<Glyph size={10} shape='COMET' />&rArr;1<Glyph size={10} shape='SCIENCE' /></div>),
         style: StyleTypes.Control,
@@ -133,23 +133,6 @@ export const Surveys = {
             }],
             cardTemplate: 'Ore2',
         }]
-    },
-    UpgradeProbe1: {
-        id: 'UpgradeProbe1',
-        header: 'Smarter Probes',
-        value: '',
-        style: StyleTypes.Control,
-        type: TemplateTypes.Payload,
-        maxUses: 1,
-        hideUses: true,
-        upgrade: {
-            'TargetProbe1': 'TargetProbe2',
-            'Probe1': 'Probe2'
-        },
-        cost: {
-            SCIENCE: 3,
-            ORE: 1
-        }
     },
     UpgradeProbe1: {
         id: 'UpgradeProbe1',

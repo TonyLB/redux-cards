@@ -1,8 +1,9 @@
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, addCards, deployCards, combineMoveCards, replaceCards, setTimers } from '../actions'
+import { moveCards, addCards, deployCards, combineMoveCards, replaceCards } from '../actions'
+import { setTimers } from '../actions/timers'
 import { changeSetting } from '../actions/settings'
 import { cardsToSpend } from '../state/hand'
-import { useCardMoves, moveThenCondense, maybeRebootDrawCycle } from './hand'
+import { useCardMoves, moveThenCondense } from './hand'
 
 export const purchaseCard = (card, track) => (dispatch, getState) => {
     let state = getState()
@@ -39,7 +40,6 @@ export const purchaseCard = (card, track) => (dispatch, getState) => {
             deploy
 
         if (outMoves) { dispatch(outMoves) }
-        dispatch(maybeRebootDrawCycle())
         
         if (purchaseTemplate.upgrade) {
             dispatch(replaceCards(purchaseTemplate.upgrade))

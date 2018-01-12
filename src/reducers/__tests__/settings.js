@@ -16,7 +16,7 @@ describe('store/reducer/settings', () => {
         Reducer(settings)
             .withState(existingState)
             .expect({ type: 'NOT_EXISTING'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should add a new setting', () => {

@@ -8,7 +8,8 @@ import testApp from './reducers/testApp'
 import App from './components/App'
 import './index.css';
 import preloadState from './preload'
-import { startTimer } from './actions'
+import { startTimer } from './actions/timers'
+import { drawCard } from './actions/hand'
 
 let store = createStore(
     testApp, 
@@ -16,7 +17,15 @@ let store = createStore(
     applyMiddleware(thunk)
 );
 
-store.dispatch(startTimer('HARVEST-TIMER'))
+store.dispatch(startTimer({ 
+    id: 'HARVEST-TIMER', 
+    duration: 2500, 
+    execute: (dispatch, getState) => {
+        if (getState().settings['AUTO-DRAW']) {
+            dispatch(drawCard())                            
+        }
+    }
+}))
 
 render(
     <Provider store={store}>

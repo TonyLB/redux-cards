@@ -31,9 +31,12 @@ class Clock extends React.Component {
     }
 
     render() {
-        let {startTime=new Date(), duration=10000} = this.props
         let time = new Date()
-        let percent = (time - startTime) / duration
+        let { durationSpent, durationRemaining=1000, lastTick } = this.props
+
+        const percent = durationSpent === null 
+            ? 1.0 
+            : (durationSpent + (time - lastTick)) / (durationSpent + durationRemaining)
         return (percent >= 1.0) ?
         this.props.children :
         (

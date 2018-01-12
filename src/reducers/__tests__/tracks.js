@@ -34,7 +34,7 @@ describe('store/reducer/tracks', () => {
         Reducer(tracks)
             .withState(existingState)
             .expect({ type: 'NOT_EXISTING'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should add a single card', () => {

@@ -29,21 +29,21 @@ describe('store/reducer/hand', () => {
         Reducer(hand)
             .withState(existingState)
             .expect({ type: 'NOT_SERVICED'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should not alter state on no stack value for SORT_HAND', () => {
         Reducer(hand)
             .withState(existingState)
             .expect({ type: 'SORT_HAND' })
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should not alter state on no stack value for MOVE_CARD', () => {
         Reducer(hand)
             .withState(existingState)
             .expect({ type: 'MOVE_CARDS' })
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should reorder stacks for SORT_HAND', () => {
@@ -68,7 +68,7 @@ describe('store/reducer/hand', () => {
         Reducer(hand)
             .withState(existingState)
             .expect({ type: 'START_TIMER', id: 'TIMER23', duration: 10000000, startTime: Empire})
-            .toStayTheSame
+            .toChangeInState({})
     })
     
     it('should update timerStarted on matching START_TIMER', () => {

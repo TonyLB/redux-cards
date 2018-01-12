@@ -1,8 +1,8 @@
-import { maybeRebootDrawCycle } from './hand'
+import { setTimers } from './timers'
 
 const postChange = (dispatch, getState, changes) => {
     if (changes['AUTO-DRAW']) {
-        dispatch(maybeRebootDrawCycle())
+        dispatch(setTimers([{ id: 'HARVEST-TIMER', repeating: true }]))
     }
 }
 

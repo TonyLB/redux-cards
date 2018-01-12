@@ -15,7 +15,7 @@ describe('store/reducer/random', () => {
     it('should not alter state', () => {
         Reducer(random)
             .expect({ type: 'NOT_SERVICED'})
-            .toStayTheSame
+            .toChangeInState({})
     })
 
     it('should advance random', () => {

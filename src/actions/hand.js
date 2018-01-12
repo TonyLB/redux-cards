@@ -1,6 +1,7 @@
 import assert from 'assert'
 import CardTemplates from '../state/CardTemplates'
-import { moveCards, combineMoveCards, addCard, removeCards, combineStacks, startTimer, markUse } from './index'
+import { moveCards, combineMoveCards, addCard, removeCards, combineStacks, markUse } from './index'
+import { startTimer } from './timers'
 import { denormalize } from '../state'
 import { canRecycle } from '../state/hand'
 import { cardLocation } from '../state/card'
@@ -106,20 +107,12 @@ export const drawCard = () => (dispatch, getState) => {
             destination: firstOpenStack
         }])
         dispatch(moveThenCondense(state, drawMove))
-        dispatch(startTimer(state.hand.timerId))
+        if (!state.settings['AUTO-DRAW']) {
+            dispatch(startTimer({ id: state.hand.timerId }))
+        }
         dispatch(checkPurchases())
     }
     dispatch(shuffleIfNeeded())
-}
-
-export const maybeRebootDrawCycle = () => function maybeRebootDrawCycle(dispatch, getState) {
-    const state = getState()
-    if (state.settings['AUTO-DRAW']) {
-        const timer = state.timers.byId[state.hand.timerId]
-        if (!timer.timeoutId) {
-            dispatch(drawCard())
-        }    
-    }
 }
 
 export const discardCard = (card) => (dispatch, getState) => {
@@ -133,7 +126,6 @@ export const discardCard = (card) => (dispatch, getState) => {
             destination: state.hand.discardId
         }])
         dispatch(moveThenCondense(state, discardMove))
-        dispatch(maybeRebootDrawCycle())
     }
 }
 
@@ -233,7 +225,6 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
     dispatch(moveThenCondense(newState, combineMoveCards([expenditureMoves, moveCards(discardMoves)])))
         
     dispatch(checkPurchases())
-    dispatch(maybeRebootDrawCycle())
 }
 
 export const queuePurchase = (stackId) => function queuePurchase(dispatch, getState) {
@@ -262,7 +253,6 @@ export const recycleCards = (stackId, destination) => (dispatch, getState) => {
             removeCards([{id: stack.cards[0], source: stackId}])
         ])
         dispatch(moveThenCondense(state, recycleMove))
-        dispatch(maybeRebootDrawCycle())
     }
 
 }
@@ -290,6 +280,5 @@ export const useCards = (cards=[], stacks=null) => (dispatch, getState) => {
     let state = getState()
     dispatch(useCardMarks(state, cards))
     dispatch(moveCards(useCardMoves(state, cards), stacks))
-    dispatch(maybeRebootDrawCycle())
 }
 

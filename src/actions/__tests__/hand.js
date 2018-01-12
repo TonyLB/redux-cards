@@ -9,10 +9,17 @@ import { generateKey } from '../../reducers/keys.js'
 jest.mock('../../reducers/keys.js')
 jest.useFakeTimers()
 
+const StarWars = Date.parse("May 25, 1977 12:00:00")
+
 const emptyHand = {
     cards: {
         byId: { },
         allIds: [ ]
+    },
+    timers: {
+        byId: { },
+        allIds: [ ],
+        lastTick: StarWars,
     },
     stacks: {
         byId: {
@@ -382,6 +389,33 @@ describe('store/actions/hand/drawCard', () => {
         expect(dispatches[3].isFunction()).toBe(true)
         expect(dispatches[3].getName()).toEqual('shuffleIfNeeded')
     })
+
+    it('should not restart the HARVEST-TIMER if AUTO-DRAW is set', () => {
+        const autoDrawHand = [
+            { type: 'ADD_CARDS', cards: [
+                { id: 'CARD20', cardTemplate: 'FuelTank', destination: 'STACK4' },
+                { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK4' },
+                { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK4' },
+                { id: 'CARD23', cardTemplate: 'Fuel2', destination: 'STACK4' },
+                { id: 'CARD24', cardTemplate: 'Fuel1', destination: 'STACK4' }
+            ]},
+            { type: 'CHANGE_SETTINGS', changes: { 'AUTO-DRAW': true }}
+        ].reduce(reduce, emptyHand)
+
+        const dispatches = Thunk(drawCard).withState(autoDrawHand).execute()
+
+        expect(dispatches.length).toBe(3)
+        expect(dispatches[0].isPlainObject()).toBe(true)
+        expect(dispatches[0].getAction()).toEqual({
+            type: 'MOVE_CARDS',
+            cards: [{ id: 'CARD20', source: 'STACK4', destination: 'STACK10' }],
+            stacks: ['STACK10', 'STACK11', 'STACK12', 'STACK13']
+        })
+        expect(dispatches[1].isFunction()).toBe(true)
+        expect(dispatches[1].getName()).toEqual('checkPurchases')
+        expect(dispatches[2].isFunction()).toBe(true)
+        expect(dispatches[2].getName()).toEqual('shuffleIfNeeded')
+    })
     
 })
 
@@ -433,7 +467,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(6)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -463,8 +497,6 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[4].isFunction()).toBe(true)
         expect(dispatches[4].getName()).toEqual('checkPurchases')
-        expect(dispatches[5].isFunction()).toBe(true)
-        expect(dispatches[5].getName()).toEqual('maybeRebootDrawCycle')
     })
 
     it('should purchase, mark, and discard, if maxUses specified', () => {
@@ -476,7 +508,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(6)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -506,8 +538,6 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[4].isFunction()).toBe(true)
         expect(dispatches[4].getName()).toEqual('checkPurchases')
-        expect(dispatches[5].isFunction()).toBe(true)
-        expect(dispatches[5].getName()).toEqual('maybeRebootDrawCycle')
     })
 
     it('should aggregate purchase into storage, if available', () => {
@@ -520,7 +550,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK11')
 
-        expect(dispatches.length).toBe(6)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -551,8 +581,6 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[4].isFunction()).toBe(true)
         expect(dispatches[4].getName()).toEqual('checkPurchases')
-        expect(dispatches[5].isFunction()).toBe(true)
-        expect(dispatches[5].getName()).toEqual('maybeRebootDrawCycle')
     })
 
     it('should purchase from a multi-purchase card', () => {
@@ -565,7 +593,7 @@ describe('store/actions/hand/activatePurchase', () => {
         generateKey.mockReturnValueOnce('CARD23')
         const dispatches = Thunk(activatePurchase).withState(fullAggregator).execute('STACK10')
 
-        expect(dispatches.length).toBe(6)
+        expect(dispatches.length).toBe(5)
         expect(dispatches[0].isPlainObject()).toBe(true)
         expect(dispatches[0].getAction()).toEqual({
             type: 'ADD_CARDS',
@@ -595,8 +623,6 @@ describe('store/actions/hand/activatePurchase', () => {
         })
         expect(dispatches[4].isFunction()).toBe(true)
         expect(dispatches[4].getName()).toEqual('checkPurchases')
-        expect(dispatches[5].isFunction()).toBe(true)
-        expect(dispatches[5].getName()).toEqual('maybeRebootDrawCycle')
     })
     
 })

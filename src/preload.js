@@ -1,8 +1,6 @@
 import { generateKey } from './reducers/keys'
 import { StateTypes, listToDenormalized, combineDenormalizedObjects } from './state'
 import CardTemplate from './state/CardTemplates'
-import { clearTimer } from './actions'
-import { drawCard } from './actions/hand'
 
 const preloadNulls = (state) => {
     let nullProp = 'NULL-STACK'
@@ -64,7 +62,7 @@ const preloadRandoms = (state) => {
 }
 
 const preloadHand = (state) => {
-    const timerId = 'HARVEST-TIMER'
+//    const timerId = 'HARVEST-TIMER'
     let stacks = listToDenormalized(
         [1, 2, 3, 4, 5].map((stack) => ({ cards: [] })),
         StateTypes.Stack
@@ -74,23 +72,28 @@ const preloadHand = (state) => {
         hand: {
             id: generateKey(StateTypes.Hand),
             stacks: stacks.allIds,
-            timerId: timerId
+            timerId: 'HARVEST-TIMER'
         },
         stacks: combineDenormalizedObjects(state.stacks, stacks),
-        timers: {
+/*        timers: {
             byId: {
                 [timerId]: {
                     id: timerId,
-                    duration: 2500,
+                    durationSpent: 0,
+                    durationRemaining: 2500,
                     execute: (dispatch, getState) => {
-                        dispatch(clearTimer('HARVEST-TIMER'))
                         if (getState().settings['AUTO-DRAW']) {
                             dispatch(drawCard())                            
                         }
                     }
                 }
             },
-            allIds: [timerId]
+            allIds: [timerId],
+            lastTick: new Date()
+        }*/
+        timers: {
+            byId: { },
+            allIds: [ ]
         }
     }
 }
