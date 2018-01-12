@@ -75,22 +75,6 @@ const preloadHand = (state) => {
             timerId: 'HARVEST-TIMER'
         },
         stacks: combineDenormalizedObjects(state.stacks, stacks),
-/*        timers: {
-            byId: {
-                [timerId]: {
-                    id: timerId,
-                    durationSpent: 0,
-                    durationRemaining: 2500,
-                    execute: (dispatch, getState) => {
-                        if (getState().settings['AUTO-DRAW']) {
-                            dispatch(drawCard())                            
-                        }
-                    }
-                }
-            },
-            allIds: [timerId],
-            lastTick: new Date()
-        }*/
         timers: {
             byId: { },
             allIds: [ ]
