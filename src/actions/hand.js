@@ -229,9 +229,11 @@ export const activatePurchase = (stackId) => function activatePurchase(dispatch,
 
 export const queuePurchase = (stackId) => function queuePurchase(dispatch, getState) {
     dispatch(lockStack(stackId))
-    setTimeout(() => {
-        dispatch(activatePurchase(stackId))
-    }, 500)
+    dispatch(startTimer({
+        id: `${stackId}-LOCK-TIMER`,
+        duration: 500,
+        execute: (dispatch, getState) => { dispatch(activatePurchase(stackId)) }
+    }))
 }
 
 export const checkPurchases = () => function checkPurchases(dispatch, getState) {

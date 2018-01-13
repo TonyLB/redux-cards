@@ -1,13 +1,18 @@
 import "babel-polyfill";
-import { Thunk } from 'redux-testkit'
-import { condenseHand, shuffleIfNeeded, drawCard, checkPurchases, activatePurchase } from '../hand.js'
+import { Thunk, FlushThunks } from 'redux-testkit'
+import { condenseHand, shuffleIfNeeded, drawCard, checkPurchases, activatePurchase, queuePurchase } from '../hand'
+import { startTimer, setTimers } from '../timers'
+import { now } from '../../state/now'
 import reduce from '../../reducers/testApp'
 import { lockStack } from '../stacks'
+
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 
 import { generateKey } from '../../reducers/keys.js'
 
 jest.mock('../../reducers/keys.js')
-jest.useFakeTimers()
+jest.mock('../../state/now')
 
 const StarWars = Date.parse("May 25, 1977 12:00:00")
 
@@ -73,7 +78,8 @@ const emptyHand = {
             'STACK13',
         ],
         drawId: 'STACK4',
-        discardId: 'STACK3'
+        discardId: 'STACK3',
+        timerId: 'HARVEST-TIMER'
     }
 }
 
@@ -695,4 +701,252 @@ describe('store/actions/hand/checkPurchases', () => {
         expect(dispatches[0].getName()).toEqual('queuePurchase')
     })
     
+})
+
+describe('store/actions/hand/queuePurchase', () => {
+    it('should dispatch a lock-stacks and a startTimer', () => {
+        const halfFullHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
+            { id: 'CARD23', cardTemplate: 'EVAMining1', destination: 'STACK11' },
+            { id: 'CARD24', cardTemplate: 'Asteroid', destination: 'STACK11' },
+            { id: 'CARD25', cardTemplate: 'Asteroid', destination: 'STACK11' }
+        ]})
+
+        const dispatches = Thunk(queuePurchase).withState(halfFullHand).execute('STACK11')
+
+        expect(dispatches.length).toBe(2)
+        expect(dispatches[0].isPlainObject()).toBe(true)
+        expect(dispatches[0].getAction()).toEqual({
+            type: 'LOCK_STACK',
+            stackId: 'STACK11'
+        })
+        expect(dispatches[1].isFunction()).toBe(true)
+        expect(dispatches[1].getName()).toEqual('startTimer')
+    })
+})
+
+describe('store/actions/hand/integration', () => {
+
+    let flushThunks, store
+
+    beforeEach(() => {
+        jest.resetAllMocks()
+        jest.useFakeTimers()
+        jest.clearAllTimers()
+        flushThunks = FlushThunks.createMiddleware()
+        store = createStore(reduce, emptyHand, applyMiddleware(flushThunks, thunk))
+        now.mockReturnValue(StarWars)
+        store.dispatch(startTimer({ id: 'HARVEST-TIMER', duration: 2500 }))
+    })
+
+    it('should draw cards', () => {
+        store.dispatch({ type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Fuel1', destination: 'STACK4'},
+            { id: 'CARD21', cardTemplate: 'Ore1', destination: 'STACK4'}
+        ]})
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20'])
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD21'])
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20'])
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD21'])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+        
+    })
+
+    it('should aggregate drawn cards into pre-drawn aggregator', () => {
+        store.dispatch({ type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK4' },
+            { id: 'CARD22', cardTemplate: 'Asteroid', destination: 'STACK4' },
+            { id: 'CARD23', cardTemplate: 'Gas', destination: 'STACK4' }
+        ]})
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD21'])
+        expect(store.getState().stacks.byId['STACK10'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD22', 'CARD23'])
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD21'])
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD23'])
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(2)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500)
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        expect(store.getState().stacks.byId['STACK10'].locked).toBe(true)
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+        
+        now.mockReturnValue(StarWars + 500)
+        generateKey.mockReturnValueOnce('CARD24')
+        jest.runTimersToTime(500)
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(3)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000)
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD24'])
+        expect(store.getState().cards.byId['CARD24'].cardTemplate).toEqual('Fuel1')
+        expect(store.getState().stacks.byId['STACK10'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK3'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        
+    })
+
+    it('should aggregate pre-drawn cards into drawn aggregator', () => {
+        store.dispatch({ type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Bussard1', destination: 'STACK4' },
+            { id: 'CARD21', cardTemplate: 'Gas', destination: 'STACK10' },
+            { id: 'CARD22', cardTemplate: 'Asteroid', destination: 'STACK11' },
+            { id: 'CARD23', cardTemplate: 'Gas', destination: 'STACK12' },
+            { id: 'CARD24', cardTemplate: 'Asteroid', destination: 'STACK4' },
+            { id: 'CARD25', cardTemplate: 'EVAMining1', destination: 'STACK4' },
+            { id: 'CARD30', cardTemplate: 'Science1', destination: 'STACK4' }
+        ]})
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(2)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500)
+        expect(store.getState().hand.stacks).toEqual(['STACK13', 'STACK11', 'STACK10', 'STACK12'])
+        expect(store.getState().stacks.byId['STACK13'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        expect(store.getState().stacks.byId['STACK13'].locked).toBe(true)
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])        
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD24', 'CARD25', 'CARD30'])
+
+        generateKey.mockReturnValueOnce('CARD26')
+        now.mockReturnValue(StarWars + 500)
+        jest.runTimersToTime(500)
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(3)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000)
+        expect(store.getState().hand.stacks).toEqual(['STACK13', 'STACK11', 'STACK10', 'STACK12'])
+        expect(store.getState().stacks.byId['STACK3'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        expect(store.getState().stacks.byId['STACK13'].cards).toEqual(['CARD26'])
+        expect(store.getState().stacks.byId['STACK13'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD24', 'CARD25', 'CARD30'])        
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+        
+        expect(setTimeout).toHaveBeenCalledTimes(3)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000)
+        expect(store.getState().hand.stacks).toEqual(['STACK13', 'STACK11', 'STACK10', 'STACK12'])
+        expect(store.getState().stacks.byId['STACK3'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        expect(store.getState().stacks.byId['STACK13'].cards).toEqual(['CARD26'])
+        expect(store.getState().stacks.byId['STACK13'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD22'])
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD24'])
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD25', 'CARD30'])        
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+        
+        expect(setTimeout).toHaveBeenCalledTimes(4)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500)
+        expect(store.getState().hand.stacks).toEqual(['STACK12', 'STACK13', 'STACK11', 'STACK10'])
+        expect(store.getState().stacks.byId['STACK3'].cards).toEqual(['CARD20', 'CARD21', 'CARD23'])
+        expect(store.getState().stacks.byId['STACK13'].cards).toEqual(['CARD26'])
+        expect(store.getState().stacks.byId['STACK13'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual(['CARD25', 'CARD22', 'CARD24'])
+        expect(store.getState().stacks.byId['STACK12'].locked).toBe(true)
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD30'])
+
+        generateKey.mockReturnValueOnce('CARD27')
+        now.mockReturnValue(StarWars + 1000)
+        jest.runTimersToTime(500)
+        flushThunks.flush()
+        
+        expect(setTimeout).toHaveBeenCalledTimes(5)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000)
+        expect(store.getState().hand.stacks).toEqual(['STACK12', 'STACK13', 'STACK11', 'STACK10'])
+        expect(store.getState().stacks.byId['STACK3'].cards).toEqual(['CARD20', 'CARD21', 'CARD23', 'CARD25', 'CARD22', 'CARD24'])
+        expect(store.getState().stacks.byId['STACK13'].cards).toEqual(['CARD26'])
+        expect(store.getState().stacks.byId['STACK13'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual(['CARD27'])
+        expect(store.getState().stacks.byId['STACK12'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual(['CARD30'])
+    })
+
+    it('should chain-aggregate', () => {
+        store.dispatch({ type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Smelter1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Ore2', destination: 'STACK10' },
+            { id: 'CARD22', cardTemplate: 'Ore2', destination: 'STACK10' },
+            { id: 'CARD23', cardTemplate: 'EVAMining2', destination: 'STACK11' },
+            { id: 'CARD24', cardTemplate: 'Asteroid', destination: 'STACK11' },
+            { id: 'CARD25', cardTemplate: 'Asteroid', destination: 'STACK11' },
+            { id: 'CARD26', cardTemplate: 'Asteroid', destination: 'STACK4' }
+        ]})
+
+        expect(setTimeout).toHaveBeenCalledTimes(1)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2500)
+
+        store.dispatch(drawCard())
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(2)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500)
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD21', 'CARD22'])
+        expect(store.getState().stacks.byId['STACK10'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual(['CARD23', 'CARD24', 'CARD25', 'CARD26'])
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])        
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+
+        generateKey.mockReturnValueOnce('CARD27')
+        now.mockReturnValue(StarWars + 500)
+        jest.runTimersToTime(500)
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(4)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500)
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD21', 'CARD22', 'CARD27'])
+        expect(store.getState().stacks.byId['STACK10'].locked).toBe(true)
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK11'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])        
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+
+        generateKey.mockReturnValueOnce('CARD28')
+        now.mockReturnValue(StarWars + 1000)
+        jest.runTimersToTime(500)
+        flushThunks.flush()
+
+        expect(setTimeout).toHaveBeenCalledTimes(5)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1500)
+        expect(store.getState().stacks.byId['STACK10'].cards).toEqual(['CARD20', 'CARD28'])
+        expect(store.getState().stacks.byId['STACK10'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK11'].cards).toEqual([])
+        expect(store.getState().stacks.byId['STACK11'].locked).toBeFalsy()
+        expect(store.getState().stacks.byId['STACK12'].cards).toEqual([])        
+        expect(store.getState().stacks.byId['STACK4'].cards).toEqual([])
+        
+    })
 })
