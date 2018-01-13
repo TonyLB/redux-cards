@@ -1,6 +1,5 @@
 import React from 'react'
 import { TransitionMotion, spring } from 'react-motion'
-import PropTypes from 'prop-types'
 import { cardSeparatedStack } from './Stack'
 import { cardSeparatedDeck } from './Deck'
 import TrackContainer from '../containers/TrackContainer'
@@ -66,23 +65,6 @@ class Hand extends React.Component {
             </div>
         ) 
     }
-}
-
-Hand.PropTypes = {
-    id: PropTypes.string.isRequired,
-    cards: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            val: PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired,
-    discardClick: PropTypes.func,
-    drawClick: PropTypes.func,
-    timer: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        startTime: PropTypes.Date,
-        duration: PropTypes.number
-    }).isRequired
 }
 
 export default Hand

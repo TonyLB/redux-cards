@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Card from './Card'
 import Header from './SVG/Header'
 
@@ -87,19 +86,5 @@ export const Deck = ( {
             )}
         </div>
 )}
-
-Deck.PropTypes = {
-    cards: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            val: PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired,
-    headerTop: PropTypes.bool,
-    discard: PropTypes.bool,
-    top: PropTypes.number,
-    left: PropTypes.number,
-    className: PropTypes.string
-}
 
 export default Deck

@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { now } from '../../state/now'
 
 const clockPath = (radius, percent, close) => ( (percent >= 1.0) ?
     `M30,${30-radius} 
@@ -31,7 +31,7 @@ class Clock extends React.Component {
     }
 
     render() {
-        let time = new Date()
+        let time = now()
         let { durationSpent, durationRemaining=1000, lastTick } = this.props
 
         const percent = durationSpent === null 
@@ -69,11 +69,6 @@ class Clock extends React.Component {
             </svg>
         )
     }
-}
-
-Clock.PropTypes = {
-    startTime: PropTypes.Date,
-    duration: PropTypes.number
 }
 
 export default Clock

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 const Glyph = ({size=30, shape}) => {
     switch (shape) {
@@ -346,11 +345,6 @@ const Glyph = ({size=30, shape}) => {
             )
         default: return null
     }
-}
-
-Glyph.PropTypes = {
-    size: PropTypes.number,
-    shape: PropTypes.string
 }
 
 export default Glyph

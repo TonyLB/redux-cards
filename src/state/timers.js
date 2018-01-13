@@ -1,3 +1,5 @@
+import { now } from './now'
+
 //
 // nextTimers
 //
@@ -68,7 +70,7 @@ export const elapsed = (state, timerId) => {
         return {
             durationSpent: 0,
             durationRemaining: 1000,
-            lastTick: new Date()
+            lastTick: now()
         }
     }
 }

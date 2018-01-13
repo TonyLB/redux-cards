@@ -1,8 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-/*            version="1.1" 
-            id="Layer_1" 
-xmlns="http://www.w3.org/2000/svg" */
 
 const SideArrow = ({ width=30, height=120, top, left=0, className='svg-blues', onClick, orientation='LEFT'}) => (
     <div 
@@ -32,15 +28,5 @@ const SideArrow = ({ width=30, height=120, top, left=0, className='svg-blues', o
         </svg>
     </div>
 )
-
-SideArrow.PropTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number,
-    top: PropTypes.number,
-    left: PropTypes.number,
-    className: PropTypes.string,
-    onClick: PropTypes.func,
-    orientation: PropTypes.string
-}
 
 export default SideArrow

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 const Arrow = ({ rotate, onClick }) => (
     <svg 
@@ -24,10 +23,5 @@ const Arrow = ({ rotate, onClick }) => (
             />
     </svg>
 )
-
-Arrow.PropTypes = {
-    rotate: PropTypes.number,
-    onClick: PropTypes.func
-}
 
 export default Arrow

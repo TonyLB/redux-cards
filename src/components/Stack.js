@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Card from './Card'
 import Header from './SVG/Header'
 
@@ -88,18 +87,5 @@ export const Stack = ( { id, cards=[], discardClick=()=>{}, top=0, left=0, child
         </div>
     )
 )
-
-Stack.PropTypes = {
-    id: PropTypes.string.isRequired,
-    cards: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            val: PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired,
-    discardClick: PropTypes.func,
-    top: PropTypes.number,
-    left: PropTypes.number
-}
 
 export default Stack

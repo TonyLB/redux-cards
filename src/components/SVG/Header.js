@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 const Header = ({ className="svg-blues", width=60, height=20, gap=20, onClick, children }) => (
     <svg 
@@ -19,12 +18,5 @@ const Header = ({ className="svg-blues", width=60, height=20, gap=20, onClick, c
         {children}
     </svg>
 )
-
-Header.PropTypes = {
-    className: PropTypes.string,
-    width: PropTypes.number,
-    height: PropTypes.number,
-    onClick: PropTypes.func
-}
 
 export default Header

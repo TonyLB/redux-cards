@@ -1,10 +1,11 @@
 import reducer from '../reducers/testApp'
 import { nextDuration, expiredTimers } from '../state/timers'
+import { now } from '../state/now'
 
 export const startTimer = ({ id, duration, execute, repeating, moment }) => function startTimer(dispatch, getState) {
     const state = getState()
     const oldDuration = nextDuration(state)
-    const defaultedMoment = moment || new Date()
+    const defaultedMoment = moment || now()
 
     const offset = defaultedMoment - (state.timers.lastTick || 0)
 
@@ -27,7 +28,7 @@ export const startTimer = ({ id, duration, execute, repeating, moment }) => func
     }
 }
 
-export const tick = (moment) => function tick(dispatch, getState) {
+export const tick = (moment = now()) => function tick(dispatch, getState) {
     const state = getState()
     const tickAction = {
         type: 'TICK',
@@ -93,8 +94,7 @@ export const resetTimeout = () => function resetTimeout(dispatch, getState) {
     if (duration) {
         const timeoutId = setTimeout(() => {
 
-            let nextTick = new Date()
-//            nextTick.setMilliseconds(nextTick.getMilliseconds() + duration)
+            let nextTick = now()
 
             dispatch(tick(nextTick))
         }, duration)

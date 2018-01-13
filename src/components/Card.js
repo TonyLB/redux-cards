@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import CardTemplates from '../state/CardTemplates'
 import { resourceShortForm }from '../state/Resources'
 
@@ -41,19 +40,5 @@ export const Card = ({
         </div> 
     </div>
 )
-
-Card.PropTypes = {
-    id: PropTypes.string,
-    className: PropTypes.string,
-    top: PropTypes.number,
-    left: PropTypes.number,
-    zIndex: PropTypes.number,
-    value: PropTypes.string.isRequired,
-    cardTemplate: PropTypes.string,
-    showBack: PropTypes.bool,
-    onClick: PropTypes.func,
-    uses: PropTypes.number,
-    maxUses: PropTypes.number
-}
 
 export default Card

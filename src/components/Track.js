@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Card from './Card'
 import CardTemplates from '../state/CardTemplates'
 import SideArrow from './SVG/SideArrow'
@@ -42,17 +41,6 @@ class Track extends React.Component {
             </div>
         )
     }
-}
-
-Track.PropTypes = {
-    id: PropTypes.string.isRequired,
-    cards: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            val: PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired,
-    trackSize: PropTypes.number.isRequired,
 }
 
 export default Track
