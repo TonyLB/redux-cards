@@ -88,3 +88,65 @@ export const canRecycle = (state, stackId) => (
         CardTemplates[state.cards.byId[state.stacks.byId[stackId].cards[0]].cardTemplate].type !== CardTemplates.Types.Planete :
         false
 )
+
+//
+// resourceTotals
+//
+// Calculates a resource total of all cards currently under the player's
+// control, returning two totals:  { hand: , allCards: }, with hand
+// listing what's showing in the hand itself, and allCards listing both
+// what is visible in the hand and what is hidden in the discard and draw
+// decks.
+//
+
+export const resourceTotals = (state) => {
+    const handCards = state.hand.stacks
+        .reduce((output, stack) => (
+            [ 
+                ...output,
+                ...(state.stacks.byId[stack].cards)
+            ]
+        ), [])
+        .map(card => (
+            CardTemplates[state.cards.byId[card].cardTemplate]
+        ))
+        .filter(card => ( card.resources ))
+        .map(card => (
+            card.resources
+        ))
+
+    const deckCards = [state.hand.drawId, state.hand.discardId]
+        .map(stack => (
+            state.stacks.byId[stack].cards
+        ))
+        .reduce((output, cards) => ([
+            ...output,
+            ...cards
+        ]), [])
+        .map(card => ( CardTemplates[state.cards.byId[card].cardTemplate] ))
+        .filter(card => ( card.resources ))
+        .map(card => (
+            card.resources
+        ))
+
+    const [ handTotal, fullTotal ] = [ handCards, [ ...deckCards, ...handCards ] ]
+        .map(resourceList => (
+            resourceList.reduce((totals, resource) => (
+                Object.entries(resource).reduce((output, [key, value]) => ({
+                    ...output,
+                    [key]: value + (output[key] || 0)
+                }), totals)
+            ), {})
+        ))
+
+    // Make sure that the hand Totals include zeroes for any resources that
+    // are included in the allCards total, if there are no similar resources
+    // showing in the hand itself.
+
+    const handAdjustedTotal = Object.keys(fullTotal)
+        .reduce((output, key) => ({
+            ...output,
+            [key]: output[key] || 0
+        }), handTotal)
+    return { hand: handAdjustedTotal, allCards: fullTotal }
+}

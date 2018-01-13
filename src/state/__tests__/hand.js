@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import { combinatoricExpansion, priceTotal, cardsToSpend } from '../hand'
+import { combinatoricExpansion, priceTotal, cardsToSpend, resourceTotals } from '../hand'
 import reduce from '../../reducers/testApp'
 
 const emptyHand = {
@@ -198,6 +198,79 @@ describe('store/state/hand/cardsToSpend', () => {
             { id: 'CARD21', source: 'STACK11' },
             { id: 'CARD22', source: 'STACK12' }
         ])
+    })
+    
+})
+
+describe('store/state/hand/resourceTotals', () => {
+
+    it('should return empty objects when presented with empty hand and deck', () => {
+        expect(resourceTotals(emptyHand)).toEqual({ hand: {}, allCards: {}})
+    })
+
+    it('should return empty objects when presented with cards with no resources', () => {
+        const resourcelessHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'EVAMining1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'EVAMining1', destination: 'STACK3' },
+            { id: 'CARD22', cardTemplate: 'EVAMining1', destination: 'STACK4' },
+        ]})
+
+        expect(resourceTotals(resourcelessHand)).toEqual({ hand: {}, allCards: {}})
+    })
+
+    it('should return zeroes in hand, and values in allCards, when all resource cards in decks', () => {
+        const resourcelessHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'EVAMining1', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK3' },
+            { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK4' },
+        ]})
+
+        expect(resourceTotals(resourcelessHand)).toEqual({ hand: { FUEL: 0, ORE: 0 }, allCards: { FUEL: 1, ORE: 1 }})
+    })
+
+    it('should return identical hand and allCards total when all resource cards in hand', () => {
+        const resourcefulHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Fuel2', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK11' },
+            { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK12' },
+            { id: 'CARD23', cardTemplate: 'EVAMining1', destination: 'STACK4'}
+        ]})
+
+        expect(resourceTotals(resourcefulHand)).toEqual({
+            hand: { FUEL: 3, ORE: 1 },
+            allCards: { FUEL: 3, ORE: 1 }
+        })
+    })
+
+    it('should combine totals when resource cards are in both places', () => {
+        const splitHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Fuel2', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Fuel1', destination: 'STACK3' },
+            { id: 'CARD22', cardTemplate: 'Ore1', destination: 'STACK3' },
+            { id: 'CARD23', cardTemplate: 'EVAMining1', destination: 'STACK4'}
+        ]})
+
+        expect(resourceTotals(splitHand)).toEqual({
+            hand: { FUEL: 2, ORE: 0 },
+            allCards: { FUEL: 3, ORE: 1 }
+        })
+    })
+
+    it('should correctly total cards held on an aggregator', () => {
+        const splitHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Bussard3', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Fuel5', destination: 'STACK10' },
+            { id: 'CARD22', cardTemplate: 'Fuel5', destination: 'STACK10' },
+            { id: 'CARD23', cardTemplate: 'Gas', destination: 'STACK10' },
+            { id: 'CARD24', cardTemplate: 'Fuel1', destination: 'STACK3' },
+            { id: 'CARD25', cardTemplate: 'Ore1', destination: 'STACK3' },
+            { id: 'CARD26', cardTemplate: 'EVAMining1', destination: 'STACK4'}
+        ]})
+
+        expect(resourceTotals(splitHand)).toEqual({
+            hand: { FUEL: 10, GAS: 1, ORE: 0 },
+            allCards: { FUEL: 11, GAS: 1, ORE: 1 }
+        })
     })
     
 })
