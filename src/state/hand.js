@@ -132,10 +132,12 @@ export const resourceTotals = (state) => {
     const [ handTotal, fullTotal ] = [ handCards, [ ...deckCards, ...handCards ] ]
         .map(resourceList => (
             resourceList.reduce((totals, resource) => (
-                Object.entries(resource).reduce((output, [key, value]) => ({
-                    ...output,
-                    [key]: value + (output[key] || 0)
-                }), totals)
+                Object.entries(resource)
+                    .filter(([key]) => ( !['GAS', 'ASTEROID', 'COMET'].find(test => (test === key))))
+                    .reduce((output, [key, value]) => ({
+                        ...output,
+                        [key]: value + (output[key] || 0)
+                    }), totals)
             ), {})
         ))
 

@@ -3,6 +3,7 @@ import { TransitionMotion, spring } from 'react-motion'
 import { cardSeparatedStack } from './Stack'
 import { cardSeparatedDeck } from './Deck'
 import TrackContainer from '../containers/TrackContainer'
+import ResourceBarContainer from '../containers/ResourceBarContainer'
 import Card from './Card'
 import Countdown from '../containers/Countdown'
 import Arrow from './SVG/Arrow'
@@ -23,14 +24,14 @@ class Hand extends React.Component {
                     <Arrow onClick={ props.drawClick } rotate={90} />
                 </Countdown>
             ),
-            top: 200, 
+            top: 220, 
             left: width-100
         })
-        let discardDeck = cardSeparatedDeck({id: props.discardId, cards: props.discardDeck.cards, top: 390, left: width-100, headerTop: true, discard: true})
+        let discardDeck = cardSeparatedDeck({id: props.discardId, cards: props.discardDeck.cards, top: 410, left: width-100, headerTop: true, discard: true})
         let stackRender = stacks
             .map((stack, index) => cardSeparatedStack({
                 ...stack,
-                top: 200,
+                top: 220,
                 left: 95*index,
                 discardClick: props.discardClick,
                 alternateClick: props.alternateClick(stack.id)
@@ -62,6 +63,7 @@ class Hand extends React.Component {
                     </div>
                 )}
                 </TransitionMotion>
+                <ResourceBarContainer top={170} width={width-150} left={5} />
             </div>
         ) 
     }

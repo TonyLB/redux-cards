@@ -256,6 +256,19 @@ describe('store/state/hand/resourceTotals', () => {
         })
     })
 
+    it('should ignore planete resources', () => {
+        const planeteHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
+            { id: 'CARD20', cardTemplate: 'Gas', destination: 'STACK10' },
+            { id: 'CARD21', cardTemplate: 'Asteroid', destination: 'STACK11' },
+            { id: 'CARD22', cardTemplate: 'Comet', destination: 'STACK12' }
+        ]})
+
+        expect(resourceTotals(planeteHand)).toEqual({
+            hand: { },
+            allCards: {  }
+        })
+    })
+
     it('should correctly total cards held on an aggregator', () => {
         const splitHand = reduce(emptyHand, { type: 'ADD_CARDS', cards: [
             { id: 'CARD20', cardTemplate: 'Bussard3', destination: 'STACK10' },
@@ -268,8 +281,8 @@ describe('store/state/hand/resourceTotals', () => {
         ]})
 
         expect(resourceTotals(splitHand)).toEqual({
-            hand: { FUEL: 10, GAS: 1, ORE: 0 },
-            allCards: { FUEL: 11, GAS: 1, ORE: 1 }
+            hand: { FUEL: 10, ORE: 0 },
+            allCards: { FUEL: 11, ORE: 1 }
         })
     })
     

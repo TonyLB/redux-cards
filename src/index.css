@@ -146,4 +146,13 @@ body {
     fill: #fcc205;  
   }
 
-
+  .resource-bar{
+    background: rgb(255, 234, 140);
+    border: 1px solid #fcc205;
+    border-radius: 20px 20px 0px 0px;
+    font-size: 28px;
+    width: 78px;
+    height: 40px;
+    position: relative;
+    cursor: default;
+  }
