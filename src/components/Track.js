@@ -3,6 +3,7 @@ import Card from './Card'
 import CardTemplates from '../state/CardTemplates'
 import SideArrow from './SVG/SideArrow'
 import Deck from './Deck'
+import AnimationFrame from './animation/AnimationFrame'
 
 class Track extends React.Component {
 
@@ -37,7 +38,15 @@ class Track extends React.Component {
                 ))
             }
                 <SideArrow top={8} left={width-140} className={props.className || 'svg-pinks'} />
-                <Deck { ...props.deck } top={0} left={width-100} className={props.className || 'svg-pinks'} />
+                <AnimationFrame top={0} left={width-100}>
+                    <Deck cardCount={props.deck.cards.length} className={props.className || 'svg-pinks'} >
+                        {
+                            props.deck.cards.slice(0, 3).map((card, index) => (
+                                <Card {...card} top={index*5} left={index*5} showBack={true} zIndex={3-index} />
+                            ))
+                        }
+                    </Deck>
+                </AnimationFrame>
             </div>
         )
     }

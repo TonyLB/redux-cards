@@ -1,12 +1,13 @@
 import React from 'react'
-import { TransitionMotion, spring } from 'react-motion'
-import { cardSeparatedStack } from './Stack'
-import { cardSeparatedDeck } from './Deck'
+import Deck from './Deck'
+import Stack from './Stack'
 import TrackContainer from '../containers/TrackContainer'
 import ResourceBarContainer from '../containers/ResourceBarContainer'
 import Card from './Card'
 import Countdown from '../containers/Countdown'
 import Arrow from './SVG/Arrow'
+import CardsWrapper from './animation/CardsWrapper'
+import AnimationFrame from './animation/AnimationFrame'
 
 class Hand extends React.Component {
 
@@ -15,56 +16,88 @@ class Hand extends React.Component {
 
         const stacks = props.stacks
         const width = props.width || 600
-        const height = props.height || 800
-        let drawDeck = cardSeparatedDeck({
-            id: props.drawId, 
-            cards: props.drawDeck.cards,
-            children: (
-                <Countdown timerId={props.timerId}>
-                    <Arrow onClick={ props.drawClick } rotate={90} />
-                </Countdown>
-            ),
-            top: 220, 
-            left: width-100
-        })
-        let discardDeck = cardSeparatedDeck({id: props.discardId, cards: props.discardDeck.cards, top: 410, left: width-100, headerTop: true, discard: true})
-        let stackRender = stacks
-            .map((stack, index) => cardSeparatedStack({
-                ...stack,
-                top: 220,
-                left: 95*index,
-                discardClick: props.discardClick,
-                alternateClick: props.alternateClick(stack.id)
-            }))
-            .reduce((state, object) => ({ 
-                jsx: state.jsx.concat(object.jsx),
-                styles: state.styles.concat(object.styles)
-            }), { jsx: [], styles: []})
 
-        let styles=[...drawDeck.styles, ...discardDeck.styles, ...stackRender.styles]
-            .sort((a, b) => ( a.cardId > b.cardId ? 1 : a.cardId < b.cardId ? -1 : 0 ))
-            .map(val => ({key: val.cardId, data: val, style: {top:spring(val.top), left:spring(val.left)} }))
         return (
-            <div className='positioning-layout' style={{position:"relative", width:width, height:height}}>
+            <React.Fragment>
                 <TrackContainer trackId={props.equipmentTrack} />
-                {drawDeck.jsx}
-                {discardDeck.jsx}
-                {stackRender.jsx}
-                <TransitionMotion
-                    styles={styles}
-                >
-                { interpolatedStyles => (
-                    <div>
-                        {interpolatedStyles.map (                
-                            config => (
-                                <Card key={config.key} {...config.data} top={config.style.top} left={config.style.left} />
-                            ))
-                        }
-                    </div>
-                )}
-                </TransitionMotion>
-                <ResourceBarContainer top={170} width={width-150} left={5} />
-            </div>
+                <CardsWrapper>
+
+                    {/*-
+                      Draw Deck
+                    */}
+
+                    <AnimationFrame top={220} left={width-100}>
+                        <Deck headerTop={false} cardCount={props.drawDeck.cards.length} key={props.drawDeck.id}>
+                            <Countdown key="CountDown" timerId={props.timerId} zIndex={4} top={35} left={9}>
+                                <Arrow onClick={ props.drawClick } rotate={90} />
+                            </Countdown>
+                            {
+                                props.drawDeck.cards.slice(0,3).map((card, index) => (
+                                    <Card 
+                                        {...card} 
+                                        top={index*5} 
+                                        left={index*5} 
+                                        zIndex={3-index}
+                                        cardId={card.id}
+                                        key={card.id}
+                                        showBack={true}
+                                    />
+                                ))
+                            }
+                        </Deck>
+                    </AnimationFrame>
+
+                    {/*-
+                      Discard Deck
+                    */}
+
+                    <AnimationFrame top={430} left={width-100}>
+                        <Deck headerTop={true}  cardCount={props.discardDeck.cards.length} key={props.discardDeck.id}>
+                            {
+                                props.discardDeck.cards.slice(0).reverse().slice(0,3).map((card, index) => (
+                                    <Card 
+                                        {...card} 
+                                        top={index*5} 
+                                        left={index*5} 
+                                        zIndex={3-index}
+                                        cardId={card.id}
+                                        key={card.id}
+                                    />
+                                ))
+                            }
+                        </Deck>
+                    </AnimationFrame>
+
+                    {/*-
+                      In-play stacks of cards
+                    */}
+
+                    { stacks
+                        .map((stack, index) => (
+                            <AnimationFrame top={220} left={10+95*index} key={"Frame-"+stack.id}>
+                                <Stack
+                                    alternateName={stack.alternateName}
+                                    alternateClick={props.alternateClick(stack.id)}
+                                    key={stack.id}
+                                >
+                                    { stack.cards.map((card, index) => (
+                                        <Card 
+                                            {...card} 
+                                            top={index*20} 
+                                            left={index?10:0} 
+                                            zIndex={index}
+                                            cardId={card.id}
+                                            key={card.id}
+                                            onClick={props.discardClick(card.id)}
+                                        />
+                                    ))}
+                                </Stack>
+                            </AnimationFrame>
+                        ))
+                    }
+                    <ResourceBarContainer top={170} width={width-150} left={5} />
+                </CardsWrapper>
+            </React.Fragment>
         ) 
     }
 }

@@ -37,36 +37,45 @@ class Clock extends React.Component {
         const percent = durationSpent === null 
             ? 1.0 
             : (durationSpent + (time - lastTick)) / (durationSpent + durationRemaining)
-        return (percent >= 1.0) ?
-        this.props.children :
-        (
-            <svg 
-                version="1.1" 
-                id="Layer_1" 
-                xmlns="http://www.w3.org/2000/svg" 
-                x="0px" 
-                y="0px"
-                width="60px" 
-                height="60px" 
-                viewBox="0 0 60 60" 
-                enableBackground="new 0 0 60 60"
-            >
-                <path 
-                    opacity="0.5" 
-                    fill="#898989" 
-                    stroke="#000000" 
-                    strokeMiterlimit="10" 
-                    d={ clockPath(20, percent, 1) }
-                    />
-                <path 
-                    opacity="0.5" 
-                    fill="none" 
-                    stroke="#000000" 
-                    strokeWidth="2"
-                    strokeMiterlimit="10" 
-                    d={ clockPath(25, percent) }
-                    />
-            </svg>
+        return (
+            <div style={{ 
+                position:"relative", 
+                top: this.props.top, 
+                left: this.props.left, 
+                zIndex: this.props.zIndex 
+            }}>
+                {(percent >= 1.0) ?
+                    this.props.children :
+                (
+                    <svg 
+                        version="1.1" 
+                        id="Layer_1" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        x="0px" 
+                        y="0px"
+                        width="60px" 
+                        height="60px" 
+                        viewBox="0 0 60 60" 
+                        enableBackground="new 0 0 60 60"
+                    >
+                        <path 
+                            opacity="0.5" 
+                            fill="#898989" 
+                            stroke="#000000" 
+                            strokeMiterlimit="10" 
+                            d={ clockPath(20, percent, 1) }
+                            />
+                        <path 
+                            opacity="0.5" 
+                            fill="none" 
+                            stroke="#000000" 
+                            strokeWidth="2"
+                            strokeMiterlimit="10" 
+                            d={ clockPath(25, percent) }
+                            />
+                    </svg>
+                )}
+            </div>
         )
     }
 }

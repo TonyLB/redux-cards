@@ -3,6 +3,7 @@ import Clock from '../components/SVG/Clock'
 import { elapsed } from '../state/timers'
 
 const mapStateToProps = (state, ownProps) => ({
+    ...ownProps,
     ...(elapsed(state, ownProps.timerId)),
     lastTick: state.timers.lastTick
 })
